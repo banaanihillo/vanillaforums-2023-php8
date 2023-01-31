@@ -371,7 +371,7 @@ class HttpResponse extends HttpMessage implements \ArrayAccess {
      * @return mixed Can return all value types.
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
      */
-    public function offsetGet($offset) {
+    public function offsetGet(mixed $offset): mixed {
         $this->getBody();
         $result = isset($this->body[$offset]) ? $this->body[$offset] : null;
         return $result;

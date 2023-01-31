@@ -228,7 +228,7 @@ class Theme implements \JsonSerializable
     /**
      * @inheritdoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->jsonFilter([
             "themeID" => $this->themeID,

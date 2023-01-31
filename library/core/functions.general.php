@@ -361,7 +361,7 @@ if (!function_exists("check_utf8")) {
     {
         $len = strlen($str);
         for ($i = 0; $i < $len; $i++) {
-            $c = ord($str[$i]);
+            $c = mb_ord($str[$i]);
             if ($c > 128) {
                 if ($c > 247) {
                     return false;
@@ -379,7 +379,7 @@ if (!function_exists("check_utf8")) {
                 }
                 while ($bytes > 1) {
                     $i++;
-                    $b = ord($str[$i]);
+                    $b = mb_ord($str[$i]);
                     if ($b < 128 || $b > 191) {
                         return false;
                     }
@@ -1879,9 +1879,10 @@ if (!function_exists("stringEndsWith")) {
      */
     function stringEndsWith($haystack, $needle, $caseInsensitive = false, $trim = false)
     {
-        if (strlen($haystack) < strlen($needle)) {
-            return $trim ? $haystack : false;
-        } elseif (strlen($needle) == 0) {
+        if (!is_string($haystack) || strlen($haystack) === 0) {
+            return $trim ? '' : false;
+        }
+        if (!is_string($needle) || strlen($needle) === 0) {
             if ($trim) {
                 return $haystack;
             }
@@ -1895,6 +1896,7 @@ if (!function_exists("stringEndsWith")) {
         }
     }
 }
+
 
 if (!function_exists("stringIsNullOrEmpty")) {
     /**

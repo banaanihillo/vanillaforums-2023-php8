@@ -116,7 +116,7 @@ class ProxyRequest
      * @param $headerString
      * @return int
      */
-    public function curlHeader(&$handler, $headerString)
+    public function curlHeader($handler, $headerString)
     {
         $line = explode(":", $headerString);
         $key = trim(array_shift($line));

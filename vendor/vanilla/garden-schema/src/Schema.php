@@ -1470,7 +1470,8 @@ class Schema implements \JsonSerializable, \ArrayAccess {
      * @param mixed $value The value to set.
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet(mixed $offset, mixed $value)
+    {
         $this->schema[$offset] = $value;
     }
 
@@ -1480,7 +1481,7 @@ class Schema implements \JsonSerializable, \ArrayAccess {
      * @param mixed $offset The offset to unset.
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset(mixed $offset): void {
         unset($this->schema[$offset]);
     }
 
