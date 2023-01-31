@@ -1,0 +1,955 @@
+{
+  "bootstrap.css": {
+    "filePath": "/dist/v1/forum/4beaa652569bcb6340aa.min.css",
+    "chunkName": "bootstrap.css",
+    "size": 15500,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "bootstrap.js": {
+    "filePath": "/dist/v1/forum/bootstrap.4d73d2d79d6794f1ef89.min.js",
+    "chunkName": "bootstrap.js",
+    "size": 15500,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "runtime.js": {
+    "filePath": "/dist/v1/forum/runtime.6d9994eec8a2bf110528.min.js",
+    "chunkName": "runtime.js",
+    "size": 143210,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "addons/dashboard-common.js": {
+    "filePath": "/dist/v1/forum/async/addons/dashboard-common.8608087e1c520c956719.min.js",
+    "chunkName": "addons/dashboard-common.js",
+    "size": 13670,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "addons/lavendermoon.js": {
+    "filePath": "/dist/v1/forum/async/addons/lavendermoon.41e0a5572823fa5cb945.min.js",
+    "chunkName": "addons/lavendermoon.js",
+    "size": 10109,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "addons/vanilla.css": {
+    "filePath": "/dist/v1/forum/async/5af150dc6bc951f9dbaf.min.css",
+    "chunkName": "addons/vanilla.css",
+    "size": 14840,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "addons/lavendersun.js": {
+    "filePath": "/dist/v1/forum/async/addons/lavendersun.bea75ef433487248ca7c.min.js",
+    "chunkName": "addons/lavendersun.js",
+    "size": 10109,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "addons/theme-foundation.js": {
+    "filePath": "/dist/v1/forum/async/addons/theme-foundation.0c82643732a84f1278c5.min.js",
+    "chunkName": "addons/theme-foundation.js",
+    "size": 10109,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "addons/qna.js": {
+    "filePath": "/dist/v1/forum/async/addons/qna.ad9f23bcbfafd385c058.min.js",
+    "chunkName": "addons/qna.js",
+    "size": 57717,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "addons/reactions.js": {
+    "filePath": "/dist/v1/forum/async/addons/reactions.58cb1f4faae416b24a59.min.js",
+    "chunkName": "addons/reactions.js",
+    "size": 32735,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "addons/rich-editor.js": {
+    "filePath": "/dist/v1/forum/async/addons/rich-editor.67ed08074d97a1a0025b.min.js",
+    "chunkName": "addons/rich-editor.js",
+    "size": 12197,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "highlightJs-light.css": {
+    "filePath": "/dist/v1/forum/async/27a7832845b0681f046e.min.css",
+    "chunkName": "highlightJs-light.css",
+    "size": 13134,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "highlightJs-dark.css": {
+    "filePath": "/dist/v1/forum/async/bfa978e9e87fda6e67f2.min.css",
+    "chunkName": "highlightJs-dark.css",
+    "size": 12409,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "features/discussions/forms/BulkMoveDiscussionsForm.js": {
+    "filePath": "/dist/v1/forum/async/features/discussions/forms/BulkMoveDiscussionsForm.5c900bc893ffc13a3dbb.min.js",
+    "chunkName": "features/discussions/forms/BulkMoveDiscussionsForm.js",
+    "size": 16707,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "forms/forms/DateRange.css": {
+    "filePath": "/dist/v1/forum/async/5af150dc6bc951f9dbaf.min.css",
+    "chunkName": "forms/forms/DateRange.css",
+    "size": 14840,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "pages/search.css": {
+    "filePath": "/dist/v1/forum/async/73c710f04d6191506aad.min.css",
+    "chunkName": "pages/search.css",
+    "size": 71622,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "pages/search.js": {
+    "filePath": "/dist/v1/forum/async/pages/search.6fdea8a155b86616593f.min.js",
+    "chunkName": "pages/search.js",
+    "size": 71622,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "features/discussions/forms/MoveDiscussionForm.js": {
+    "filePath": "/dist/v1/forum/async/features/discussions/forms/MoveDiscussionForm.5ee47352ebf121163cdc.min.js",
+    "chunkName": "features/discussions/forms/MoveDiscussionForm.js",
+    "size": 16707,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  },
+  "packages.js": {
+    "filePath": "/dist/v1/forum/packages.dbeb6f186a6ef8d31ccb.min.js",
+    "chunkName": "packages.js",
+    "size": 5861260,
+    "chunkReason": "split chunk (cache group: packages) (name: packages)",
+    "dependsOnAsyncChunks": []
+  },
+  "vendors.js": {
+    "filePath": "/dist/v1/forum/vendors.7beb6ddea88aea9efb44.min.js",
+    "chunkName": "vendors.js",
+    "size": 4794040,
+    "chunkReason": "split chunk (cache group: vendors) (name: vendors)",
+    "dependsOnAsyncChunks": []
+  },
+  "library-2d32d187.js": {
+    "filePath": "/dist/v1/forum/library-2d32d187.352946159bcb9c2a6c73.min.js",
+    "chunkName": "library-2d32d187.js",
+    "size": 638360,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "async/1464.min.js": {
+    "filePath": "/dist/v1/forum/async/1464.de2b27044e154277e442.min.js",
+    "chunkName": "async/1464.min.js",
+    "size": 75564,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "async/6559.min.js": {
+    "filePath": "/dist/v1/forum/async/6559.5d0fafbe199a24e4ee08.min.js",
+    "chunkName": "async/6559.min.js",
+    "size": 263099,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "async/7663.min.js": {
+    "filePath": "/dist/v1/forum/async/7663.17419cd614ebdb8b7970.min.js",
+    "chunkName": "async/7663.min.js",
+    "size": 135253,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "async/1054.min.js": {
+    "filePath": "/dist/v1/forum/async/1054.c5b0971cf596f09301c3.min.js",
+    "chunkName": "async/1054.min.js",
+    "size": 165154,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "async/697.min.js": {
+    "filePath": "/dist/v1/forum/async/697.621a42222ef4694c6ba1.min.js",
+    "chunkName": "async/697.min.js",
+    "size": 297787,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "async/2918.min.js": {
+    "filePath": "/dist/v1/forum/async/2918.f520191a04af5f703da8.min.js",
+    "chunkName": "async/2918.min.js",
+    "size": 71026,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "async/8852.min.js": {
+    "filePath": "/dist/v1/forum/async/8852.5f22152a58d40b0878dc.min.js",
+    "chunkName": "async/8852.min.js",
+    "size": 3859453,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "1312.min.js": {
+    "filePath": "/dist/v1/forum/1312.063d470bdf80b8f0a63f.min.js",
+    "chunkName": "1312.min.js",
+    "size": 5399450,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "async/4247.min.js": {
+    "filePath": "/dist/v1/forum/async/4247.91948f261b7d70a91ada.min.js",
+    "chunkName": "async/4247.min.js",
+    "size": 488412,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "async/1659.min.js": {
+    "filePath": "/dist/v1/forum/async/1659.18122b05af58cec0ce78.min.js",
+    "chunkName": "async/1659.min.js",
+    "size": 565519,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "async/min.css": {
+    "filePath": "/dist/v1/forum/async/4eab58e71c87f4d3b9a7.min.css",
+    "chunkName": "async/min.css",
+    "size": 158399,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "async/4550.min.js": {
+    "filePath": "/dist/v1/forum/async/4550.58d15a10b94bc16e7567.min.js",
+    "chunkName": "async/4550.min.js",
+    "size": 258834,
+    "chunkReason": "split chunk (cache group: default)",
+    "dependsOnAsyncChunks": []
+  },
+  "library-cc102d41.js": {
+    "filePath": "/dist/v1/forum/library-cc102d41.8d2cc9de47b5e85598b0.min.js",
+    "chunkName": "library-cc102d41.js",
+    "size": 1257360,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-de8b5b60.js": {
+    "filePath": "/dist/v1/forum/library-de8b5b60.545063d18aa8f391ccc9.min.js",
+    "chunkName": "library-de8b5b60.js",
+    "size": 1953810,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-6b9cbaae.js": {
+    "filePath": "/dist/v1/forum/library-6b9cbaae.3745282a3205fef02667.min.js",
+    "chunkName": "library-6b9cbaae.js",
+    "size": 984300,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-155ed1d1.js": {
+    "filePath": "/dist/v1/forum/library-155ed1d1.9883ebd74261e094d12c.min.js",
+    "chunkName": "library-155ed1d1.js",
+    "size": 8018640,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-b3ff4ff5.js": {
+    "filePath": "/dist/v1/forum/library-b3ff4ff5.19a97a764697b6dc7e53.min.js",
+    "chunkName": "library-b3ff4ff5.js",
+    "size": 2424160,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-b9e9f021.js": {
+    "filePath": "/dist/v1/forum/library-b9e9f021.9536c365ea32bd884d55.min.js",
+    "chunkName": "library-b9e9f021.js",
+    "size": 3017600,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-10c31700.js": {
+    "filePath": "/dist/v1/forum/library-10c31700.0afc8f92ba97c7b31482.min.js",
+    "chunkName": "library-10c31700.js",
+    "size": 4529460,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-620da1e1.js": {
+    "filePath": "/dist/v1/forum/library-620da1e1.8e1396aa60b9cb9d9cb9.min.js",
+    "chunkName": "library-620da1e1.js",
+    "size": 1152040,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-2c9e96e5.js": {
+    "filePath": "/dist/v1/forum/library-2c9e96e5.5eb6ad891323c5962b4d.min.js",
+    "chunkName": "library-2c9e96e5.js",
+    "size": 958570,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-154f14ca.js": {
+    "filePath": "/dist/v1/forum/library-154f14ca.ad65460022a08340d2b0.min.js",
+    "chunkName": "library-154f14ca.js",
+    "size": 213380,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-222bc760.js": {
+    "filePath": "/dist/v1/forum/library-222bc760.c879890eb1ce7897269d.min.js",
+    "chunkName": "library-222bc760.js",
+    "size": 404410,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-a48e544a.js": {
+    "filePath": "/dist/v1/forum/library-a48e544a.4fd05c9f0da2625b23fe.min.js",
+    "chunkName": "library-a48e544a.js",
+    "size": 4694050,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-d4f2673a.js": {
+    "filePath": "/dist/v1/forum/library-d4f2673a.010fa1e4f52e78085687.min.js",
+    "chunkName": "library-d4f2673a.js",
+    "size": 1007140,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-b5206d0f.js": {
+    "filePath": "/dist/v1/forum/library-b5206d0f.b3ea2fa5a64f776d0bef.min.js",
+    "chunkName": "library-b5206d0f.js",
+    "size": 831300,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-2f1652fc.js": {
+    "filePath": "/dist/v1/forum/library-2f1652fc.3be6df4dd288002db1a6.min.js",
+    "chunkName": "library-2f1652fc.js",
+    "size": 715960,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-64840acf.js": {
+    "filePath": "/dist/v1/forum/library-64840acf.2e329d6a5f339522d723.min.js",
+    "chunkName": "library-64840acf.js",
+    "size": 10500400,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-9aa6fe4f.js": {
+    "filePath": "/dist/v1/forum/library-9aa6fe4f.144a66511319e77a1e00.min.js",
+    "chunkName": "library-9aa6fe4f.js",
+    "size": 3137700,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-c19d9c43.js": {
+    "filePath": "/dist/v1/forum/library-c19d9c43.864fb708a085b75f7d1c.min.js",
+    "chunkName": "library-c19d9c43.js",
+    "size": 288940,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-c7c1a4dd.js": {
+    "filePath": "/dist/v1/forum/library-c7c1a4dd.256b9a70f5230e230019.min.js",
+    "chunkName": "library-c7c1a4dd.js",
+    "size": 12808920,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-8351907e.js": {
+    "filePath": "/dist/v1/forum/library-8351907e.ffcfd4a5ddf659956052.min.js",
+    "chunkName": "library-8351907e.js",
+    "size": 3173950,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-3b962b3c.js": {
+    "filePath": "/dist/v1/forum/library-3b962b3c.c514a57509c92e6384e4.min.js",
+    "chunkName": "library-3b962b3c.js",
+    "size": 4051390,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-91c7739a.js": {
+    "filePath": "/dist/v1/forum/library-91c7739a.9f7d017d2cf2073b7f94.min.js",
+    "chunkName": "library-91c7739a.js",
+    "size": 1210270,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-0a00c317.js": {
+    "filePath": "/dist/v1/forum/library-0a00c317.03f48b575b32e5f57b37.min.js",
+    "chunkName": "library-0a00c317.js",
+    "size": 4117620,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-125fb5ae.js": {
+    "filePath": "/dist/v1/forum/library-125fb5ae.92ec16f53e5e23de45ac.min.js",
+    "chunkName": "library-125fb5ae.js",
+    "size": 1420030,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-1b5f44f5.js": {
+    "filePath": "/dist/v1/forum/library-1b5f44f5.88048884abb6dbc3e187.min.js",
+    "chunkName": "library-1b5f44f5.js",
+    "size": 18440840,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-bd952247.js": {
+    "filePath": "/dist/v1/forum/library-bd952247.74028765947b026b89e2.min.js",
+    "chunkName": "library-bd952247.js",
+    "size": 4167950,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-2da6cbf1.js": {
+    "filePath": "/dist/v1/forum/library-2da6cbf1.3fe0628469f37d4e62a0.min.js",
+    "chunkName": "library-2da6cbf1.js",
+    "size": 3135850,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-3f9d9fa6.js": {
+    "filePath": "/dist/v1/forum/library-3f9d9fa6.20595974a11e65ac8027.min.js",
+    "chunkName": "library-3f9d9fa6.js",
+    "size": 2230460,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-b40b2b97.js": {
+    "filePath": "/dist/v1/forum/library-b40b2b97.f0264632ff8a41d92e38.min.js",
+    "chunkName": "library-b40b2b97.js",
+    "size": 3750070,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-1e3a4ead.js": {
+    "filePath": "/dist/v1/forum/library-1e3a4ead.2657aaf2a77785b1f08d.min.js",
+    "chunkName": "library-1e3a4ead.js",
+    "size": 3693320,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-1f0b08b7.js": {
+    "filePath": "/dist/v1/forum/library-1f0b08b7.735171275a45c9641ce2.min.js",
+    "chunkName": "library-1f0b08b7.js",
+    "size": 237610,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-4774b20b.js": {
+    "filePath": "/dist/v1/forum/library-4774b20b.917dd8d0886cb003db95.min.js",
+    "chunkName": "library-4774b20b.js",
+    "size": 3127830,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-fae66388.js": {
+    "filePath": "/dist/v1/forum/library-fae66388.8b49f1b5b31383f28b61.min.js",
+    "chunkName": "library-fae66388.js",
+    "size": 2176390,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-35a1f0cc.js": {
+    "filePath": "/dist/v1/forum/library-35a1f0cc.3c194327338df63a52fa.min.js",
+    "chunkName": "library-35a1f0cc.js",
+    "size": 4911680,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-d51a67ca.js": {
+    "filePath": "/dist/v1/forum/library-d51a67ca.d6cfdcfd513d8182e2df.min.js",
+    "chunkName": "library-d51a67ca.js",
+    "size": 2977290,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-70109b0c.js": {
+    "filePath": "/dist/v1/forum/library-70109b0c.3fec959b8a8da5b0333b.min.js",
+    "chunkName": "library-70109b0c.js",
+    "size": 2769560,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "library-00a511ae.js": {
+    "filePath": "/dist/v1/forum/library-00a511ae.ff5e526c61a50f11a8f0.min.js",
+    "chunkName": "library-00a511ae.js",
+    "size": 4092020,
+    "chunkReason": "split chunk (cache group: library) (name: library)",
+    "dependsOnAsyncChunks": [
+      "async/1464.min.js",
+      "async/6559.min.js",
+      "async/7663.min.js",
+      "async/2918.min.js",
+      "async/1659.min.js",
+      "async/min.css",
+      "async/1054.min.js",
+      "async/697.min.js",
+      "async/4247.min.js",
+      "async/4550.min.js",
+      "async/8852.min.js"
+    ]
+  },
+  "widgetDefaultIcon.svg": {
+    "filePath": "/dist/v1/forum/619bc298cfc2a42ba6427ad2a10a8858.svg",
+    "chunkName": "widgetDefaultIcon.svg",
+    "size": 0,
+    "chunkReason": "unknown",
+    "dependsOnAsyncChunks": []
+  }
+}
