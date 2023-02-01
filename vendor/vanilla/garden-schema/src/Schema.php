@@ -1448,7 +1448,7 @@ class Schema implements \JsonSerializable, \ArrayAccess {
      * @return boolean true on success or false on failure.
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
      */
-    public function offsetExists(mixed $offset): mixed {
+    public function offsetExists(mixed $offset): boolean {
         return isset($this->schema[$offset]);
     }
 
@@ -1470,7 +1470,7 @@ class Schema implements \JsonSerializable, \ArrayAccess {
      * @param mixed $value The value to set.
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
      */
-    public function offsetSet(mixed $offset, mixed $value): mixed
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->schema[$offset] = $value;
     }
