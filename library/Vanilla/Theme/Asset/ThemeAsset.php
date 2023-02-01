@@ -130,7 +130,8 @@ abstract class ThemeAsset implements \JsonSerializable
     /**
      * Specify data which should be serialized to JSON.
      */
-    public function jsonSerialize(): mixed
+    #[\ReturnTypeWillChange]
+    public function jsonSerialize()
     {
         return $this->asArray();
     }
