@@ -463,7 +463,7 @@ class Data implements \JsonSerializable, \ArrayAccess, \Countable, \IteratorAggr
      * @param mixed $value The value to set.
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
      */
-    public function offsetSet(mixed $offset, $value): mixed
+    public function offsetSet(mixed $offset, $value): void
     {
         $this->setDataItem($offset, $value);
     }
@@ -474,8 +474,8 @@ class Data implements \JsonSerializable, \ArrayAccess, \Countable, \IteratorAggr
      * @param mixed $offset The offset to unset.
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
      */
-    # Returns no type?
-    public function offsetUnset(mixed $offset): mixed
+    # Returns no type? May need to return void?
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->data[$offset]);
     }
