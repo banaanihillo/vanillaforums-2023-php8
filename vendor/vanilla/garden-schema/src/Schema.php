@@ -1226,7 +1226,7 @@ class Schema implements \JsonSerializable, \ArrayAccess {
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @link http://json-schema.org/
      */
-    public function jsonSerialize() {
+    public function jsonSerialize(): mixed {
         $fix = function ($schema) use (&$fix) {
             if ($schema instanceof Schema) {
                 return $schema->jsonSerialize();
