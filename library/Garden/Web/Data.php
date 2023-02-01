@@ -172,7 +172,7 @@ class Data implements \JsonSerializable, \ArrayAccess, \Countable, \IteratorAggr
      * which is a value of any type other than a resource.
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $data = $this->getData();
         $data = $this->jsonFilter($data);
