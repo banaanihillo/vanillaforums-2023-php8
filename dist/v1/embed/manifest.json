@@ -1,9 +1,0 @@
-{
-  "modernEmbed.remote.js": {
-    "filePath": "/dist/v1/embed/modernEmbed.remote.39c78d744c2b894b89cd.min.js",
-    "chunkName": "modernEmbed.remote.js",
-    "size": 138800,
-    "chunkReason": "unknown",
-    "dependsOnAsyncChunks": []
-  }
-}

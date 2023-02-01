@@ -356,7 +356,7 @@ class HttpResponse extends HttpMessage implements \ArrayAccess {
      * The return value will be casted to boolean if non-boolean was returned.
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
      */
-    public function offsetExists($offset): bool {
+    public function offsetExists(mixed $offset): bool {
         $body = $this->getBody();
         return isset($body[$offset]);
     }
@@ -371,7 +371,7 @@ class HttpResponse extends HttpMessage implements \ArrayAccess {
      * @return mixed Can return all value types.
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
      */
-    public function offsetGet(mixed $offset): mixed {
+    public function offsetGet(mixed $offset) {
         $this->getBody();
         $result = isset($this->body[$offset]) ? $this->body[$offset] : null;
         return $result;
@@ -387,7 +387,7 @@ class HttpResponse extends HttpMessage implements \ArrayAccess {
      * @param mixed $value The value to set.
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet(mixed $offset, $value) {
         $this->getBody();
         if (is_null($offset)) {
             $this->body[] = $value;
@@ -406,7 +406,7 @@ class HttpResponse extends HttpMessage implements \ArrayAccess {
      * @param mixed $offset The offset to unset.
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset(mixed $offset) {
         $this->getBody();
         unset($this->body[$offset]);
     }
