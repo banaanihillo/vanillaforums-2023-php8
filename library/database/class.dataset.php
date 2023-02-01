@@ -119,7 +119,7 @@ class Gdn_DataSet implements IteratorAggregate, Countable, JsonSerializable, Inj
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->numRows();
     }
