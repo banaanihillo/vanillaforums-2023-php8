@@ -439,7 +439,7 @@ class Data implements \JsonSerializable, \ArrayAccess, \Countable, \IteratorAggr
      * The return value will be casted to boolean if non-boolean was returned.
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
      */
-    public function offsetExists(mixed $offset): bool
+    public function offsetExists(mixed $offset): mixed
     {
         return isset($this->data[$offset]);
     }
@@ -451,7 +451,7 @@ class Data implements \JsonSerializable, \ArrayAccess, \Countable, \IteratorAggr
      * @return mixed Can return all value types.
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
      */
-    public function offsetGet(mixed $offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->getDataItem($offset);
     }
@@ -463,7 +463,7 @@ class Data implements \JsonSerializable, \ArrayAccess, \Countable, \IteratorAggr
      * @param mixed $value The value to set.
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
      */
-    public function offsetSet(mixed $offset, $value)
+    public function offsetSet(mixed $offset, $value): mixed
     {
         $this->setDataItem($offset, $value);
     }
@@ -474,7 +474,7 @@ class Data implements \JsonSerializable, \ArrayAccess, \Countable, \IteratorAggr
      * @param mixed $offset The offset to unset.
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
      */
-    public function offsetUnset(mixed $offset)
+    public function offsetUnset(mixed $offset): mixed
     {
         unset($this->data[$offset]);
     }
