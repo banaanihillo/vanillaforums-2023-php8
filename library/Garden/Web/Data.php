@@ -486,7 +486,7 @@ class Data implements \JsonSerializable, \ArrayAccess, \Countable, \IteratorAggr
      * @link http://php.net/manual/en/countable.count.php
      * @return int The custom count as an integer.
      */
-    public function count(): mixed
+    public function count(): int
     {
         return count($this->data);
     }
