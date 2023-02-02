@@ -359,6 +359,9 @@ if (!function_exists("check_utf8")) {
      */
     function check_utf8($str)
     {
+        if (gettype($str) === "boolean") {
+          return false;
+        }
         $len = strlen($str);
         for ($i = 0; $i < $len; $i++) {
             $c = mb_ord($str[$i]);
