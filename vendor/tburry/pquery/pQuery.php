@@ -78,7 +78,7 @@ class pQuery implements ArrayAccess, IteratorAggregate, IQuery {
      *
      * @return int Returns the count of matched elements.
      */
-    public function count() {
+    public function count(): int {
         return count($this->nodes);
     }
 

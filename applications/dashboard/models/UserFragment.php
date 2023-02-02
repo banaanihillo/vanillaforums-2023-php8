@@ -109,7 +109,7 @@ class UserFragment implements \ArrayAccess, \JsonSerializable, \IteratorAggregat
     /**
      * Implement the \Countable interface.
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
