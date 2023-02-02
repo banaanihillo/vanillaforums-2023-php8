@@ -371,7 +371,7 @@ class HttpResponse extends HttpMessage implements \ArrayAccess {
      * @return mixed Can return all value types.
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
      */
-    public function offsetGet(mixed $offset) {
+    public function offsetGet(mixed $offset): mixed {
         $this->getBody();
         $result = isset($this->body[$offset]) ? $this->body[$offset] : null;
         return $result;
@@ -387,7 +387,7 @@ class HttpResponse extends HttpMessage implements \ArrayAccess {
      * @param mixed $value The value to set.
      * @link http://php.net/manual/en/arrayaccess.offsetset.php
      */
-    public function offsetSet(mixed $offset, $value) {
+    public function offsetSet(mixed $offset, $value): void {
         $this->getBody();
         if (is_null($offset)) {
             $this->body[] = $value;
@@ -406,7 +406,7 @@ class HttpResponse extends HttpMessage implements \ArrayAccess {
      * @param mixed $offset The offset to unset.
      * @link http://php.net/manual/en/arrayaccess.offsetunset.php
      */
-    public function offsetUnset(mixed $offset) {
+    public function offsetUnset(mixed $offset): void {
         $this->getBody();
         unset($this->body[$offset]);
     }

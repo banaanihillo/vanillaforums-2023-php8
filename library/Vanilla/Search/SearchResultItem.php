@@ -438,7 +438,7 @@ class SearchResultItem implements \JsonSerializable, \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->data[$offset]);
     }
@@ -446,7 +446,7 @@ class SearchResultItem implements \JsonSerializable, \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->data[$offset] ?? null;
     }
@@ -454,7 +454,7 @@ class SearchResultItem implements \JsonSerializable, \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (is_null($offset)) {
             $this->data[] = $value;
@@ -468,7 +468,7 @@ class SearchResultItem implements \JsonSerializable, \ArrayAccess
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->data[$offset]);
         $this->itemInputSchema()->validate($this->data);
