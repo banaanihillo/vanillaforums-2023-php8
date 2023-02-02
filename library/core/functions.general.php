@@ -81,12 +81,12 @@ if (!function_exists("anonymizeIP")) {
 
         if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6)) {
             // Need a packed version for bitwise operations.
-            $packed = inet_pton($ip);
+            $packed = inet_pton($ip ?? "");
             if ($packed !== false) {
                 // Remove the last octet of an IPv4 address or the last 80 bits of an IPv6 address.
                 // IP v4 addresses are 32 bits (4 bytes). IP v6 addresses are 128 bits (16 bytes).
                 $mask = strlen($packed) == 4 ? inet_pton("255.255.255.0") : inet_pton("ffff:ffff:ffff::");
-                $result = inet_ntop($packed & $mask);
+                $result = inet_ntop($packed & $mask ?? "");
             }
         }
 
@@ -1121,7 +1121,7 @@ if (!function_exists("ipDecode")) {
         if (filter_var($packedIP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6)) {
             // If it's already a valid IP address, don't bother unpacking it.
             $result = $packedIP;
-        } elseif ($iP = @inet_ntop($packedIP)) {
+        } elseif ($iP = @inet_ntop($packedIP ?? "")) {
             $result = $iP;
         } else {
             $result = null;
@@ -1142,7 +1142,7 @@ if (!function_exists("ipEncode")) {
     {
         $result = null;
 
-        if ($packedIP = @inet_pton($iP)) {
+        if ($packedIP = @inet_pton($iP ?? "")) {
             $result = $packedIP;
         }
 

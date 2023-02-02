@@ -932,8 +932,12 @@ if (!function_exists("formatIP")) {
 
         // Is this a packed IP address?
         if (
-            !filter_var($iP, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6) &&
-            ($unpackedIP = @inet_ntop($iP))
+            !filter_var(
+                $iP,
+                FILTER_VALIDATE_IP,
+                FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6
+            )
+            && ($unpackedIP = @inet_ntop($iP ?? ""))
         ) {
             $iP = $unpackedIP;
         }
