@@ -1778,7 +1778,12 @@ if (!function_exists("sliceParagraph")) {
 
         if ($pos === false || $pos < $minLength) {
             // There was no paragraph so try and split on sentences.
-            $sentences = preg_split("`([.!?:]\s+)`", $string, null, PREG_SPLIT_DELIM_CAPTURE);
+            $sentences = preg_split(
+              "`([.!?:]\s+)`",
+              $string,
+              -1,
+              PREG_SPLIT_DELIM_CAPTURE
+            );
 
             $result = "";
             if (count($sentences) > 1) {

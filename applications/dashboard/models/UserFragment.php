@@ -69,7 +69,7 @@ class UserFragment implements \ArrayAccess, \JsonSerializable, \IteratorAggregat
     /**
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->data);
     }
