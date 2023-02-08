@@ -135,7 +135,10 @@ class Gdn_Module extends Gdn_Pluggable implements Gdn_IModule
         }
         $viewPath = $this->fetchViewLocation($this->view);
         // Check to see if there is a handler for this particular extension.
-        $viewHandler = Gdn::factory("ViewHandler" . strtolower(strrchr($viewPath, ".")));
+        $viewHandler = Gdn::factory(
+            "ViewHandler"
+            . strtolower(strrchr($viewPath, ".") ?? "")
+        );
 
         $String = "";
         ob_start();
@@ -187,7 +190,7 @@ class Gdn_Module extends Gdn_Pluggable implements Gdn_IModule
     public function fetchViewLocation($view = "", $applicationFolder = "")
     {
         if ($view == "") {
-            $view = strtolower($this->name());
+            $view = strtolower($this->name() ?? "");
         }
 
         if (substr($view, -6) == "module") {
@@ -201,7 +204,7 @@ class Gdn_Module extends Gdn_Pluggable implements Gdn_IModule
         if ($applicationFolder == "") {
             $applicationFolder = strpos($this->_ApplicationFolder ?? "", "/")
                 ? $this->_ApplicationFolder
-                : strtolower($this->_ApplicationFolder);
+                : strtolower($this->_ApplicationFolder ?? "");
         }
 
         $themeFolder = $this->_ThemeFolder;
