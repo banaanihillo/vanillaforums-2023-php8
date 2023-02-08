@@ -56,7 +56,7 @@ class BlotGroupCollection implements \IteratorAggregate, TextDOMInterface
     /**
      * @inheritdoc
      */
-    public function getIterator(): ArrayIterator
+    public function getIterator(): mixed
     {
         return new \ArrayIterator($this->groups);
     }
