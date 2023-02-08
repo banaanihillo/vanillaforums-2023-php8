@@ -67,7 +67,7 @@ class DateTimeFormatter
 
         $gmTimestamp = $integerTimestamp;
         // Add a potential hour offset to account for the time zone
-        $integerTimestamp = $this->adjustTimeStampForUser($$integerTimestamp);
+        $integerTimestamp = $this->adjustTimeStampForUser($integerTimestamp);
 
         if ($phpDateFormat === "") {
             $phpDateFormat = $this->getDefaultFormatForTimestamp($integerTimestamp);
