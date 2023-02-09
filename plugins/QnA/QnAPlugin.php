@@ -720,7 +720,10 @@ class QnAPlugin extends Gdn_Plugin implements LoggerAwareInterface, PsrEventHand
             $discussion = $this->discussionModel->getID(val("DiscussionID", $comment));
         }
 
-        if (!$discussion || strtolower(val("Type", $discussion)) != "question") {
+        if (
+            !$discussion
+            || strtolower(val("Type", $discussion) ?? "") != "question"
+        ) {
             return;
         }
 
@@ -1392,7 +1395,7 @@ class QnAPlugin extends Gdn_Plugin implements LoggerAwareInterface, PsrEventHand
     private function getDiscussionQnATagString(object $discussion = null): string
     {
         $tag = "";
-        if (strtolower(val("Type", $discussion)) != "question") {
+        if (strtolower(val("Type", $discussion) ?? "") != "question") {
             return $tag;
         }
 
