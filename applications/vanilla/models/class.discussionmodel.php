@@ -1497,19 +1497,24 @@ SQL;
      * @param string $orderField
      * @param string $orderDirection
      */
-    public function fixOrder(Gdn_DataSet $data, string $orderField, string $orderDirection)
-    {
+    public function fixOrder(
+      Gdn_DataSet $data,
+      string $orderField,
+      string $orderDirection
+    ) {
         // Change discussions order.
         $result = &$data->result();
         usort($result, function ($a, $b) use ($orderField, $orderDirection) {
             $order = $orderDirection === "asc" ? 1 : -1;
             if (is_array($a)) {
                 return $order *
-                    (($a[$orderField] ?? $a[ucfirst($orderField)]) <=> ($b[$orderField] ?? $b[ucfirst($orderField)]));
+                    (($a[$orderField] ?? $a[ucfirst($orderField)]) <=>
+                        ($b[$orderField] ?? $b[ucfirst($orderField)]));
             } else {
-                return $order *
-                    (($a->$orderField ?? $a->{ucfirst($orderField)}) <=>
-                        ($b->$orderField ?? $b->{ucfirst($orderField)}));
+                return $order * (
+                    ($a->$orderField ?? $a->{ucfirst($orderField)} ?? 1) <=>
+                    ($b->$orderField ?? $b->{ucfirst($orderField)} ?? 1)
+                );
             }
         });
     }
