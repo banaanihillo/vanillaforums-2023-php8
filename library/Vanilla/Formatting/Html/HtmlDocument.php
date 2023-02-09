@@ -86,7 +86,7 @@ class HtmlDocument implements TextDOMInterface
             );
         }
         @$this->dom->loadHTML(
-            htmlentities($innerHtml),
+            $innerHtml,
             LIBXML_NOBLANKS,
         );
     }
