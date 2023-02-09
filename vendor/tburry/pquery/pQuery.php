@@ -94,6 +94,10 @@ class pQuery implements ArrayAccess, IteratorAggregate, IQuery {
 //        return $formatter->format($dom);
 //    }
 
+    /**
+     * @return no_idea
+     */
+    #[\ReturnTypeWillChange]
     public function getIterator() {
         return new ArrayIterator($this->nodes);
     }
