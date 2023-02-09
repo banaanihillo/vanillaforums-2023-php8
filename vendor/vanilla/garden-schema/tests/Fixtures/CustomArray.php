@@ -87,6 +87,7 @@ class CustomArray implements \ArrayAccess, \IteratorAggregate {
      * <b>Traversable</b>
      * @since 5.0.0
      */
+    #[\ReturnTypeWillChange]
     public function getIterator() {
         return new \ArrayIterator($this->arr);
     }

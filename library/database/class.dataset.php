@@ -305,7 +305,8 @@ class Gdn_DataSet implements IteratorAggregate, Countable, JsonSerializable, Inj
     /**
      * Interface method for IteratorAggregate.
      */
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()
     {
         return new ArrayIterator($this->result());
     }

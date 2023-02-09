@@ -497,7 +497,8 @@ class Data implements \JsonSerializable, \ArrayAccess, \Countable, \IteratorAggr
      * @return Traversable An instance of an object implementing <b>Iterator</b> or <b>Traversable</b>.
      * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
      */
-    public function getIterator(): Traversable
+    #[\ReturnTypeWillChange]
+    public function getIterator()
     {
         return new \ArrayIterator($this->data);
     }

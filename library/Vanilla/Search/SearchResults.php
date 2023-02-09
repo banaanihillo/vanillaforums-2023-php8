@@ -121,6 +121,7 @@ class SearchResults implements \IteratorAggregate, \JsonSerializable, \Countable
     /**
      * @inheritdoc
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->resultItems);
