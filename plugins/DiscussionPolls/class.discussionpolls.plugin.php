@@ -69,7 +69,8 @@ class DiscussionPollsPlugin extends Gdn_Plugin {
      * @param VanillaController $Sender DiscussionController
      */
     public function DiscussionController_Poll_Create($Sender) {
-        $this->Dispatch($Sender, $Sender->RequestArgs ?? []);
+        $senderRequestArguments = $Sender->RequestArgs ?? [];
+        $this->Dispatch($Sender, $senderRequestArguments);
     }
 
     /**

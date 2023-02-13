@@ -582,7 +582,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      * @return array Returns an array in the form `[$controllerName, $parts]` where `$parts` is the remaining path parts.
      * If a controller cannot be found then an array in the form of `['', $parts]` is returned.
      */
-    private function findController(array $parts=[]) {
+    private function findController(array $parts)
+    {
         // Look for the old-school application name as the first part of the path.
         if (in_array($parts[0] ?? false, $this->getEnabledApplicationFolders())) {
             $application = array_shift($parts);
@@ -618,7 +619,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      * @return array Returns an array in the form `[$methodName, $pathArgs]`.
      * If the method is not found then an empty string is returned for the method name.
      */
-    private function findControllerMethod($controller, $pathArgs) {
+    private function findControllerMethod($controller, $pathArgs)
+    {
         $first = $this->filterName(reset($pathArgs));
 
         if ($this->methodExists($controller, $first)) {
