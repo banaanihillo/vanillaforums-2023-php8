@@ -582,20 +582,14 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      * @return array Returns an array in the form `[$controllerName, $parts]` where `$parts` is the remaining path parts.
      * If a controller cannot be found then an array in the form of `['', $parts]` is returned.
      */
-    private function findController(array $parts)
-    {
-        $partsArray = array($parts);
+    private function findController(array $parts=[]) {
         // Look for the old-school application name as the first part of the path.
-        $isInArray = in_array(
-            $partsArray[0] ?? false,
-            $this->getEnabledApplicationFolders(),
-        );
-        if ($isInArray) {
-            $application = array_shift($partsArray);
+        if (in_array($parts[0] ?? false, $this->getEnabledApplicationFolders())) {
+            $application = array_shift($parts);
         } else {
             $application = "";
         }
-        $controller = $this->filterName(reset($partsArray));
+        $controller = $this->filterName(reset($parts));
 
         // This is a kludge until we can refactor- settings controllers better.
         if ($controller === "Settings" && $application !== "dashboard") {
@@ -606,22 +600,13 @@ class Gdn_Dispatcher extends Gdn_Pluggable
 
         // If the lookup succeeded, good to go
         if (class_exists($controllerName, true)) {
-            array_shift($partsArray);
-            return [$controllerName, $partsArray];
-        } elseif (
-            !empty($application)
-            && class_exists($this->filterName($application) . "Controller", true)
-        ) {
-            // There is a controller with the same name as the application; use it.
-            return [
-                $this->filterName($application) . "Controller",
-                $partsArray,
-            ];
+            array_shift($parts);
+            return [$controllerName, $parts];
+        } elseif (!empty($application) && class_exists($this->filterName($application) . "Controller", true)) {
+            // There is a controller with the same name as the application so use it.
+            return [$this->filterName($application) . "Controller", $parts];
         } else {
-            return [
-                "",
-                $partsArray,
-            ];
+            return ["", $parts];
         }
     }
 
@@ -633,41 +618,23 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      * @return array Returns an array in the form `[$methodName, $pathArgs]`.
      * If the method is not found then an empty string is returned for the method name.
      */
-    private function findControllerMethod($controller, $pathArgs)
-    {
-        $pathArgumentsArray = array($pathArgs);
-        $first = $this->filterName(reset($pathArgumentsArray));
+    private function findControllerMethod($controller, $pathArgs) {
+        $first = $this->filterName(reset($pathArgs));
 
         if ($this->methodExists($controller, $first)) {
-            array_shift($pathArgumentsArray);
-            return [
-                lcfirst($first),
-                $pathArgumentsArray,
-            ];
+            array_shift($pathArgs);
+            return [lcfirst($first), $pathArgs];
         } elseif ($this->methodExists($controller, "x$first")) {
-            array_shift($pathArgumentsArray);
-            deprecated(
-                get_class($controller) . "->x$first",
-                get_class($controller) . "->$first",
-            );
-            return [
-                "x$first",
-                $pathArgumentsArray,
-            ];
+            array_shift($pathArgs);
+            deprecated(get_class($controller) . "->x$first", get_class($controller) . "->$first");
+            return ["x$first", $pathArgs];
         } elseif ($this->methodExists($controller, "index")) {
-            // "index" is the default controller method
-            // if an explicit method cannot be found.
-            $this->EventArguments["PathArgs"] = $pathArgumentsArray;
+            // "index" is the default controller method if an explicit method cannot be found.
+            $this->EventArguments["PathArgs"] = $pathArgs;
             $this->fireEvent("MethodNotFound");
-            return [
-                "index",
-                $pathArgumentsArray,
-            ];
+            return ["index", $pathArgs];
         } else {
-            return [
-                "",
-                $pathArgumentsArray,
-            ];
+            return ["", $pathArgs];
         }
     }
 
