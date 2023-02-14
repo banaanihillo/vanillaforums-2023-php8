@@ -658,19 +658,19 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         print_r($controller->$first ?? "No controller first");
         prettyPrint($first);
         if ($this->methodExists($controller, $first)) {
-            prettyPrint("Method first exists");
+            prettyPrint("Method \"Discussion\" exists?");
             // prettyPrint($controller);
             // prettyPrint($first);
-            // prettyPrint($pathArgs);
+            prettyPrint($pathArgs);
             array_shift($pathArgs);
-            // prettyPrint("Shifted:");
-            // prettyPrint($pathArgs);
+            prettyPrint("Shifted:");
+            prettyPrint($pathArgs);
             return [
                 lcfirst($first),
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "x$first")) {
-            prettyPrint("Method xfirst exists:");
+            prettyPrint("Method \"xDiscussion\" exists?");
             // prettyPrint($controller);
             // prettyPrint("x$first");
             // prettyPrint($pathArgs);
