@@ -1153,6 +1153,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         } else {
             prettyPrint("Not an array");
         }
+        // Is this variable a reference that can be used by call user_func_array?
         $args = Dispatcher::reflectArgs(
             $method,
             array_merge($inputArgs, $reflectionArguments),
@@ -1224,7 +1225,16 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // var_export($callback);
             // print_r($args);
             // prettyPrint($callback[0]);
-            call_user_func_array($callback, $args);
+            // call_user_func_array($callback, $args);
+            call_user_func_array($callback, array(&$args));
+            // call_user_func_array(
+            //     $callback,
+            //     array(
+            //         $args["DiscussionID"],
+            //         $args["DiscussionStub"],
+            //         $args["Page"],
+            //     ),
+            // );
             // $callback(...$args);
             // prettyPrint("User function array called");
             // prettyPrint("Callback called with unpacked arguments");
