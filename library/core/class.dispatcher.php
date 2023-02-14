@@ -1194,6 +1194,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             } else {
                 prettyPrint("No discussion ID");
             }
+            prettyPrint("Discussion ID callback done");
 
             if ($args["DiscussionStub"] ?? false) {
                 prettyPrint($args["DiscussionStub"]);
@@ -1201,6 +1202,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             } else {
                 prettyPrint("No discussion stub");
             }
+            prettyPrint("Discussion stub callback done");
 
             if ($args["Page"] ?? false) {
                 prettyPrint($args["Page"]);
@@ -1208,12 +1210,13 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             } else {
                 prettyPrint("No page");
             }
+            prettyPrint("Page callback done");
 
             // var_dump($callback);
             // var_export($callback);
             // print_r($args);
             // prettyPrint($callback[0]);
-            call_user_func_array($callback, $args);
+            // call_user_func_array($callback, $args);
             // $callback(...$args);
             // prettyPrint("User function array called");
             // prettyPrint("Callback called with unpacked arguments");
