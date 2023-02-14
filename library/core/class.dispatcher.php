@@ -25,6 +25,12 @@ use Vanilla\FeatureFlagHelper;
 use Vanilla\Utility\DebugUtils;
 use Vanilla\Utility\Timers;
 
+function prettyPrint($value) {
+    echo '<pre>';
+    print_r($value);
+    echo '</pre>';
+}
+
 /**
  * Handles all requests and routing.
  */
@@ -588,12 +594,12 @@ class Gdn_Dispatcher extends Gdn_Pluggable
     {
         // Look for the old-school application name as the first part of the path.
         if (in_array($parts[0] ?? false, $this->getEnabledApplicationFolders())) {
-            print_r($parts);
+            prettyPrint($parts);
             $application = array_shift($parts);
         } else {
             $application = "";
         }
-        print_r("Calling\n filter name\n and reset \n");
+        prettyPrint("Calling\n filter name\n and reset \n");
         $controller = $this->filterName(reset($parts));
 
         // This is a kludge until we can refactor- settings controllers better.
@@ -605,9 +611,14 @@ class Gdn_Dispatcher extends Gdn_Pluggable
 
         // If the lookup succeeded, good to go
         if (class_exists($controllerName, true)) {
-            print_r($parts);
+            prettyPrint($parts);
             array_shift($parts);
-            return [$controllerName, $parts];
+            prettyPrint("Parts shifted");
+            prettyPrint($parts);
+            return [
+                $controllerName,
+                $parts,
+            ];
         } elseif (
             !empty($application)
             && class_exists($this->filterName($application) . "Controller", true)
@@ -639,14 +650,14 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         $first = $this->filterName(reset($pathArgs));
 
         if ($this->methodExists($controller, $first)) {
-            print_r($pathArgs);
+            prettyPrint($pathArgs);
             array_shift($pathArgs);
             return [
                 lcfirst($first),
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "x$first")) {
-            print_r($pathArgs);
+            prettyPrint($pathArgs);
             array_shift($pathArgs);
             deprecated(
                 get_class($controller) . "->x$first",
