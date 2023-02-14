@@ -1181,6 +1181,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // prettyPrint($callback);
             // prettyPrint($args);
             prettyPrint(json_encode($callback, JSON_PRETTY_PRINT));
+            prettyPrint("Arguments:");
+            prettyPrint(json_encode($args, JSON_PRETTY_PRINT));
             // var_dump($callback);
             // var_export($callback);
             // print_r($args);
