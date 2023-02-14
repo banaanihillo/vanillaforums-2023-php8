@@ -654,7 +654,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
 
         // print_r("Find controller method");
         // // prettyPrint($pathArgs);
-        print_r($controller);
+        print_r($controller->$first ?? "No controller first");
         // print_r($first);
         if ($this->methodExists($controller, $first)) {
             // prettyPrint("Method exists:");
@@ -677,6 +677,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // prettyPrint("Shifted:");
             // prettyPrint($pathArgs);
             // prettyPrint("Getting class with deprecated thing");
+            print_r($controller . "->x$first");
             deprecated(
                 get_class($controller) . "->x$first",
                 get_class($controller) . "->$first",
@@ -689,6 +690,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // print_r("Calling default controller method");
             // "index" is the default controller method
             // if an explicit method cannot be found.
+            print_r($controller->index);
             $this->EventArguments["PathArgs"] = $pathArgs;
             $this->fireEvent("MethodNotFound");
             return [
