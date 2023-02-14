@@ -1253,7 +1253,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 exit();
             }
         }
-        prettyPrint("All good");
+        // prettyPrint("All good");
     }
 
     /**
