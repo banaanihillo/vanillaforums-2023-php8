@@ -1148,8 +1148,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             : new ReflectionFunction($callback);
         if (is_array($callback)) {
             prettyPrint("Callback is an array");
-            prettyPrint($callback[0]);
-            prettyPrint($callback[1]);
+            prettyPrint(json_encode($callback[0], JSON_PRETTY_PRINT));
+            prettyPrint(json_encode($callback[1], JSON_PRETTY_PRINT));
         } else {
             prettyPrint("Not an array");
         }
