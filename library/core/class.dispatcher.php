@@ -594,13 +594,13 @@ class Gdn_Dispatcher extends Gdn_Pluggable
     {
         // Look for the old-school application name as the first part of the path.
         if (in_array($parts[0] ?? false, $this->getEnabledApplicationFolders())) {
-            print_r("Find controller:");
-            prettyPrint($parts);
+            // print_r("Find controller:");
+            // prettyPrint($parts);
             $application = array_shift($parts);
         } else {
             $application = "";
         }
-        prettyPrint("Calling filter name and reset");
+        // prettyPrint("Calling filter name and reset");
         $controller = $this->filterName(reset($parts));
 
         // This is a kludge until we can refactor- settings controllers better.
@@ -612,10 +612,10 @@ class Gdn_Dispatcher extends Gdn_Pluggable
 
         // If the lookup succeeded, good to go
         if (class_exists($controllerName, true)) {
-            print_r("Class exists:");
-            prettyPrint($controllerName);
-            prettyPrint($parts);
-            // array_shift($parts);
+            // print_r("Class exists:");
+            // prettyPrint($controllerName);
+            // prettyPrint($parts);
+            array_shift($parts);
             // prettyPrint("Parts shifted");
             // prettyPrint($parts);
             return [
@@ -627,13 +627,13 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             && class_exists($this->filterName($application) . "Controller", true)
           ) {
             // There is a controller with the same name as the application; use it.
-            prettyPrint("Something else exists");
+            // prettyPrint("Something else exists");
             return [
                 $this->filterName($application) . "Controller",
                 $parts,
             ];
         } else {
-            prettyPrint("Returning empty first thing");
+            // prettyPrint("Returning empty first thing");
             return [
                 "",
                 $parts,
@@ -652,36 +652,36 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      */
     private function findControllerMethod($controller, $pathArgs)
     {
-        prettyPrint($pathArgs);
+        // prettyPrint($pathArgs);
         $first = $this->filterName(reset($pathArgs));
 
         // print_r("Find controller method");
         // // prettyPrint($pathArgs);
-        print_r($controller->$first ?? "No controller first");
-        prettyPrint($first);
+        // print_r($controller->$first ?? "No controller first");
+        // prettyPrint($first);
         if ($this->methodExists($controller, $first)) {
-            prettyPrint("Method \"Discussion\" exists?");
+            // prettyPrint("Method \"Discussion\" exists?");
             // prettyPrint($controller);
             // prettyPrint($first);
-            prettyPrint($pathArgs);
-            // array_shift($pathArgs);
+            // prettyPrint($pathArgs);
+            array_shift($pathArgs);
             // prettyPrint("Shifted:");
             // prettyPrint($pathArgs);
-            prettyPrint(lcfirst($first));
+            // prettyPrint(lcfirst($first));
             return [
                 lcfirst($first),
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "x$first")) {
-            prettyPrint("Method \"xDiscussion\" exists?");
+            // prettyPrint("Method \"xDiscussion\" exists?");
             // prettyPrint($controller);
             // prettyPrint("x$first");
             // prettyPrint($pathArgs);
-            // array_shift($pathArgs);
+            array_shift($pathArgs);
             // prettyPrint("Shifted:");
             // prettyPrint($pathArgs);
             // prettyPrint("Getting class with deprecated thing");
-            print_r($controller . "->x$first");
+            // print_r($controller . "->x$first");
             deprecated(
                 get_class($controller) . "->x$first",
                 get_class($controller) . "->$first",
@@ -691,10 +691,10 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "index")) {
-            print_r("Calling default controller method");
+            // print_r("Calling default controller method");
             // "index" is the default controller method
             // if an explicit method cannot be found.
-            prettyPrint($controller->index);
+            // prettyPrint($controller->index);
             $this->EventArguments["PathArgs"] = $pathArgs;
             $this->fireEvent("MethodNotFound");
             return [
@@ -1025,33 +1025,52 @@ class Gdn_Dispatcher extends Gdn_Pluggable
     }
 
     /**
-     * Dispatch to a controller that's already been found with {@link Gdn_Dispatcher::analyzeRequest()}.
+     * Dispatch to a controller that's already been found
+     * with {@link Gdn_Dispatcher::analyzeRequest()}.
      *
-     * Although the controller has been found, its method may not have been found and will render an error if so.
+     * Although the controller has been found,
+     * its method may not have been found and will render an error if so.
      *
      * @param Gdn_Request $request The request being dispatched.
-     * @param array $routeArgs The result of {@link Gdn_Dispatcher::analyzeRequest()}.
-     * @return mixed Returns the result of a dispatch not found if the controller wasn't found or is disabled.
+     * @param array $routeArgs The result of
+     * {@link Gdn_Dispatcher::analyzeRequest()}.
+     * 
+     * @return mixed Returns the result of a dispatch,
+     * [or?] not found if the controller wasn't found or is disabled.
      */
     private function dispatchController($request, $routeArgs)
     {
+        prettyPrint("Dispatch controller");
+        prettyPrint($request);
+        prettyPrint($routeArgs);
         // Clean this out between dispatches.
         $this->sentHeaders = [];
 
         // Create the controller first.
         $controllerName = $routeArgs["controller"];
-        $controller = $this->createController($controllerName, $request, $routeArgs);
+        $controller = $this->createController(
+            $controllerName,
+            $request,
+            $routeArgs,
+        );
 
         if ($controller instanceof VanillaController) {
             if ($controller->disabled()) {
                 $routeArgs["controllerMethod"] = "disabled";
                 $routeArgs["controller"] = $controllerName = "VanillaController";
-                $controller = $this->createController($controllerName, $request, $routeArgs);
+                $controller = $this->createController(
+                    $controllerName,
+                    $request,
+                    $routeArgs,
+                );
                 safeHeader("HTTP/1.1 404 Not Found");
             }
         }
         // Find the method to call.
-        [$controllerMethod, $pathArgs] = $this->findControllerMethod($controller, $routeArgs["pathArgs"]);
+        [$controllerMethod, $pathArgs] = $this->findControllerMethod(
+            $controller,
+            $routeArgs["pathArgs"],
+        );
         if (!$controllerMethod) {
             // The controller method was not found.
             return $this->dispatchNotFound("method_notfound", $request);
@@ -1060,23 +1079,40 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         // The method has been found, set it on the controller.
         $controller->RequestMethod = $controllerMethod;
         $controller->RequestArgs = $pathArgs;
-        $controller->ResolvedPath =
-            ($routeArgs["addon"] ? $routeArgs["addon"]->getKey() . "/" : "") .
-            strtolower(stringEndsWith($controllerName, "Controller", true, true)) .
-            "/" .
-            strtolower($controllerMethod);
+        $controller->ResolvedPath = (
+            $routeArgs["addon"]
+                ? $routeArgs["addon"]->getKey() . "/"
+                : ""
+        ) . (
+            strtolower(stringEndsWith($controllerName, "Controller", true, true))
+            . "/"
+            . strtolower($controllerMethod)
+        );
 
         $reflectionArguments = $request->get();
         $this->EventArguments["Arguments"] = &$reflectionArguments;
         $this->fireEvent("BeforeReflect");
 
         // Get the callback to call.
-        if (Gdn::pluginManager()->hasNewMethod(get_class($controller), $controllerMethod)) {
-            $callback = Gdn::pluginManager()->getCallback(get_class($controller), $controllerMethod);
+        if (
+            Gdn::pluginManager()->hasNewMethod(
+                get_class($controller), $controllerMethod,
+            )
+        ) {
+            $callback = Gdn::pluginManager()->getCallback(
+                get_class($controller),
+                $controllerMethod,
+            );
 
-            // Augment the arguments to the plugin with the sender and these arguments.
-            // The named sender and args keys are an old legacy format before plugins could override controller methods properly.
-            $inputArgs = array_merge([$controller], $pathArgs, ["sender" => $controller, "args" => $pathArgs]);
+            // Augment the arguments to the plugin
+            // with the sender and these arguments.
+            // The named sender and args keys are an old legacy format
+            // before plugins could override controller methods properly.
+            $inputArgs = array_merge(
+                [$controller],
+                $pathArgs,
+                ["sender" => $controller, "args" => $pathArgs],
+            );
         } else {
             $callback = [$controller, $controllerMethod];
             $inputArgs = $pathArgs;
@@ -1092,14 +1128,24 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         );
         $controller->ReflectArgs = $args;
 
-        $canonicalUrl = url($this->makeCanonicalUrl($controller, $method, $args), true);
+        $canonicalUrl = url(
+            $this->makeCanonicalUrl($controller, $method, $args), true
+        );
         $controller->canonicalUrl($canonicalUrl);
 
-        // Now that we have everything its time to call the callback for the controller.
+        // Now that we have everything,
+        // it's time to call the callback for the controller.
         try {
             $this->fireEvent("BeforeControllerMethod");
-            Gdn::pluginManager()->callEventHandlers($controller, $controllerName, $controllerMethod, "before");
-            $this->eventManager->dispatch(new ControllerDispatchedEvent($callback));
+            Gdn::pluginManager()->callEventHandlers(
+                $controller,
+                $controllerName,
+                $controllerMethod,
+                "before",
+            );
+            $this->eventManager->dispatch(
+                new ControllerDispatchedEvent($callback),
+            );
             call_user_func_array($callback, $args);
             $this->applyTimeHeaders();
         } catch (ExitException $ex) {
@@ -1108,7 +1154,10 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 exit();
             }
         } catch (Throwable $ex) {
-            $dispatcherExceptionEvent = new DispatcherExceptionEvent($ex, $request);
+            $dispatcherExceptionEvent = new DispatcherExceptionEvent(
+                $ex,
+                $request,
+            );
             $this->eventManager->dispatch($dispatcherExceptionEvent);
             if ($this->rethrowExceptions) {
                 throw $ex;
@@ -1120,18 +1169,27 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $this->dispatchException = $ex;
                 $controller->renderException($ex);
             } else {
-                trigger_error("Multiple exceptions encountered while dispatching {$request->path}.", E_USER_WARNING);
-                $this->logger->warning("Multiple exceptions encountered while dispatching.", [
-                    "lastException" => [
-                        "message" => $ex->getMessage(),
-                        "trace" => $ex->getTrace(),
-                    ],
-                    "originalException" => [
-                        "message" => $this->dispatchException->getMessage(),
-                        "trace" => $this->dispatchException->getTrace(),
-                    ],
-                    "timestamp" => time(),
-                ]);
+                trigger_error(
+                    (
+                        "Multiple exceptions encountered"
+                        . " while dispatching {$request->path}."
+                    ),
+                    E_USER_WARNING,
+                );
+                $this->logger->warning(
+                    "Multiple exceptions encountered while dispatching.",
+                    [
+                        "lastException" => [
+                            "message" => $ex->getMessage(),
+                            "trace" => $ex->getTrace(),
+                        ],
+                        "originalException" => [
+                            "message" => $this->dispatchException->getMessage(),
+                            "trace" => $this->dispatchException->getTrace(),
+                        ],
+                        "timestamp" => time(),
+                    ]
+                );
                 safeHeader("HTTP/1.0 500", true, 500);
             }
             if (!DebugUtils::isTestMode()) {
