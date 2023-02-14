@@ -600,7 +600,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         } else {
             $application = "";
         }
-        prettyPrint("Calling filter name and reset");
+        // prettyPrint("Calling filter name and reset");
         $controller = $this->filterName(reset($parts));
 
         // This is a kludge until we can refactor- settings controllers better.
@@ -613,8 +613,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         // If the lookup succeeded, good to go
         if (class_exists($controllerName, true)) {
             prettyPrint("Class exists:");
-            // prettyPrint($controllerName);
-            // prettyPrint($parts);
+            prettyPrint($controllerName);
+            prettyPrint($parts);
             array_shift($parts);
             prettyPrint("Parts shifted");
             prettyPrint($parts);
@@ -654,6 +654,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
 
         prettyPrint("Find controller method");
         prettyPrint($pathArgs);
+        prettyPrint($controller);
+        prettyPrint($first);
         if ($this->methodExists($controller, $first)) {
             prettyPrint("Method exists:");
             // prettyPrint($controller);
