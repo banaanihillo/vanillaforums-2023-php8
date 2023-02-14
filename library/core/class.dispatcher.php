@@ -1184,8 +1184,10 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // var_dump($callback);
             // var_export($callback);
             print_r($args);
-            call_user_func_array($callback, $args);
-            prettyPrint("User function array called");
+            // call_user_func_array($callback, $args);
+            $callback(...$args);
+            // prettyPrint("User function array called");
+            prettyPrint("Callback called with unpacked arguments");
             $this->applyTimeHeaders();
             prettyPrint("Time headers applied");
         } catch (ExitException $ex) {
