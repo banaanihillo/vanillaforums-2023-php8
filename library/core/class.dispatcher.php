@@ -1146,8 +1146,13 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         $method = is_array($callback)
             ? new ReflectionMethod($callback[0], $callback[1])
             : new ReflectionFunction($callback);
-        prettyPrint("Callback is or is not an array:");
-        prettyPrint(is_array($callback));
+        if (is_array($callback)) {
+            prettyPrint("Callback is an array");
+            prettyPrint($callback[0]);
+            prettyPrint($callback[1]);
+        } else {
+            prettyPrint("Not an array");
+        }
         $args = Dispatcher::reflectArgs(
             $method,
             array_merge($inputArgs, $reflectionArguments),
