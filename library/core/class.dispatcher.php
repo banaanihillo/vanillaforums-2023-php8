@@ -613,11 +613,11 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         // If the lookup succeeded, good to go
         if (class_exists($controllerName, true)) {
             print_r("Class exists:");
-            print_r($controllerName);
-            print_r($parts);
-            array_shift($parts);
-            prettyPrint("Parts shifted");
+            prettyPrint($controllerName);
             prettyPrint($parts);
+            // array_shift($parts);
+            // prettyPrint("Parts shifted");
+            // prettyPrint($parts);
             return [
                 $controllerName,
                 $parts,
@@ -664,9 +664,9 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // prettyPrint($controller);
             // prettyPrint($first);
             prettyPrint($pathArgs);
-            array_shift($pathArgs);
-            prettyPrint("Shifted:");
-            prettyPrint($pathArgs);
+            // array_shift($pathArgs);
+            // prettyPrint("Shifted:");
+            // prettyPrint($pathArgs);
             prettyPrint(lcfirst($first));
             return [
                 lcfirst($first),
@@ -677,7 +677,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // prettyPrint($controller);
             // prettyPrint("x$first");
             // prettyPrint($pathArgs);
-            array_shift($pathArgs);
+            // array_shift($pathArgs);
             // prettyPrint("Shifted:");
             // prettyPrint($pathArgs);
             // prettyPrint("Getting class with deprecated thing");
