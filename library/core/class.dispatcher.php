@@ -579,19 +579,21 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      * Find the controller object corresponding to a request path.
      *
      * @param array $parts The path parts in lowercase.
-     * @return array Returns an array in the form `[$controllerName, $parts]` where `$parts` is the remaining path parts.
-     * If a controller cannot be found then an array in the form of `['', $parts]` is returned.
+     * @return array Returns an array in the form `[$controllerName, $parts]`
+     * where `$parts` is the remaining path parts.
+     * If a controller cannot be found
+     * then an array in the form of `['', $parts]` is returned.
      */
     private function findController(array $parts)
     {
         // Look for the old-school application name as the first part of the path.
         if (in_array($parts[0] ?? false, $this->getEnabledApplicationFolders())) {
-            // print_r($parts);
+            print_r($parts);
             $application = array_shift($parts);
         } else {
             $application = "";
         }
-        // print_r("Calling\n filter name\n and reset \n");
+        print_r("Calling\n filter name\n and reset \n");
         $controller = $this->filterName(reset($parts));
 
         // This is a kludge until we can refactor- settings controllers better.
@@ -603,7 +605,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
 
         // If the lookup succeeded, good to go
         if (class_exists($controllerName, true)) {
-            // print_r($parts);
+            print_r($parts);
             array_shift($parts);
             return [$controllerName, $parts];
         } elseif (
@@ -626,24 +628,25 @@ class Gdn_Dispatcher extends Gdn_Pluggable
     /**
      * Find the method to call on a controller, based on a path.
      *
-     * @param Gdn_Controller $controller The controller or name of the controller class to look at.
+     * @param Gdn_Controller $controller The controller or controller class name
      * @param string[] $pathArgs An array of path arguments.
      * @return array Returns an array in the form `[$methodName, $pathArgs]`.
-     * If the method is not found then an empty string is returned for the method name.
+     * If the method is not found
+     * then an empty string is returned for the method name.
      */
     private function findControllerMethod($controller, $pathArgs)
     {
         $first = $this->filterName(reset($pathArgs));
 
         if ($this->methodExists($controller, $first)) {
-            // print_r($pathArgs);
+            print_r($pathArgs);
             array_shift($pathArgs);
             return [
                 lcfirst($first),
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "x$first")) {
-            // print_r($pathArgs);
+            print_r($pathArgs);
             array_shift($pathArgs);
             deprecated(
                 get_class($controller) . "->x$first",
@@ -654,7 +657,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "index")) {
-            // "index" is the default controller method if an explicit method cannot be found.
+            // "index" is the default controller method
+            // if an explicit method cannot be found.
             $this->EventArguments["PathArgs"] = $pathArgs;
             $this->fireEvent("MethodNotFound");
             return [
@@ -682,7 +686,13 @@ class Gdn_Dispatcher extends Gdn_Pluggable
 
         if (empty($method)) {
             return false;
-        } elseif (method_exists($object, $method) && (is_string($object) || !$object->isInternal($method))) {
+        } elseif (
+            method_exists($object, $method)
+            && (
+                is_string($object)
+                || !$object->isInternal($method)
+            )
+        ) {
             return true;
         } elseif (Gdn::pluginManager()->hasNewMethod($class, $method)) {
             return true;
