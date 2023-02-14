@@ -376,7 +376,7 @@ class Gdn_Module extends Gdn_Pluggable implements Gdn_IModule
      */
     public function toString()
     {
-        if ($this->Visible) {
+        if ($this->Visible ?? false) {
             return $this->fetchView() ?? "";
         } else {
             return "";
