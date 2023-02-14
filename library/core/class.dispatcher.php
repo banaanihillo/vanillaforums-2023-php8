@@ -594,12 +594,12 @@ class Gdn_Dispatcher extends Gdn_Pluggable
     {
         // Look for the old-school application name as the first part of the path.
         if (in_array($parts[0] ?? false, $this->getEnabledApplicationFolders())) {
-            prettyPrint($parts);
+            prettyPrint("Find controller:\n $parts");
             $application = array_shift($parts);
         } else {
             $application = "";
         }
-        prettyPrint("Calling\n filter name\n and reset \n");
+        prettyPrint("Calling filter name and reset");
         $controller = $this->filterName(reset($parts));
 
         // This is a kludge until we can refactor- settings controllers better.
@@ -611,6 +611,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
 
         // If the lookup succeeded, good to go
         if (class_exists($controllerName, true)) {
+            prettyPrint("Class $controllerName exists");
             prettyPrint($parts);
             array_shift($parts);
             prettyPrint("Parts shifted");
@@ -649,16 +650,22 @@ class Gdn_Dispatcher extends Gdn_Pluggable
     {
         $first = $this->filterName(reset($pathArgs));
 
+        prettyPrint("Find controller method:\n $pathArgs");
         if ($this->methodExists($controller, $first)) {
+            prettyPrint("$controller method $first exists");
             prettyPrint($pathArgs);
             array_shift($pathArgs);
+            prettyPrint("Shifted: \n $pathArgs");
             return [
                 lcfirst($first),
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "x$first")) {
+            prettyPrint("$controller method x$first exists");
             prettyPrint($pathArgs);
             array_shift($pathArgs);
+            prettyPrint("Shifted: \n $pathArgs");
+            prettyPrint("Getting class with deprecated thing");
             deprecated(
                 get_class($controller) . "->x$first",
                 get_class($controller) . "->$first",
@@ -668,6 +675,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "index")) {
+            prettyPrint("Calling default controller method");
             // "index" is the default controller method
             // if an explicit method cannot be found.
             $this->EventArguments["PathArgs"] = $pathArgs;
@@ -677,6 +685,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $pathArgs,
             ];
         } else {
+            prettyPrint("Returning empty controller and \n $pathArgs");
             return [
                 "",
                 $pathArgs,
