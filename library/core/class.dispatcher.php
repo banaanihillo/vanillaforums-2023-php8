@@ -616,8 +616,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             prettyPrint($controllerName);
             prettyPrint($parts);
             array_shift($parts);
-            prettyPrint("Parts shifted");
-            prettyPrint($parts);
+            // prettyPrint("Parts shifted");
+            // prettyPrint($parts);
             return [
                 $controllerName,
                 $parts,
@@ -657,13 +657,13 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         prettyPrint($controller);
         prettyPrint($first);
         if ($this->methodExists($controller, $first)) {
-            prettyPrint("Method exists:");
+            // prettyPrint("Method exists:");
             // prettyPrint($controller);
             // prettyPrint($first);
             // prettyPrint($pathArgs);
             array_shift($pathArgs);
-            prettyPrint("Shifted:");
-            prettyPrint($pathArgs);
+            // prettyPrint("Shifted:");
+            // prettyPrint($pathArgs);
             return [
                 lcfirst($first),
                 $pathArgs,
@@ -674,9 +674,9 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // prettyPrint("x$first");
             // prettyPrint($pathArgs);
             array_shift($pathArgs);
-            prettyPrint("Shifted:");
-            prettyPrint($pathArgs);
-            prettyPrint("Getting class with deprecated thing");
+            // prettyPrint("Shifted:");
+            // prettyPrint($pathArgs);
+            // prettyPrint("Getting class with deprecated thing");
             deprecated(
                 get_class($controller) . "->x$first",
                 get_class($controller) . "->$first",
@@ -696,8 +696,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $pathArgs,
             ];
         } else {
-            prettyPrint("Returning empty controller:");
-            prettyPrint($pathArgs);
+            // prettyPrint("Returning empty controller:");
+            // prettyPrint($pathArgs);
             return [
                 "",
                 $pathArgs,
