@@ -1180,11 +1180,11 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             prettyPrint("Will err on the next call_user_func_array call");
             // prettyPrint($callback);
             // prettyPrint($args);
-            print_r(json_encode($callback));
+            prettyPrint(json_encode($callback, JSON_PRETTY_PRINT));
             // var_dump($callback);
             // var_export($callback);
             // print_r($args);
-            prettyPrint($callback[0]);
+            // prettyPrint($callback[0]);
             call_user_func_array($callback, $args);
             // $callback(...$args);
             // prettyPrint("User function array called");
