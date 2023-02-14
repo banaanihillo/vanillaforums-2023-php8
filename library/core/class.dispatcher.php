@@ -1190,9 +1190,9 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             call_user_func_array($callback, $args);
             // $callback(...$args);
             // prettyPrint("User function array called");
-            prettyPrint("Callback called with unpacked arguments");
+            // prettyPrint("Callback called with unpacked arguments");
             $this->applyTimeHeaders();
-            prettyPrint("Time headers applied");
+            // prettyPrint("Time headers applied");
         } catch (ExitException $ex) {
             // The controller wanted to exit.
             prettyPrint("Wanted to exit :D");
@@ -1253,6 +1253,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 exit();
             }
         }
+        prettyPrint("All good");
     }
 
     /**
