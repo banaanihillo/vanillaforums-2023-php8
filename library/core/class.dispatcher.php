@@ -1226,15 +1226,15 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // print_r($args);
             // prettyPrint($callback[0]);
             // call_user_func_array($callback, $args);
-            call_user_func_array($callback, array(&$args));
-            // call_user_func_array(
-            //     $callback,
-            //     array(
-            //         $args["DiscussionID"],
-            //         $args["DiscussionStub"],
-            //         $args["Page"],
-            //     ),
-            // );
+            // call_user_func_array($callback, array(&$args));
+            call_user_func_array(
+                $callback,
+                array(
+                    $args["DiscussionID"],
+                    $args["DiscussionStub"],
+                    $args["Page"],
+                ),
+            );
             // $callback(...$args);
             // prettyPrint("User function array called");
             // prettyPrint("Callback called with unpacked arguments");
