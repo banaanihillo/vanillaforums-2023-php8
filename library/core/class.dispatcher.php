@@ -1139,8 +1139,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         $method = is_array($callback)
             ? new ReflectionMethod($callback[0], $callback[1])
             : new ReflectionFunction($callback);
-        prettyPrint("Callback is or is not an array");
-        // prettyPrint(is_array($callback));
+        prettyPrint("Callback is or is not an array:");
+        prettyPrint(is_array($callback));
         $args = Dispatcher::reflectArgs(
             $method,
             array_merge($inputArgs, $reflectionArguments),
@@ -1180,12 +1180,14 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             prettyPrint("Will err on the next call_user_func_array call");
             // prettyPrint($callback);
             // prettyPrint($args);
-            print_r(json_encode($callback));
+            // print_r(json_encode($callback));
             // var_dump($callback);
             // var_export($callback);
-            print_r($args);
-            // call_user_func_array($callback, $args);
-            $callback(...$args);
+            // print_r($args);
+            prettyPrint(array_slice($callback, 0, 10));
+            prettyPrint(array_slice($callback, -10));
+            call_user_func_array($callback, $args);
+            // $callback(...$args);
             // prettyPrint("User function array called");
             prettyPrint("Callback called with unpacked arguments");
             $this->applyTimeHeaders();
