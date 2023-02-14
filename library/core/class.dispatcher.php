@@ -650,6 +650,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      */
     private function findControllerMethod($controller, $pathArgs)
     {
+        prettyPrint($pathArgs);
         $first = $this->filterName(reset($pathArgs));
 
         // print_r("Find controller method");
@@ -657,7 +658,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         print_r($controller->$first ?? "No controller first");
         prettyPrint($first);
         if ($this->methodExists($controller, $first)) {
-            // prettyPrint("Method exists:");
+            prettyPrint("Method first exists");
             // prettyPrint($controller);
             // prettyPrint($first);
             // prettyPrint($pathArgs);
@@ -669,7 +670,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "x$first")) {
-            // prettyPrint("Method exists:");
+            prettyPrint("Method xfirst exists:");
             // prettyPrint($controller);
             // prettyPrint("x$first");
             // prettyPrint($pathArgs);
