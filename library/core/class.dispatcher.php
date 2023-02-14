@@ -25,6 +25,9 @@ use Vanilla\FeatureFlagHelper;
 use Vanilla\Utility\DebugUtils;
 use Vanilla\Utility\Timers;
 
+/**
+ * @global
+ */
 function prettyPrint($value) {
     echo '<pre>';
     print_r($value);

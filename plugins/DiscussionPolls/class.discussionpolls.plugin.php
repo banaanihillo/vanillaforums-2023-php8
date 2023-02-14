@@ -28,12 +28,6 @@ $PluginInfo['DiscussionPolls'] = array(
 );
 
 
-function prettyPrint($value) {
-    echo '<pre>';
-    print_r($value);
-    echo '</pre>';
-}
-
 class DiscussionPollsPlugin extends Gdn_Plugin {
 
     public function __construct() {
