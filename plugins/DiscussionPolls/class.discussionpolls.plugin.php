@@ -27,6 +27,13 @@ $PluginInfo['DiscussionPolls'] = array(
     'License' => 'GPLv3'
 );
 
+
+function prettyPrint($value) {
+    echo '<pre>';
+    print_r($value);
+    echo '</pre>';
+}
+
 class DiscussionPollsPlugin extends Gdn_Plugin {
 
     public function __construct() {
@@ -70,6 +77,9 @@ class DiscussionPollsPlugin extends Gdn_Plugin {
      */
     public function DiscussionController_Poll_Create($Sender) {
         $senderRequestArguments = $Sender->RequestArgs ?? [];
+        prettyPrint("Discussion controller poll create");
+        prettyPrint($senderRequestArguments);
+        prettyPrint($senderRequestArguments);
         $this->Dispatch($Sender, $senderRequestArguments);
     }
 
