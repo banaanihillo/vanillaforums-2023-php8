@@ -1187,12 +1187,28 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             prettyPrint(json_encode($callback, JSON_PRETTY_PRINT));
             prettyPrint("Arguments:");
             prettyPrint(json_encode($args, JSON_PRETTY_PRINT));
-            prettyPrint($args["DiscussionID"]);
-            prettyPrint($args["DiscussionStub"]);
-            prettyPrint($args["Page"]);
-            // prettyPrint($callback($args["DiscussionID"]));
-            // prettyPrint($callback($args["DiscussionStub"]));
-            // prettyPrint($callback($args["Page"]));
+
+            if ($args["DiscussionID"] ?? false) {
+                prettyPrint($args["DiscussionID"]);
+                prettyPrint($callback($args["DiscussionID"]));
+            } else {
+                prettyPrint("No discussion ID");
+            }
+
+            if ($args["DiscussionStub"] ?? false) {
+                prettyPrint($args["DiscussionStub"]);
+                prettyPrint($callback($args["DiscussionStub"]));
+            } else {
+                prettyPrint("No discussion stub");
+            }
+
+            if ($args["Page"] ?? false) {
+                prettyPrint($args["Page"]);
+                prettyPrint($callback($args["Page"]));
+            } else {
+                prettyPrint("No page");
+            }
+
             // var_dump($callback);
             // var_export($callback);
             // print_r($args);
