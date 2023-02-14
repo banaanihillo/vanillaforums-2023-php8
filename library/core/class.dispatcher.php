@@ -592,6 +592,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      */
     private function findController(array $parts)
     {
+        prettyPrint("Find controller");
+        prettyPrint($parts);
         // Look for the old-school application name as the first part of the path.
         if (in_array($parts[0] ?? false, $this->getEnabledApplicationFolders())) {
             // print_r("Find controller:");
@@ -652,6 +654,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      */
     private function findControllerMethod($controller, $pathArgs)
     {
+        prettyPrint("Find controller method");
+        prettyPrint($pathArgs);
         // prettyPrint($pathArgs);
         $first = $this->filterName(reset($pathArgs));
 
