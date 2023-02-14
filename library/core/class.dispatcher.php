@@ -594,7 +594,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
     {
         // Look for the old-school application name as the first part of the path.
         if (in_array($parts[0] ?? false, $this->getEnabledApplicationFolders())) {
-            prettyPrint("Find controller:\n $parts");
+            prettyPrint("Find controller:");
+            prettyPrint($parts);
             $application = array_shift($parts);
         } else {
             $application = "";
@@ -611,7 +612,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
 
         // If the lookup succeeded, good to go
         if (class_exists($controllerName, true)) {
-            prettyPrint("Class $controllerName exists");
+            prettyPrint("Class exists:");
+            prettyPrint($controllerName);
             prettyPrint($parts);
             array_shift($parts);
             prettyPrint("Parts shifted");
@@ -650,21 +652,28 @@ class Gdn_Dispatcher extends Gdn_Pluggable
     {
         $first = $this->filterName(reset($pathArgs));
 
-        prettyPrint("Find controller method:\n $pathArgs");
+        prettyPrint("Find controller method");
+        prettyPrint($pathArgs);
         if ($this->methodExists($controller, $first)) {
-            prettyPrint("$controller method $first exists");
+            prettyPrint("Method exists:");
+            prettyPrint($controller);
+            prettyPrint($first);
             prettyPrint($pathArgs);
             array_shift($pathArgs);
-            prettyPrint("Shifted: \n $pathArgs");
+            prettyPrint("Shifted:");
+            prettyPrint($pathArgs);
             return [
                 lcfirst($first),
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "x$first")) {
-            prettyPrint("$controller method x$first exists");
+            prettyPrint("Method exists:");
+            prettyPrint($controller);
+            prettyPrint("x$first");
             prettyPrint($pathArgs);
             array_shift($pathArgs);
-            prettyPrint("Shifted: \n $pathArgs");
+            prettyPrint("Shifted:");
+            prettyPrint($pathArgs);
             prettyPrint("Getting class with deprecated thing");
             deprecated(
                 get_class($controller) . "->x$first",
@@ -685,7 +694,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $pathArgs,
             ];
         } else {
-            prettyPrint("Returning empty controller and \n $pathArgs");
+            prettyPrint("Returning empty controller:");
+            prettyPrint($pathArgs);
             return [
                 "",
                 $pathArgs,
