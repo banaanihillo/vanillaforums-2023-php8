@@ -1052,7 +1052,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             $request,
             $routeArgs,
         );
-        prettyPrint($controllerName);
+        // prettyPrint($controllerName);
         prettyPrint("Controller created");
 
         if ($controller instanceof VanillaController) {
@@ -1081,7 +1081,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             return $this->dispatchNotFound("method_notfound", $request);
         }
         prettyPrint("Method to call found");
-        prettyPrint($controllerMethod);
+        // prettyPrint($controllerMethod);
 
         // The method has been found, set it on the controller.
         $controller->RequestMethod = $controllerMethod;
@@ -1096,10 +1096,10 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             . strtolower($controllerMethod)
         );
         prettyPrint("Method set to controller, I think");
-        prettyPrint($controller->ResolvedPath);
+        // prettyPrint($controller->ResolvedPath);
 
         $reflectionArguments = $request->get();
-        prettyPrint($reflectionArguments);
+        // prettyPrint($reflectionArguments);
         $this->EventArguments["Arguments"] = &$reflectionArguments;
         $this->fireEvent("BeforeReflect");
         prettyPrint("Reflection?");
@@ -1133,14 +1133,14 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $controller,
                 $controllerMethod,
             ];
-            prettyPrint($callback);
+            // prettyPrint($callback);
             $inputArgs = $pathArgs;
         }
         $method = is_array($callback)
             ? new ReflectionMethod($callback[0], $callback[1])
             : new ReflectionFunction($callback);
         prettyPrint("Callback is or is not an array");
-        prettyPrint(is_array($callback));
+        // prettyPrint(is_array($callback));
         $args = Dispatcher::reflectArgs(
             $method,
             array_merge($inputArgs, $reflectionArguments),
@@ -1148,7 +1148,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             false
         );
         prettyPrint("Reflect arguments?");
-        prettyPrint($args);
+        // prettyPrint($args);
         $controller->ReflectArgs = $args;
         prettyPrint("Controller reflect arguments assigned");
 
@@ -1156,7 +1156,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             $this->makeCanonicalUrl($controller, $method, $args), true
         );
         prettyPrint("Canonical uniform resource locator made");
-        prettyPrint($canonicalUrl);
+        // prettyPrint($canonicalUrl);
         $controller->canonicalUrl($canonicalUrl);
         prettyPrint("Controller canonical uniform resource locator assigned");
 
