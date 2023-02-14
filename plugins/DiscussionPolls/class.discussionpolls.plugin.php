@@ -72,8 +72,11 @@ class DiscussionPollsPlugin extends Gdn_Plugin {
     public function DiscussionController_Poll_Create($Sender) {
         $senderRequestArguments = $Sender->RequestArgs ?? [];
         prettyPrint("Discussion controller poll create");
+        print_r("Discussion controller poll create");
         prettyPrint($senderRequestArguments);
-        prettyPrint($senderRequestArguments);
+        print_r($senderRequestArguments);
+        prettyPrint($Sender);
+        print_r($Sender);
         $this->Dispatch($Sender, $senderRequestArguments);
     }
 
