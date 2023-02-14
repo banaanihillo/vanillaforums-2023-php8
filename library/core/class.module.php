@@ -390,6 +390,6 @@ class Gdn_Module extends Gdn_Pluggable implements Gdn_IModule
      */
     public function __toString()
     {
-        return $this->toString();
+        return $this->toString() ?? "";
     }
 }
