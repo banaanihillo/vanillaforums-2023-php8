@@ -594,13 +594,13 @@ class Gdn_Dispatcher extends Gdn_Pluggable
     {
         // Look for the old-school application name as the first part of the path.
         if (in_array($parts[0] ?? false, $this->getEnabledApplicationFolders())) {
-            // print_r("Find controller:");
-            // prettyPrint($parts);
+            print_r("Find controller:");
+            prettyPrint($parts);
             $application = array_shift($parts);
         } else {
             $application = "";
         }
-        // prettyPrint("Calling filter name and reset");
+        prettyPrint("Calling filter name and reset");
         $controller = $this->filterName(reset($parts));
 
         // This is a kludge until we can refactor- settings controllers better.
@@ -612,12 +612,12 @@ class Gdn_Dispatcher extends Gdn_Pluggable
 
         // If the lookup succeeded, good to go
         if (class_exists($controllerName, true)) {
-            // print_r("Class exists:");
-            // print_r($controllerName);
-            // print_r($parts);
+            print_r("Class exists:");
+            print_r($controllerName);
+            print_r($parts);
             array_shift($parts);
-            // prettyPrint("Parts shifted");
-            // prettyPrint($parts);
+            prettyPrint("Parts shifted");
+            prettyPrint($parts);
             return [
                 $controllerName,
                 $parts,
@@ -627,11 +627,13 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             && class_exists($this->filterName($application) . "Controller", true)
           ) {
             // There is a controller with the same name as the application; use it.
+            prettyPrint("Something else exists");
             return [
                 $this->filterName($application) . "Controller",
                 $parts,
             ];
         } else {
+            prettyPrint("Returning empty first thing");
             return [
                 "",
                 $parts,
@@ -665,6 +667,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             array_shift($pathArgs);
             prettyPrint("Shifted:");
             prettyPrint($pathArgs);
+            prettyPrint(lcfirst($first));
             return [
                 lcfirst($first),
                 $pathArgs,
