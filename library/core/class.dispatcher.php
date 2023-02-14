@@ -614,7 +614,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         if (class_exists($controllerName, true)) {
             print_r("Class exists:");
             prettyPrint($controllerName);
-            prettyPrint($parts);
+            print_r($parts);
             array_shift($parts);
             // prettyPrint("Parts shifted");
             // prettyPrint($parts);
@@ -655,7 +655,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         print_r("Find controller method");
         // prettyPrint($pathArgs);
         prettyPrint($controller);
-        prettyPrint($first);
+        print_r($first);
         if ($this->methodExists($controller, $first)) {
             // prettyPrint("Method exists:");
             // prettyPrint($controller);
