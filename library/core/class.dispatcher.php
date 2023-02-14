@@ -1178,8 +1178,10 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             );
             prettyPrint("Event manager dispatched");
             prettyPrint("Will err on the next call_user_func_array call");
-            prettyPrint($callback);
-            prettyPrint($args);
+            // prettyPrint($callback);
+            // prettyPrint($args);
+            print_r($callback);
+            print_r($args);
             call_user_func_array($callback, $args);
             prettyPrint("User function array called");
             $this->applyTimeHeaders();
