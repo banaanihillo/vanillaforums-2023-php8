@@ -1181,12 +1181,15 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 new ControllerDispatchedEvent($callback),
             );
             prettyPrint("Event manager dispatched");
-            prettyPrint("Will err on the next call_user_func_array call");
+            prettyPrint("May or may not err on the next call_user_func_array");
             // prettyPrint($callback);
             // prettyPrint($args);
             prettyPrint(json_encode($callback, JSON_PRETTY_PRINT));
             prettyPrint("Arguments:");
             prettyPrint(json_encode($args, JSON_PRETTY_PRINT));
+            prettyPrint($callback($args->DiscussionID));
+            prettyPrint($callback($args->DiscussionStub));
+            prettyPrint($callback($args->Page));
             // var_dump($callback);
             // var_export($callback);
             // print_r($args);
