@@ -613,8 +613,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         // If the lookup succeeded, good to go
         if (class_exists($controllerName, true)) {
             prettyPrint("Class exists:");
-            prettyPrint($controllerName);
-            prettyPrint($parts);
+            // prettyPrint($controllerName);
+            // prettyPrint($parts);
             array_shift($parts);
             prettyPrint("Parts shifted");
             prettyPrint($parts);
@@ -656,9 +656,9 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         prettyPrint($pathArgs);
         if ($this->methodExists($controller, $first)) {
             prettyPrint("Method exists:");
-            prettyPrint($controller);
-            prettyPrint($first);
-            prettyPrint($pathArgs);
+            // prettyPrint($controller);
+            // prettyPrint($first);
+            // prettyPrint($pathArgs);
             array_shift($pathArgs);
             prettyPrint("Shifted:");
             prettyPrint($pathArgs);
@@ -667,10 +667,10 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "x$first")) {
-            prettyPrint("Method exists:");
-            prettyPrint($controller);
-            prettyPrint("x$first");
-            prettyPrint($pathArgs);
+            // prettyPrint("Method exists:");
+            // prettyPrint($controller);
+            // prettyPrint("x$first");
+            // prettyPrint($pathArgs);
             array_shift($pathArgs);
             prettyPrint("Shifted:");
             prettyPrint($pathArgs);
