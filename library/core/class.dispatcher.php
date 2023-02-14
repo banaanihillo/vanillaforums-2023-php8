@@ -655,7 +655,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         // print_r("Find controller method");
         // // prettyPrint($pathArgs);
         print_r($controller->$first ?? "No controller first");
-        // print_r($first);
+        prettyPrint($first);
         if ($this->methodExists($controller, $first)) {
             // prettyPrint("Method exists:");
             // prettyPrint($controller);
@@ -687,10 +687,10 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $pathArgs,
             ];
         } elseif ($this->methodExists($controller, "index")) {
-            // print_r("Calling default controller method");
+            print_r("Calling default controller method");
             // "index" is the default controller method
             // if an explicit method cannot be found.
-            print_r($controller->index);
+            prettyPrint($controller->index);
             $this->EventArguments["PathArgs"] = $pathArgs;
             $this->fireEvent("MethodNotFound");
             return [
