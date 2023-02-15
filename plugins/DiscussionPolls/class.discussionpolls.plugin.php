@@ -97,7 +97,13 @@ class DiscussionPollsPlugin extends Gdn_Plugin {
         else {
             // You have to have voting privilege only
             if(!$Session->CheckPermission('Plugins.DiscussionPolls.Vote', FALSE) || !$Session->UserID) {
-                Gdn::Session()->Stash('DiscussionPollsMessage', T('Plugins.DiscussionPolls.UnableToSubmit', 'You do not have permission to submit a poll.'));
+                Gdn::Session()->Stash(
+                    'DiscussionPollsMessage',
+                    T(
+                        'Plugins.DiscussionPolls.UnableToSubmit',
+                        'You do not have permission to submit a poll.',
+                    ),
+                );
                 Redirect('discussion/' . $FormPostValues['DiscussionID']);
             }
 
@@ -131,10 +137,22 @@ class DiscussionPollsPlugin extends Gdn_Plugin {
                     // Don't stash any message
                 }
                 else if($Partial) {
-                    Gdn::Session()->Stash('DiscussionPollsMessage', T('Plugins.DiscussionPolls.UnsweredAllQuestions', 'You have not answered all questions!'));
+                    Gdn::Session()->Stash(
+                        'DiscussionPollsMessage',
+                        T(
+                            'Plugins.DiscussionPolls.UnansweredAllQuestions',
+                            'Not all questions were answered.',
+                        ),
+                    );
                 }
                 else {
-                    Gdn::Session()->Stash('DiscussionPollsMessage', T('Plugins.DiscussionPolls.UnsweredUnable', 'Unable to save!'));
+                    Gdn::Session()->Stash(
+                        'DiscussionPollsMessage',
+                        T(
+                            'Plugins.DiscussionPolls.UnansweredUnable',
+                            'Unable to save due to missing answer(s).',
+                        ),
+                    );
                 }
                 Redirect('discussion/' . $FormPostValues['DiscussionID']);
             }
@@ -501,7 +519,14 @@ class DiscussionPollsPlugin extends Gdn_Plugin {
             // Can the current user view polls?
             if(!$Session->CheckPermission('Plugins.DiscussionPolls.View')) {
                 // make this configurable?
-                echo Wrap(T('Plugins.DiscussionPolls.NoView', 'You do not have permission to view polls.'), 'div', array('class' => 'DP_AnswerForm'));
+                echo Wrap(
+                    T(
+                        'Plugins.DiscussionPolls.NoView',
+                        'You do not have permission to view polls.',
+                    ),
+                    'div',
+                    array('class' => 'DP_AnswerForm'),
+                );
                 return;
             }
             // Check to see if the discussion is closed
@@ -526,7 +551,12 @@ class DiscussionPollsPlugin extends Gdn_Plugin {
                 //if some saved partial answers inform
                 if(!empty($PartialAnswers)) {
                     // TODO: Remove?
-                    Gdn::Controller()->InformMessage(T('Plugins.DiscussionPolls.LoadedPartial', 'Your answered questions have been loaded.'));
+                    Gdn::Controller()->InformMessage(
+                        T(
+                            'Plugins.DiscussionPolls.LoadedPartial',
+                            'Your answered questions have been loaded.',
+                        ),
+                    );
                 }
                 // Render the submission form
                 $this->_RenderVotingForm($Sender, $Poll, $PartialAnswers);
