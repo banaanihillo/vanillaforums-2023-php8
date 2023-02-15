@@ -386,25 +386,41 @@ abstract class Gdn_Plugin extends Gdn_Pluggable implements Gdn_IPlugin
      */
     public function dispatch($sender, $requestArgs = [])
     {
+        prettyPrint("Dispatch");
+        prettyPrint($requestArgs);
         $this->Sender = $sender;
         $sender->Form = new Gdn_Form();
 
         $controllerMethod = "Controller_Index";
         if (is_array($requestArgs) && sizeof($sender->RequestArgs)) {
+            prettyPrint("Is array");
             [$methodName] = $sender->RequestArgs;
             // Account for suffix
-            $methodName = array_shift($trash = explode(".", $methodName));
+            $trash = explode(".", $methodName);
+            prettyPrint($trash);
+            $methodName = array_shift($trash);
+            prettyPrint("Array shifted");
+            prettyPrint($methodName);
             $testControllerMethod = "Controller_" . $methodName;
             if (method_exists($this, $testControllerMethod)) {
+                prettyPrint("Test controller method exists");
                 $controllerMethod = $testControllerMethod;
+                prettyPrint($controllerMethod);
                 array_shift($requestArgs);
+                prettyPrint("Request array shifted");
             }
         }
 
         if (method_exists($this, $controllerMethod)) {
+            prettyPrint("Controller method exists");
             $sender->Plugin = $this;
-            return call_user_func([$this, $controllerMethod], $sender, $requestArgs);
+            return call_user_func(
+                [$this, $controllerMethod],
+                $sender,
+                $requestArgs,
+            );
         } else {
+            prettyPrint("Controller method does not exist");
             $pluginName = get_class($this);
             throw notFoundException("@{$pluginName}->{$controllerMethod}()");
         }
