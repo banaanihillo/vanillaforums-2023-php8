@@ -1310,7 +1310,7 @@ if (!function_exists("offsetLimit")) {
         if (is_numeric($offsetOrPage)) {
             $offset = (int) $offsetOrPage;
             $limit = $limitOrPageSize;
-        } elseif (preg_match("/p(\d+)/i", $offsetOrPage, $matches)) {
+        } elseif (preg_match("/p(\d+)/i", $offsetOrPage ?? "", $matches)) {
             $page = $matches[1];
             $offset = $limitOrPageSize * ($page - 1);
             $limit = $limitOrPageSize;
