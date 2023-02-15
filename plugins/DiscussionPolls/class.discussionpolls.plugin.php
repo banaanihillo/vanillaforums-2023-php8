@@ -109,6 +109,7 @@ class DiscussionPollsPlugin extends Gdn_Plugin {
 
             $DPModel = new DiscussionPollsModel();
 
+            $Saved = null;
             if(!$DPModel->CheckFullyAnswered($FormPostValues)) {
                 //save partial answers
                 $Partial = $DPModel->SavePartialAnswer($FormPostValues, $Session->UserID);
