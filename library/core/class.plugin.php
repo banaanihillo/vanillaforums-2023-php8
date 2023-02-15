@@ -173,7 +173,8 @@ abstract class Gdn_Plugin extends Gdn_Pluggable implements Gdn_IPlugin
      */
     public function getView($viewName)
     {
-        deprecated("Gdn_Plugin->getView()");
+        // "Not advisable" but still works, and no suitable alternative exists
+        // deprecated("Gdn_Plugin->getView()");
         $pluginDirectory = implode(DS, [$this->getPluginFolder(true), "views"]);
         return $pluginDirectory . DS . $viewName;
     }
