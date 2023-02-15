@@ -595,8 +595,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      */
     private function findController(array $parts)
     {
-        prettyPrint("Find controller");
-        prettyPrint($parts);
+        // prettyPrint("Find controller");
+        // prettyPrint($parts);
         // Look for the old-school application name as the first part of the path.
         if (in_array($parts[0] ?? false, $this->getEnabledApplicationFolders())) {
             // print_r("Find controller:");
@@ -657,8 +657,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      */
     private function findControllerMethod($controller, $pathArgs)
     {
-        prettyPrint("Find controller method");
-        prettyPrint($pathArgs);
+        // prettyPrint("Find controller method");
+        // prettyPrint($pathArgs);
         // prettyPrint($pathArgs);
         $first = $this->filterName(reset($pathArgs));
 
@@ -1047,8 +1047,8 @@ class Gdn_Dispatcher extends Gdn_Pluggable
      */
     private function dispatchController($request, $routeArgs)
     {
-        prettyPrint("Dispatch controller");
-        prettyPrint($routeArgs["pathArgs"] ?? "No path arguments");
+        // prettyPrint("Dispatch controller");
+        // prettyPrint($routeArgs["pathArgs"] ?? "No path arguments");
         // Clean this out between dispatches.
         $this->sentHeaders = [];
 
@@ -1060,12 +1060,12 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             $routeArgs,
         );
         // prettyPrint($controllerName);
-        prettyPrint("Controller created");
+        // prettyPrint("Controller created");
 
         if ($controller instanceof VanillaController) {
-            prettyPrint("Controller is an instance of VanillaController");
+            // prettyPrint("Controller is an instance of VanillaController");
             if ($controller->disabled()) {
-                prettyPrint("Controller is disabled");
+                // prettyPrint("Controller is disabled");
                 $routeArgs["controllerMethod"] = "disabled";
                 $routeArgs["controller"] = $controllerName = "VanillaController";
                 $controller = $this->createController(
@@ -1073,7 +1073,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                     $request,
                     $routeArgs,
                 );
-                prettyPrint("Another controller created");
+                // prettyPrint("Another controller created");
                 safeHeader("HTTP/1.1 404 Not Found");
             }
         }
@@ -1084,10 +1084,10 @@ class Gdn_Dispatcher extends Gdn_Pluggable
         );
         if (!$controllerMethod) {
             // The controller method was not found.
-            prettyPrint("No method to call found");
+            // prettyPrint("No method to call found");
             return $this->dispatchNotFound("method_notfound", $request);
         }
-        prettyPrint("Method to call found");
+        // prettyPrint("Method to call found");
         // prettyPrint($controllerMethod);
 
         // The method has been found, set it on the controller.
@@ -1102,14 +1102,14 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             . "/"
             . strtolower($controllerMethod)
         );
-        prettyPrint("Method set to controller, I think");
+        // prettyPrint("Method set to controller, I think");
         // prettyPrint($controller->ResolvedPath);
 
         $reflectionArguments = $request->get();
         // prettyPrint($reflectionArguments);
         $this->EventArguments["Arguments"] = &$reflectionArguments;
         $this->fireEvent("BeforeReflect");
-        prettyPrint("Reflection?");
+        // prettyPrint("Reflection?");
 
         // Get the callback to call.
         if (
@@ -1117,12 +1117,12 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 get_class($controller), $controllerMethod,
             )
         ) {
-            prettyPrint("Plugin manager has method");
+            // prettyPrint("Plugin manager has method");
             $callback = Gdn::pluginManager()->getCallback(
                 get_class($controller),
                 $controllerMethod,
             );
-            prettyPrint("Callback found");
+            // prettyPrint("Callback found");
 
             // Augment the arguments to the plugin
             // with the sender and these arguments.
@@ -1133,9 +1133,9 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                 $pathArgs,
                 ["sender" => $controller, "args" => $pathArgs],
             );
-            prettyPrint("Array merged");
+            // prettyPrint("Array merged");
         } else {
-            prettyPrint("Plugin manager does not have method");
+            // prettyPrint("Plugin manager does not have method");
             $callback = [
                 $controller,
                 $controllerMethod,
@@ -1147,11 +1147,11 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             ? new ReflectionMethod($callback[0], $callback[1])
             : new ReflectionFunction($callback);
         if (is_array($callback)) {
-            prettyPrint("Callback is an array");
-            prettyPrint(json_encode($callback[0], JSON_PRETTY_PRINT));
-            prettyPrint(json_encode($callback[1], JSON_PRETTY_PRINT));
+            // prettyPrint("Callback is an array");
+            // prettyPrint(json_encode($callback[0], JSON_PRETTY_PRINT));
+            // prettyPrint(json_encode($callback[1], JSON_PRETTY_PRINT));
         } else {
-            prettyPrint("Not an array");
+            // prettyPrint("Not an array");
         }
         // Is this variable a reference that can be used by call user_func_array?
         $args = Dispatcher::reflectArgs(
@@ -1160,64 +1160,64 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             $this->container,
             false
         );
-        prettyPrint("Reflect arguments?");
+        // prettyPrint("Reflect arguments?");
         // prettyPrint($args);
         $controller->ReflectArgs = $args;
-        prettyPrint("Controller reflect arguments assigned");
+        // prettyPrint("Controller reflect arguments assigned");
 
         $canonicalUrl = url(
             $this->makeCanonicalUrl($controller, $method, $args), true
         );
-        prettyPrint("Canonical uniform resource locator made");
+        // prettyPrint("Canonical uniform resource locator made");
         // prettyPrint($canonicalUrl);
         $controller->canonicalUrl($canonicalUrl);
-        prettyPrint("Controller canonical uniform resource locator assigned");
+        // prettyPrint("Controller canonical uniform resource locator assigned");
 
         // Now that we have everything,
         // it's time to call the callback for the controller.
         try {
-            prettyPrint("Trying to call callback");
+            // prettyPrint("Trying to call callback");
             $this->fireEvent("BeforeControllerMethod");
-            prettyPrint("Event fired");
+            // prettyPrint("Event fired");
             Gdn::pluginManager()->callEventHandlers(
                 $controller,
                 $controllerName,
                 $controllerMethod,
                 "before",
             );
-            prettyPrint("Event handlers called");
+            // prettyPrint("Event handlers called");
             $this->eventManager->dispatch(
                 new ControllerDispatchedEvent($callback),
             );
-            prettyPrint("Event manager dispatched");
-            prettyPrint("May or may not err on the next call_user_func_array");
+            // prettyPrint("Event manager dispatched");
+            // prettyPrint("May or may not err on the next call_user_func_array");
             // prettyPrint($callback);
             // prettyPrint($args);
-            prettyPrint(json_encode($callback, JSON_PRETTY_PRINT));
-            prettyPrint("Arguments:");
-            prettyPrint(json_encode($args, JSON_PRETTY_PRINT));
+            // prettyPrint(json_encode($callback, JSON_PRETTY_PRINT));
+            // prettyPrint("Arguments:");
+            // prettyPrint(json_encode($args, JSON_PRETTY_PRINT));
 
             if ($args["DiscussionID"] ?? false) {
-                prettyPrint($args["DiscussionID"]);
+                // prettyPrint($args["DiscussionID"]);
                 // prettyPrint($callback($args["DiscussionID"]));
             } else {
-                prettyPrint("No discussion ID");
+                // prettyPrint("No discussion ID");
             }
             // prettyPrint("Discussion ID callback done");
 
             if ($args["DiscussionStub"] ?? false) {
-                prettyPrint($args["DiscussionStub"]);
+                // prettyPrint($args["DiscussionStub"]);
                 // prettyPrint($callback($args["DiscussionStub"]));
             } else {
-                prettyPrint("No discussion stub");
+                // prettyPrint("No discussion stub");
             }
             // prettyPrint("Discussion stub callback done");
 
             if ($args["Page"] ?? false) {
-                prettyPrint($args["Page"]);
+                // prettyPrint($args["Page"]);
                 // prettyPrint($callback($args["Page"]));
             } else {
-                prettyPrint("No page");
+                // prettyPrint("No page");
             }
             // prettyPrint("Page callback done");
 
@@ -1225,16 +1225,16 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // var_export($callback);
             // print_r($args);
             // prettyPrint($callback[0]);
-            // call_user_func_array($callback, $args);
+            call_user_func_array($callback, $args);
             // call_user_func_array($callback, array(&$args));
-            call_user_func_array(
-                $callback,
-                array(
-                    $args["DiscussionID"],
-                    $args["DiscussionStub"],
-                    $args["Page"],
-                ),
-            );
+            // call_user_func_array(
+            //     $callback,
+            //     array(
+            //         $args["DiscussionID"],
+            //         $args["DiscussionStub"],
+            //         $args["Page"],
+            //     ),
+            // );
             // $callback(...$args);
             // prettyPrint("User function array called");
             // prettyPrint("Callback called with unpacked arguments");
@@ -1242,35 +1242,35 @@ class Gdn_Dispatcher extends Gdn_Pluggable
             // prettyPrint("Time headers applied");
         } catch (ExitException $ex) {
             // The controller wanted to exit.
-            prettyPrint("Wanted to exit :D");
+            // prettyPrint("Wanted to exit :D");
             if (!DebugUtils::isTestMode()) {
                 exit();
             }
         } catch (Throwable $ex) {
-            prettyPrint("Exception caught");
+            // prettyPrint("Exception caught");
             $dispatcherExceptionEvent = new DispatcherExceptionEvent(
                 $ex,
                 $request,
             );
-            prettyPrint("Dispatcher exception event created");
+            // prettyPrint("Dispatcher exception event created");
             $this->eventManager->dispatch($dispatcherExceptionEvent);
-            prettyPrint("Exception dispatched");
+            // prettyPrint("Exception dispatched");
             if ($this->rethrowExceptions) {
-                prettyPrint("Exception rethrown?");
+                // prettyPrint("Exception rethrown?");
                 throw $ex;
             }
             if (!DebugUtils::isDebug()) {
                 $ex = $this->sanitizeException($ex);
-                prettyPrint("Exception sanitized");
+                // prettyPrint("Exception sanitized");
             }
             if ($this->dispatchException === null) {
-                prettyPrint("No dispatch exception");
+                // prettyPrint("No dispatch exception");
                 $this->dispatchException = $ex;
-                prettyPrint("Dispatch exception set to exception");
+                // prettyPrint("Dispatch exception set to exception");
                 $controller->renderException($ex);
-                prettyPrint("Exception rendered");
+                // prettyPrint("Exception rendered");
             } else {
-                prettyPrint("Dispatch exception was not null");
+                // prettyPrint("Dispatch exception was not null");
                 trigger_error(
                     (
                         "Multiple exceptions encountered"
@@ -1278,7 +1278,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                     ),
                     E_USER_WARNING,
                 );
-                prettyPrint("Error triggered");
+                // prettyPrint("Error triggered");
                 $this->logger->warning(
                     "Multiple exceptions encountered while dispatching.",
                     [
@@ -1293,7 +1293,7 @@ class Gdn_Dispatcher extends Gdn_Pluggable
                         "timestamp" => time(),
                     ]
                 );
-                prettyPrint("Warning logged");
+                // prettyPrint("Warning logged");
                 safeHeader("HTTP/1.0 500", true, 500);
             }
             if (!DebugUtils::isTestMode()) {
