@@ -115,7 +115,7 @@ class Filterer
             "attributes" => [
                 "link" => $embed["loaderData"]["link"] ?? "",
             ],
-            "insert" => $embed["loaderData"]["link"],
+            "insert" => $embed["loaderData"]["link"] ?? "",
         ];
     }
 }
