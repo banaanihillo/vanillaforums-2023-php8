@@ -15,11 +15,11 @@ use Vanilla\Formatting\HtmlDomRangeFragment;
 use Vanilla\Formatting\TextDOMInterface;
 use Vanilla\Formatting\TextFragmentInterface;
 
-// function prettyPrint($value) {
-//     echo "<pre>";
-//     print_r($value);
-//     echo "</pre>";
-// }
+function prettyPrint($value) {
+    echo "<pre>";
+    print_r($value);
+    echo "</pre>";
+}
 
 /**
  * Class for parsing and modifying HTML.
@@ -102,6 +102,8 @@ class HtmlDocument implements TextDOMInterface
             // Log the error(s) into an external log file if necessary?
             // May or may not be actual errors;
             // xml syntax just happens to be pretty strict
+            prettyPrint($xmlErrors);
+            prettyPrint($innerHtml);
         }
         unset($xmlErrors);
         libxml_clear_errors();
