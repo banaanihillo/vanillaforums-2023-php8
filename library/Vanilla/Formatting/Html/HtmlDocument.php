@@ -85,10 +85,17 @@ class HtmlDocument implements TextDOMInterface
                 . $this->getDocumentSuffix()
             );
         }
+
+        $libxmlInternalErrors = libxml_use_internal_errors(true);
         @$this->dom->loadHTML(
             $innerHtml,
             LIBXML_NOBLANKS,
         );
+        $xmlErrors = libxml_get_errors();
+        prettyPrint($xmlErrors);
+        unset($xmlErrors);
+        libxml_clear_errors();
+        libxml_use_internal_errors($libxmlInternalErrors);
     }
 
     /**
