@@ -16,7 +16,9 @@ use Vanilla\Formatting\TextDOMInterface;
 use Vanilla\Formatting\TextFragmentInterface;
 
 function prettyPrint($value) {
-    print_r("<pre> $value </pre>");
+    echo "<pre>";
+    print_r($value);
+    echo "</pre>";
 }
 
 /**
