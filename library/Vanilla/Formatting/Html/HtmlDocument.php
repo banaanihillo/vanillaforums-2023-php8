@@ -15,11 +15,11 @@ use Vanilla\Formatting\HtmlDomRangeFragment;
 use Vanilla\Formatting\TextDOMInterface;
 use Vanilla\Formatting\TextFragmentInterface;
 
-function prettyPrint($value) {
-    echo "<pre>";
-    print_r($value);
-    echo "</pre>";
-}
+// function prettyPrint($value) {
+//     echo "<pre>";
+//     print_r($value);
+//     echo "</pre>";
+// }
 
 /**
  * Class for parsing and modifying HTML.
@@ -92,18 +92,18 @@ class HtmlDocument implements TextDOMInterface
             );
         }
 
-        $libxmlInternalErrors = libxml_use_internal_errors(true);
+        // $libxmlInternalErrors = libxml_use_internal_errors(true);
         @$this->dom->loadHTML(
             $innerHtml,
             LIBXML_NOBLANKS,
         );
-        $xmlErrors = libxml_get_errors();
-        if (sizeof($xmlErrors) > 0) {
-            prettyPrint($xmlErrors);
-        }
-        unset($xmlErrors);
-        libxml_clear_errors();
-        libxml_use_internal_errors($libxmlInternalErrors);
+        // $xmlErrors = libxml_get_errors();
+        // if (sizeof($xmlErrors) > 0) {
+        //     prettyPrint($xmlErrors);
+        // }
+        // unset($xmlErrors);
+        // libxml_clear_errors();
+        // libxml_use_internal_errors($libxmlInternalErrors);
     }
 
     /**
