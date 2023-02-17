@@ -100,7 +100,7 @@ class HtmlDocument implements TextDOMInterface
         $xmlErrors = libxml_get_errors();
         if (sizeof($xmlErrors) > 0) {
             prettyPrint($xmlErrors);
-            prettyPrint($innerHTML);
+            prettyPrint($innerHtml);
         }
         unset($xmlErrors);
         libxml_clear_errors();
