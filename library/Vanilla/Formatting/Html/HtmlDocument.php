@@ -98,11 +98,10 @@ class HtmlDocument implements TextDOMInterface
             LIBXML_NOBLANKS,
         );
         $xmlErrors = libxml_get_errors();
-        if (sizeof($xmlErrors) > 0) {
-            prettyPrint($xmlErrors);
-            prettyPrint($innerHtml);
-            echo "<script>console.log('\'' + $innerHtml + '\'')</script>";
-        }
+        // if (sizeof($xmlErrors) > 0) {
+        //     prettyPrint($xmlErrors);
+        //     prettyPrint($innerHtml);
+        // }
         unset($xmlErrors);
         libxml_clear_errors();
         libxml_use_internal_errors($libxmlInternalErrors);
