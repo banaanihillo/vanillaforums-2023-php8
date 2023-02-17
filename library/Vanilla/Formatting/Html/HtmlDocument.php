@@ -15,6 +15,10 @@ use Vanilla\Formatting\HtmlDomRangeFragment;
 use Vanilla\Formatting\TextDOMInterface;
 use Vanilla\Formatting\TextFragmentInterface;
 
+function prettyPrint($value) {
+    print_r("<pre> $value </pre>");
+}
+
 /**
  * Class for parsing and modifying HTML.
  */
