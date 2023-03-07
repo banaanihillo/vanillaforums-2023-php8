@@ -29,8 +29,6 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         $smarty = $this->smarty();
         // $smarty->clearAllCache();
         $smarty->clear_compiled_tpl();
-        $smarty->clear_compiled_tpl();
-        $smarty->$force_compile = true;
 
         // Get a friendly name for the controller.
         $controllerName = get_class($controller);
