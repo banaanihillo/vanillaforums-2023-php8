@@ -1,7 +1,7 @@
 <?php
 
 function prettyPrint($whatToPrint) {
-    print_r("<pre>" . $whatToPrint . "</pre>");
+    print_r("<pre>" . json_encode($whatToPrint) . "</pre>");
 }
 
 /**
@@ -128,7 +128,7 @@ abstract class Smarty_Template_Resource_Base
             $unifunc($_template);
             // prettyPrint(json_encode($_template->endRenderCallbacks));
             foreach ($_template->endRenderCallbacks as $callback) {
-                prettyPrint(json_encode($callback));
+                prettyPrint($callback);
                 call_user_func($callback, $_template);
             }
             $_template->isRenderingCache = false;
