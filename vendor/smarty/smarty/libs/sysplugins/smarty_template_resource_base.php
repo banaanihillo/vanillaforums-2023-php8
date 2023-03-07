@@ -123,6 +123,7 @@ abstract class Smarty_Template_Resource_Base
             print_r($unifunc);
             $unifunc($_template);
             foreach ($_template->endRenderCallbacks as $callback) {
+                print_r($callback);
                 call_user_func($callback, $_template);
             }
             $_template->isRenderingCache = false;
