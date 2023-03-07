@@ -128,7 +128,7 @@ abstract class Smarty_Template_Resource_Base
             $unifunc($_template);
             // prettyPrint(json_encode($_template->endRenderCallbacks));
             foreach ($_template->endRenderCallbacks as $callback) {
-                var_dump($callback);
+                // var_dump($callback);
                 prettyPrint(var_dump($callback));
                 call_user_func($callback, $_template);
             }
