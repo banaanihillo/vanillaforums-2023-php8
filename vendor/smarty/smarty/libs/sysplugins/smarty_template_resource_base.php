@@ -126,10 +126,10 @@ abstract class Smarty_Template_Resource_Base
             }
             prettyPrint($unifunc);
             $unifunc($_template);
-            // prettyPrint(json_encode($_template->endRenderCallbacks));
+            prettyPrint(array_values($_template->endRenderCallbacks));
             foreach ($_template->endRenderCallbacks as $callback) {
                 // var_dump($callback);
-                prettyPrint(var_dump($callback));
+                // prettyPrint(var_dump($callback));
                 call_user_func($callback, $_template);
             }
             $_template->isRenderingCache = false;
