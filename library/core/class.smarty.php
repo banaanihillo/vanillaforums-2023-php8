@@ -30,6 +30,7 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         // $smarty->clearAllCache();
         $smarty->clear_compiled_tpl();
         $smarty->setCompileCheck(true);
+        $smarty->caching = 0;
 
         // Get a friendly name for the controller.
         $controllerName = get_class($controller);
@@ -117,6 +118,7 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         // $smarty->clearAllCache();
         $smarty->clear_compiled_tpl();
         $smarty->setCompileCheck(true);
+        $smarty->caching = 0;
 
         $this->enableSecurity($smarty);
     }
@@ -151,6 +153,7 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
 
         $smarty->clear_compiled_tpl();
         $smarty->setCompileCheck(true);
+        $smarty->caching = 0;
         $smarty->display($path, null, $compileID);
     }
 
@@ -174,6 +177,7 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
 
             $smarty->clear_compiled_tpl();
             $smarty->setCompileCheck(true);
+            $smarty->caching = 0;
             $this->_Smarty = $smarty;
         }
         // $this->_Smarty->clearAllCache();
@@ -204,6 +208,7 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         }
         $smarty->clear_compiled_tpl();
         $smarty->setCompileCheck(true);
+        $smarty->caching = 0;
         return $return;
     }
 
@@ -226,6 +231,7 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         // $sm->clearAllCache();
         $sm->clear_compiled_tpl();
         $sm->setCompileCheck(true);
+        $sm->caching = 0;
         return $sm->fetch(PATH_APPLICATIONS.'/dashboard/views/debug_vars.tpl');
     }
 
@@ -301,5 +307,6 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         $smarty->enableSecurity($security);
         $smarty->clear_compiled_tpl();
         $smarty->setCompileCheck(true);
+        $smarty->caching = 0;
     }
 }
