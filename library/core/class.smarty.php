@@ -28,9 +28,9 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
     public function init($path, $controller) {
         $smarty = $this->smarty();
         // $smarty->clearAllCache();
-        $smarty->clear_compiled_tpl();
-        $smarty->setCompileCheck(true);
-        $smarty->caching = 0;
+        // $smarty->clear_compiled_tpl();
+        // $smarty->setCompileCheck(true);
+        $smarty->caching = Smarty::CACHING_OFF;
 
         // Get a friendly name for the controller.
         $controllerName = get_class($controller);
@@ -116,9 +116,9 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         // Assign the controller data last so the controllers override any default data.
         $smarty->assign($controller->Data);
         // $smarty->clearAllCache();
-        $smarty->clear_compiled_tpl();
-        $smarty->setCompileCheck(true);
-        $smarty->caching = 0;
+        // $smarty->clear_compiled_tpl();
+        // $smarty->setCompileCheck(true);
+        // $smarty->caching = 0;
 
         $this->enableSecurity($smarty);
     }
@@ -151,9 +151,9 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
             }
         }
 
-        $smarty->clear_compiled_tpl();
-        $smarty->setCompileCheck(true);
-        $smarty->caching = 0;
+        // $smarty->clear_compiled_tpl();
+        // $smarty->setCompileCheck(true);
+        // $smarty->caching = 0;
         $smarty->display($path, null, $compileID);
     }
 
@@ -175,9 +175,9 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
 //         Gdn::pluginManager()->Trace = TRUE;
             Gdn::pluginManager()->callEventHandlers($smarty, 'Gdn_Smarty', 'Init');
 
-            $smarty->clear_compiled_tpl();
-            $smarty->setCompileCheck(true);
-            $smarty->caching = 0;
+            // $smarty->clear_compiled_tpl();
+            // $smarty->setCompileCheck(true);
+            // $smarty->caching = 0;
             $this->_Smarty = $smarty;
         }
         // $this->_Smarty->clearAllCache();
@@ -206,9 +206,9 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         } catch (Exception $ex) {
             $return = false;
         }
-        $smarty->clear_compiled_tpl();
-        $smarty->setCompileCheck(true);
-        $smarty->caching = 0;
+        // $smarty->clear_compiled_tpl();
+        // $smarty->setCompileCheck(true);
+        // $smarty->caching = 0;
         return $return;
     }
 
@@ -229,9 +229,9 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         // $sm->clearAllCache();
         $sm->assign('assigned_vars', $vars);
         // $sm->clearAllCache();
-        $sm->clear_compiled_tpl();
-        $sm->setCompileCheck(true);
-        $sm->caching = 0;
+        // $sm->clear_compiled_tpl();
+        // $sm->setCompileCheck(true);
+        // $sm->caching = 0;
         return $sm->fetch(PATH_APPLICATIONS.'/dashboard/views/debug_vars.tpl');
     }
 
@@ -305,8 +305,8 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         );
 
         $smarty->enableSecurity($security);
-        $smarty->clear_compiled_tpl();
-        $smarty->setCompileCheck(true);
-        $smarty->caching = 0;
+        // $smarty->clear_compiled_tpl();
+        // $smarty->setCompileCheck(true);
+        // $smarty->caching = 0;
     }
 }
