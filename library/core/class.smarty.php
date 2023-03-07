@@ -27,7 +27,10 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
      */
     public function init($path, $controller) {
         $smarty = $this->smarty();
-        $smarty->clearAllCache();
+        // $smarty->clearAllCache();
+        $smarty->clear_compiled_tpl();
+        $smarty->clear_compiled_tpl();
+        $smarty->$force_compile = true;
 
         // Get a friendly name for the controller.
         $controllerName = get_class($controller);
@@ -112,7 +115,7 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
 
         // Assign the controller data last so the controllers override any default data.
         $smarty->assign($controller->Data);
-        $smarty->clearAllCache();
+        // $smarty->clearAllCache();
 
         $this->enableSecurity($smarty);
     }
@@ -168,7 +171,7 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
 
             $this->_Smarty = $smarty;
         }
-        $this->_Smarty->clearAllCache();
+        // $this->_Smarty->clearAllCache();
         return $this->_Smarty;
     }
 
@@ -211,9 +214,9 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
         ksort($vars);
 
         $sm = new Smarty();
-        $sm->clearAllCache();
+        // $sm->clearAllCache();
         $sm->assign('assigned_vars', $vars);
-        $sm->clearAllCache();
+        // $sm->clearAllCache();
         return $sm->fetch(PATH_APPLICATIONS.'/dashboard/views/debug_vars.tpl');
     }
 
