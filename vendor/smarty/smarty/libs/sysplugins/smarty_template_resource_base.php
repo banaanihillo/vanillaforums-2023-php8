@@ -124,7 +124,7 @@ abstract class Smarty_Template_Resource_Base
                     call_user_func($callback, $_template);
                 }
             }
-            $unknownFunctionReturnValue = $unifunc($_template);
+            // $unifunc($_template);
             prettyPrint($unifunc);
             prettyPrint($unifunc($_template));
             foreach ($_template->endRenderCallbacks as $callback) {
