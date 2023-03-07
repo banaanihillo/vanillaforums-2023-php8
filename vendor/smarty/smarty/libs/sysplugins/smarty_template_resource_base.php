@@ -1,5 +1,11 @@
 <?php
 
+function prettyPrint($whatToPrint) {
+    $printOutput = "<pre>";
+    $printOutput .= print_r($whatToPrint);
+    $printOutput .= "</pre>";
+}
+
 /**
  * Smarty Template Resource Base Object
  *
@@ -122,8 +128,9 @@ abstract class Smarty_Template_Resource_Base
             }
             print_r($unifunc);
             $unifunc($_template);
+            prettyPrint($_template->endRenderCallbacks);
             foreach ($_template->endRenderCallbacks as $callback) {
-                print_r($callback);
+                // print_r($callback);
                 call_user_func($callback, $_template);
             }
             $_template->isRenderingCache = false;
