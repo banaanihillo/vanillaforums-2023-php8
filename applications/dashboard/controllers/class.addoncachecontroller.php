@@ -42,8 +42,6 @@ class AddonCacheController extends DashboardController {
 
         $cleared = Gdn::addonManager()->clearCache();
 
-        $smartyCleared = Smarty()->clearAllCache() ?? null;
-
         if ($cleared) {
             $this->informMessage(t('Addon cache cleared.'));
         } else {
