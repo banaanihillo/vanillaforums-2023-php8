@@ -1,9 +1,7 @@
 <?php
 
 function prettyPrint($whatToPrint) {
-    $printOutput = "<pre>";
-    $printOutput .= print_r($whatToPrint);
-    $printOutput .= "</pre>";
+    print_r("<pre>" . $whatToPrint . "</pre>");
 }
 
 /**
