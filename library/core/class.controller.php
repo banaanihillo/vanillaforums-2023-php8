@@ -24,6 +24,10 @@ use Vanilla\Web\JsInterpop\ReduxActionPreloadTrait;
 use Vanilla\Web\MasterViewRenderer;
 use Vanilla\Dashboard\Pages\LegacyDashboardPage;
 
+function prettyPrint($whatToPrint) {
+    print_r("<pre>" . json_encode($whatToPrint) . "</pre>");
+}
+
 /**
  * Controller base class.
  *
