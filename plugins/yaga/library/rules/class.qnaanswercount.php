@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges based on a user's answer count from the QnA plugin
@@ -7,67 +7,67 @@
  * @since 0.5
  * @package Yaga
  */
-class QnAAnserCount implements YagaRule{
+class QnAAnserCount implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $Result = FALSE;
-    switch($Criteria->Comparison) {
-      case 'gt':
-        if($User->CountAcceptedAnswers > $Criteria->Target) {
-          $Result = TRUE;
+    public function award($sender, $user, $criteria) {
+        $result = false;
+        switch($criteria->Comparison) {
+            case 'gt':
+                if ($user->CountAcceptedAnswers > $criteria->Target) {
+                    $result = true;
+                }
+                break;
+            case 'lt':
+                if ($user->CountAcceptedAnswers < $criteria->Target) {
+                    $result = true;
+                }
+                break;
+            default:
+            case 'gte':
+                if ($user->CountAcceptedAnswers >= $criteria->Target) {
+                    $result = true;
+                }
+                break;
         }
-        break;
-      case 'lt':
-        if($User->CountAcceptedAnswers < $Criteria->Target) {
-          $Result = TRUE;
-        }
-        break;
-      default:
-      case 'gte':
-        if($User->CountAcceptedAnswers >= $Criteria->Target) {
-          $Result = TRUE;
-        }
-        break;
+
+        return $result;
     }
 
-    return $Result;
-  }
+    public function form($form) {
+        $comparisons = [
+            'gt' => Gdn::translate('More than:'),
+            'lt' => Gdn::translate('Less than:'),
+            'gte' => Gdn::translate('More than or:')
+        ];
 
-  public function Form($Form) {
-    $Comparisons = array(
-        'gt' => T('More than:'),
-        'lt' => T('Less than:'),
-        'gte' => T('More than or:')
-    );
+        $string = $form->label('Yaga.Rules.QnAAnserCount.Criteria.Head', 'QnAAnserCount');
+        $string .= $form->dropDown('Comparison', $comparisons);
+        $string .= $form->textbox('Target');
 
-    $String = $Form->Label('Yaga.Rules.QnAAnserCount.Criteria.Head', 'QnAAnserCount');
-    $String .= $Form->DropDown('Comparison', $Comparisons) . ' ';
-    $String .= $Form->Textbox('Target', array('class' => 'SmallInput'));
+        return $string;
+    }
 
-    return $String;
-  }
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('Target', ['Required', 'Integer']);
+        $validation->applyRule('Comparison', 'Required');
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
+    }
+    public function hooks() {
+        return ['gdn_dispatcher_appStartup'];
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('Target', array('Required', 'Integer'));
-    $Validation->ApplyRule('Comparison', 'Required');
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
-  public function Hooks() {
-    return array('gdn_dispatcher_appStartup');
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.QnAAnserCount.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Description() {
-    $Description = T('Yaga.Rules.QnAAnserCount.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.QnAAnserCount');
+    }
 
-  public function Name() {
-    return T('Yaga.Rules.QnAAnserCount');
-  }
-  
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 }

@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges based on a user's join date
@@ -9,53 +9,49 @@
  */
 class LengthOfService implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $InsertDate = strtotime($User->DateInserted);
-    $TargetDate = strtotime($Criteria->Duration . ' ' . $Criteria->Period . ' ago');
-    if($InsertDate < $TargetDate) {
-      return TRUE;
+    public function award($sender, $user, $criteria) {
+        $insertDate = strtotime($user->DateInserted);
+        $targetDate = strtotime($criteria->Duration.' '.$criteria->Period.' ago');
+
+        return $insertDate < $targetDate;
     }
-    else {
-      return FALSE;
+
+    public function form($form) {
+        $lengths = [
+            'day' => Gdn::translate('Days'),
+            'week' => Gdn::translate('Weeks'),
+            'year' => Gdn::translate('Years')
+        ];
+
+        $string = $form->label('Yaga.Rules.LengthOfService.Criteria.Head', 'LengthOfService');
+        $string .= $form->textbox('Duration');
+        $string .= $form->dropDown('Period', $lengths);
+
+        return $string;
     }
-  }
 
-  public function Form($Form) {
-    $Lengths = array(
-        'day' => T('Days'),
-        'week' => T('Weeks'),
-        'year' => T('Years')
-    );
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('Duration', ['Required', 'Integer']);
+        $validation->applyRule('Period', 'Required');
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
+    }
 
-    $String = $Form->Label('Yaga.Rules.LengthOfService.Criteria.Head', 'LengthOfService');
-    $String .= $Form->Textbox('Duration', array('class' => 'SmallInput')) . ' ';
-    $String .= $Form->DropDown('Period', $Lengths);
+    public function hooks() {
+        return ['gdn_dispatcher_appStartup'];
+    }
 
-    return $String;
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.LengthOfService.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('Duration', array('Required', 'Integer'));
-    $Validation->ApplyRule('Period', 'Required');
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.LengthOfService');
+    }
 
-  public function Hooks() {
-    return array('gdn_dispatcher_appStartup');
-  }
-
-  public function Description() {
-    $Description = T('Yaga.Rules.LengthOfService.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
-
-  public function Name() {
-    return T('Yaga.Rules.LengthOfService');
-  }
-  
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 }

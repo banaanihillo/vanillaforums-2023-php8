@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges when a user comments on a dead discussion.
@@ -9,60 +9,55 @@
  */
 class NecroPost implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $NecroDate = strtotime($Criteria->Duration . ' ' . $Criteria->Period . ' ago');
-    
-    // Get the last comment date from the parent discussion
-    $Args = $Sender->EventArguments;
-    $DiscussionID = $Args['FormPostValues']['DiscussionID'];
-    $DiscussionModel = new DiscussionModel();
-    $Discussion = $DiscussionModel->GetID($DiscussionID);
-    $LastCommentDate = strtotime($Discussion->DateLastComment);
-    
-    if($Discussion->DateLastComment && $LastCommentDate < $NecroDate) {
-      return TRUE;
+    public function award($sender, $user, $criteria) {
+        $necroDate = strtotime($criteria->Duration.' '.$criteria->Period.' ago');
+
+        // Get the last comment date from the parent discussion
+        $args = $sender->EventArguments;
+        $discussionID = $args['FormPostValues']['DiscussionID'];
+        $discussionModel = new DiscussionModel();
+        $discussion = $discussionModel->getID($discussionID);
+        $lastCommentDate = strtotime($discussion->DateLastComment);
+
+        return $discussion->DateLastComment && $lastCommentDate < $necroDate;
     }
-    else {
-      return FALSE;
+
+    public function form($form) {
+        $lengths = [
+            'day' => Gdn::translate('Days'),
+            'week' => Gdn::translate('Weeks'),
+            'year' => Gdn::translate('Years')
+        ];
+
+        $string = $form->label('Yaga.Rules.NecroPost.Criteria.Head', 'NecroPost');
+        $string .= $form->textbox('Duration');
+        $string .= $form->dropDown('Period', $lengths);
+
+        return $string;
     }
-  }
 
-  public function Form($Form) {
-    $Lengths = array(
-        'day' => T('Days'),
-        'week' => T('Weeks'),
-        'year' => T('Years')
-    );
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('Duration', ['Required', 'Integer']);
+        $validation->applyRule('Period', 'Required');
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
+    }
 
-    $String = $Form->Label('Yaga.Rules.NecroPost.Criteria.Head', 'NecroPost');
-    $String .= $Form->Textbox('Duration', array('class' => 'SmallInput')) . ' ';
-    $String .= $Form->DropDown('Period', $Lengths);
+    public function hooks() {
+        return ['commentModel_afterSaveComment'];
+    }
 
-    return $String;
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.NecroPost.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('Duration', array('Required', 'Integer'));
-    $Validation->ApplyRule('Period', 'Required');
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.NecroPost');
+    }
 
-  public function Hooks() {
-    return array('commentModel_afterSaveComment');
-  }
-
-  public function Description() {
-    $Description = T('Yaga.Rules.NecroPost.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
-
-  public function Name() {
-    return T('Yaga.Rules.NecroPost');
-  }
-  
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 }

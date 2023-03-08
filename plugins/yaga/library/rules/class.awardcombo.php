@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges based on a user's badge awards.
@@ -11,69 +11,68 @@
  */
 class AwardCombo implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $UserID = $Sender->EventArguments['UserID'];
-    $Target = $Criteria->Target;
+    public function award($sender, $user, $criteria) {
+        $userID = $sender->EventArguments['UserID'];
+        $target = $criteria->Target;
 
-    $BadgeAwardModel = Yaga::BadgeAwardModel();
-    $TargetDate = strtotime($Criteria->Duration . ' ' . $Criteria->Period . ' ago');
-    $Badges = $BadgeAwardModel->GetByUser($UserID);
+        $badgeAwardModel = Gdn::getContainer()->get(BadgeAwardModel::class);
+        $targetDate = strtotime($criteria->Duration.' '.$criteria->Period.' ago');
+        $badges = $badgeAwardModel->getByUser($userID);
 
-    $Types = array();
-    foreach($Badges as $Badge) {
-      if(strtotime($Badge['DateInserted']) >= $TargetDate) {
-        $Types[$Badge['RuleClass']] = TRUE;
-      }
+        $types = [];
+        foreach ($badges as $badge) {
+            if (strtotime($badge['DateInserted']) >= $targetDate) {
+                $types[$badge['RuleClass']] = true;
+            }
+        }
+
+        if (count($types) >= $target) {
+            return $userID;
+        } else {
+            return false;
+        }
     }
 
-    if(count($Types) >= $Target) {
-      return $UserID;
+    public function form($form) {
+        $lengths = [
+            'day' => Gdn::translate('Days'),
+            'week' => Gdn::translate('Weeks'),
+            'year' => Gdn::translate('Years')
+        ];
+
+        $string = $form->label('Yaga.Rules.AwardCombo.Criteria.Head', 'AwardCombo');
+        $string .= $form->textbox('Target');
+        $string .= $form->label('Time Frame');
+        $string .= $form->textbox('Duration');
+        $string .= $form->dropDown('Period', $lengths);
+
+        return $string;
     }
-    else {
-      return FALSE;
+
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('Target', ['Required', 'Integer']);
+        $validation->applyRule('Duration', ['Required', 'Integer']);
+        $validation->applyRule('Period', 'Required');
+
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
     }
-  }
 
-  public function Form($Form) {
-    $Lengths = array(
-        'day' => T('Days'),
-        'week' => T('Weeks'),
-        'year' => T('Years')
-    );
+    public function hooks() {
+        return ['badgeAwardModel_afterBadgeAward'];
+    }
 
-    $String = $Form->Label('Yaga.Rules.AwardCombo.Criteria.Head', 'AwardCombo');
-    $String .= $Form->Textbox('Target', array('class' => 'SmallInput'));
-    $String .= $Form->Label('Time Frame');
-    $String .= $Form->Textbox('Duration', array('class' => 'SmallInput')) . ' ';
-    $String .= $Form->DropDown('Period', $Lengths);
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.AwardCombo.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-    return $String;
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.AwardCombo');
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('Target', array('Required', 'Integer'));
-    $Validation->ApplyRule('Duration', array('Required', 'Integer'));
-    $Validation->ApplyRule('Period', 'Required');
-
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
-
-  public function Hooks() {
-    return array('badgeAwardModel_afterBadgeAward');
-  }
-
-  public function Description() {
-    $Description = T('Yaga.Rules.AwardCombo.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
-
-  public function Name() {
-    return T('Yaga.Rules.AwardCombo');
-  }
-  
-  public function Interacts() {
-    return TRUE;
-  }
+    public function interacts() {
+        return true;
+    }
 }

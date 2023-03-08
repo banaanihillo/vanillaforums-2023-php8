@@ -1,23 +1,22 @@
-# Yaga
+# YAGA for Vanilla 3.2 and up
 
-**Y**&#8203;et **A**&#8203;nother **G**&#8203;amification **A**&#8203;pplication is a Garden application that provides a gamification platform for Vanilla Forums and other Garden applications. It integrates by default with Vanilla Forums. Out of the box, it provides Reactions, Badges, and Ranks.
+This is a fork of the great YAGA (Yet Another Gamification Application) for Vanilla forums by @hgtonight.
+All of the original credit goes to him.
 
-It is released under the GPLv2 and may be released under a different license _**with permission**_.
+https://github.com/hgtonight/Application-Yaga
 
-## Requirements
+## Installation
 
-Yaga requires:
+This is a **plugin**.
+Please install it to `plugins/yaga` and enable it through the Vanilla dashboard.
 
-* Vanilla 2.2.x (Garden is the actual requirement)
-* Pretty URLs enabled
+*If you have the original YAGA application installed:*
 
-## Contributing
+* Disable the old application first.
+* Make sure you remove the folder `applications/yaga` **entirely** before enabling the new plugin.
+If the old folder still exists, Vanilla will autoload wrong classes and the plugin will not work.
+* Delete the addon cache `cache/addon.php`
+* Unpack this plugin to `plugins/yaga` and enable it in the dashboard.
 
-Please contribute fixes against the `develop` branch.
-
-## Documentation
-
-Yaga's [main documentation page is here](http://hgtonight.github.io/Application-Yaga/).
-
----
-Copyright 2013 - 2016 © Zachary Doll
+Upon installation, all tables and data will be converted automatically.
+You may need to run `utility/structure` twice.

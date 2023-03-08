@@ -1,51 +1,67 @@
 <?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013 Zachary Doll */
 
-$Rules = $this->Data('Rules');
+$rules = $this->data('Rules');
 
-echo Wrap($this->Title(), 'h1');
-echo Wrap(Wrap(T('Yaga.Badges.Desc'), 'div'), 'div', array('class' => 'Wrap'));
-echo Wrap(Wrap(T('Yaga.Badges.Settings.Desc'), 'div'), 'div', array('class' => 'Wrap'));
-echo Wrap(Anchor(T('Yaga.Badge.Add'), 'badge/add', array('class' => 'Button')), 'div', array('class' => 'Wrap'));
+echo heading($this->title(), Gdn::translate('Yaga.Badge.Add'), 'badge/add', 'btn btn-primary');
 
+echo helpAsset(Gdn::translate('Yaga.Badges'), Gdn::translate('Yaga.Badges.Desc'));
+
+echo wrap(Gdn::translate('Yaga.Badges.Settings.Desc'), 'div', ['class' => 'padded']);
 ?>
-<table id="Badges" class="AltRows Sortable">
-  <thead>
-    <tr>
-      <th><?php echo T('Image'); ?></th>
-      <th><?php echo T('Name'); ?></th>
-      <th><?php echo T('Description'); ?></th>
-      <th><?php echo T('Rule'); ?></th>
-      <th><?php echo T('Award Value'); ?></th>
-      <th><?php echo T('Auto Award'); ?></th>
-      <th><?php echo T('Options'); ?></th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-    $Alt = 'Alt';
-    foreach($this->Data('Badges') as $Badge) {
-      $Alt = $Alt ? '' : 'Alt';
-      $Row = '';
 
-      $BadgePhoto = Img($Badge->Photo, array('class' => 'BadgePhoto'));
+<div class="table-wrap">
+    <table id="Badges" class="table-data Sortable">
+        <thead>
+            <tr>
+                <th class="column-sm"><?php echo Gdn::translate('Image'); ?></th>
+                <th><?php echo Gdn::translate('Name'); ?></th>
+                <th class="column-lg"><?php echo Gdn::translate('Description'); ?></th>
+                <th><?php echo Gdn::translate('Rule'); ?></th>
+                <th class="column-sm"><?php echo Gdn::translate('Award Value'); ?></th>
+                <th class="column-sm"><?php echo Gdn::translate('Auto Award'); ?></th>
+                <th class="options column-sm"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            foreach ($this->data('Badges') as $badge) {
+                $tr = '<tr id="BadgeID_'.$badge->BadgeID.'" data-badgeid="'.$badge->BadgeID.'">';
 
-      $Row .= Wrap(Anchor($BadgePhoto, '/yaga/badges/' . $Badge->BadgeID . '/' . Gdn_Format::Url($Badge->Name), array('title' => T('Yaga.Badge.DetailLink'))), 'td');
-      $Row .= Wrap($Badge->Name, 'td');
-      $Row .= Wrap($Badge->Description, 'td');
-      $RuleName = T('Yaga.Rules.UnknownRule');
-      if(array_key_exists($Badge->RuleClass, $Rules)) {
-        $RuleName = $Rules[$Badge->RuleClass];
-      }
-      $Row .= Wrap($RuleName, 'td');
-      $Row .= Wrap($Badge->AwardValue, 'td');
-      $ToggleText = ($Badge->Enabled) ? T('Enabled') : T('Disabled');
-      $ActiveClass = ($Badge->Enabled) ? 'Active' : 'InActive';
-      $Row .= Wrap(Wrap(Anchor($ToggleText, 'badge/toggle/' . $Badge->BadgeID, 'Hijack Button'), 'span', array('class' => "ActivateSlider ActivateSlider-{$ActiveClass}")), 'td');
-      $Row .= Wrap(Anchor(T('Edit'), 'badge/edit/' . $Badge->BadgeID, array('class' => 'Button')) . Anchor(T('Delete'), 'badge/delete/' . $Badge->BadgeID, array('class' => 'Danger Popup Button')), 'td');
-      echo Wrap($Row, 'tr', array('id' => 'BadgeID_' . $Badge->BadgeID, 'data-badgeid' => $Badge->BadgeID, 'class' => $Alt));
-    }
-    ?>
-  </tbody>
-</table>
-<?php PagerModule::Write(array('Sender' => $this));
+                $tr .= wrap(anchor(
+                    img($badge->Photo, ['class' => 'BadgePhoto']),
+                    '/yaga/badges/'.$badge->BadgeID.'/'.rawurlencode($badge->Name),
+                    ['title' => Gdn::translate('Yaga.Badge.DetailLink')]
+                ), 'td');
+
+                $tr .= wrap(wrap($badge->Name, 'strong'), 'td');
+
+                $tr .= wrap($badge->Description, 'td');
+
+                $tr .= wrap($rules[$badge->RuleClass] ?? Gdn::translate('Yaga.Rules.UnknownRule'), 'td');
+
+                $tr .= wrap($badge->AwardValue, 'td');
+
+                $tr .= wrap(renderYagaToggle('badge/toggle/'.$badge->BadgeID, $badge->Enabled, $badge->BadgeID), 'td');
+
+                $tr .= '<td class="options">';
+                $tr .= renderYagaOptionButtons(
+                    'badge/edit/'.$badge->BadgeID,
+                    'badge/delete/'.$badge->BadgeID,
+                    false
+                );
+                $tr .= '</td>';
+
+                $tr .= '</tr>';
+
+                echo $tr;
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
+
+<?php
+// This page cannot have a pager as this would interfere with sorting.
+//PagerModule::write(['Sender' => $this, 'View' => 'pager-dashboard']);

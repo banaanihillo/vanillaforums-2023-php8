@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges if the user posts on the anniversary of their account
@@ -10,49 +10,42 @@
  */
 class CakeDayPost implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    // Determine if today is the target day
-    $CakeDate = strtotime($User->DateInserted);
-    
-    $CakeYear = date('Y', $CakeDate);
-    $CakeMonth = date('n', $CakeDate);
-    $CakeDay = date('j', $CakeDate);
-    $TodaysYear = date('Y');
-    $TodaysMonth = date('n');
-    $TodaysDay = date('j');
+    public function award($sender, $user, $criteria) {
+        // Determine if today is the target day
+        $cakeDate = strtotime($user->DateInserted);
 
-    if($CakeMonth == $TodaysMonth
-            && $CakeDay == $TodaysDay
-            && $CakeYear != $TodaysYear) {
-      return TRUE;
+        $cakeYear = date('Y', $cakeDate);
+        $cakeMonth = date('n', $cakeDate);
+        $cakeDay = date('j', $cakeDate);
+        $todaysYear = date('Y');
+        $todaysMonth = date('n');
+        $todaysDay = date('j');
+
+        return $cakeMonth == $todaysMonth && $cakeDay == $todaysDay && $cakeYear != $todaysYear;
     }
-    else {
-      return FALSE;
+
+    public function form($form) {
+        return '';
     }
-  }
 
-  public function Form($Form) {
-    return '';
-  }
+    public function validate($criteria, $form) {
+        return;
+    }
 
-  public function Validate($Criteria, $Form) {
-    return;
-  }
+    public function hooks() {
+        return ['discussionModel_afterSaveDiscussion', 'commentModel_afterSaveComment', 'activityModel_beforeSaveComment'];
+    }
 
-  public function Hooks() {
-    return array('discussionModel_afterSaveDiscussion', 'commentModel_afterSaveComment', 'activityModel_beforeSaveComment');
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.CakeDayPost.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Description() {
-    $Description = T('Yaga.Rules.CakeDayPost.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.CakeDayPost');
+    }
 
-  public function Name() {
-    return T('Yaga.Rules.CakeDayPost');
-  }
-  
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 }

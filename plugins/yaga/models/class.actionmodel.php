@@ -1,4 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013 Zachary Doll */
 
 /**
@@ -12,103 +13,96 @@
 
 class ActionModel extends Gdn_Model {
 
-  /**
-   * This is used as a cache.
-   * @var object
-   */
-  private static $_Actions = NULL;
+    /**
+     * This is used as a cache.
+     * @var object
+     */
+    private $_actions = null;
 
-  /**
-   * Defines the related database table name.
-   */
-  public function __construct() {
-    parent::__construct('Action');
-  }
-
-  /**
-   * Returns a list of all available actions
-   *
-   * @return dataset
-   */
-  public function Get($orderFields = '', $orderDirection = 'asc', $limit = false, $pageNumber = false) {
-    if(empty(self::$_Actions)) {
-      self::$_Actions = $this->SQL
-              ->Select()
-              ->From('Action')
-              ->OrderBy('Sort')
-              ->Get()
-              ->Result();
+    /**
+     * Defines the related database table name.
+     */
+    public function __construct() {
+        parent::__construct('YagaAction');
+        $this->PrimaryKey = 'ActionID';
     }
-    return self::$_Actions;
-  }
 
-  /**
-   * Returns data for a specific action
-   *
-   * @param int $ActionID
-   * @return dataset
-   */
-  public function GetByID($ActionID) {
-    $Action = $this->SQL
-                    ->Select()
-                    ->From('Action')
-                    ->Where('ActionID', $ActionID)
-                    ->Get()
-                    ->FirstRow();
-    return $Action;
-  }
+    /**
+     * Returns a list of all available actions
+     *
+     * @return Gdn_DataSet
+     */
+    public function get($orderFields = '', $orderDirection = 'asc', $limit = false, $pageNumber = false) {
+        if ($orderFields !== '' || $orderDirection !== 'asc' || $limit !== false || $pageNumber !== false) {
+            return parent::get($orderFields, $orderDirection, $limit, $pageNumber);
+        }
 
-  /**
-   * Determine if a specified action exists
-   *
-   * @param int $ActionID
-   * @return bool
-   */
-  public function Exists($ActionID) {
-    $temp = $this->GetByID($ActionID);
-    return !empty($temp);
-  }
+        // Cache any get() call with default arguments.
+        if (empty($this->_actions)) {
+            $this->_actions = $this->SQL
+                ->select()
+                ->from($this->Name)
+                ->orderBy('Sort')
+                ->get()
+                ->result();
+        }
 
-  /**
-   * Remove an action from the db
-   *
-   * @param int $ActionID
-   * @param int $ReplacementID what action ID existing reactions should report
-   * to. Null will delete the associated reactions.
-   * @return boolean Whether or not the deletion was successful
-   */
-  public function DeleteAction($ActionID, $ReplacementID = NULL) {
-    if($this->Exists($ActionID)) {
-      $this->SQL->Delete('Action', array('ActionID' => $ActionID));
-
-      // replace the reaction table to move reactions to a new action
-      if($ReplacementID && $this->Exists($ReplacementID)) {
-        $this->SQL->Update('Reaction')
-                ->Set('ActionID', $ReplacementID)
-                ->Where('ActionID', $ActionID)
-                ->Put();
-      }
-      else {
-        $this->SQL->Delete('Reaction', array('ActionID' => $ActionID));
-      }
-      return TRUE;
+        return $this->_actions;
     }
-    return FALSE;
-  }
 
-  /**
-   * Updates the sort field for each action in the sort array
-   *
-   * @param array $SortArray
-   * @return boolean
-   */
-  public function SaveSort($SortArray) {
-    foreach($SortArray as $Index => $Action) {
-      // remove the 'ActionID_' prefix
-      $ActionID = substr($Action, 9);
-      $this->SetField($ActionID, 'Sort', $Index);
+    /**
+     * Determine if a specified action exists
+     *
+     * @param int $actionID
+     * @return bool
+     */
+    public function exists($actionID) {
+        return !empty($this->getID($actionID));
     }
-    return TRUE;
-  }
+
+    /**
+     * Remove an action from the db
+     *
+     * @param int $actionID
+     * @param int $replacementID what action ID existing reactions should report
+     * to. null will delete the associated reactions.
+     * @return boolean Whether or not the deletion was successful
+     */
+    public function deleteAction($actionID, $replacementID = null) {
+        if (!$this->exists($actionID)) {
+            return false;
+        }
+
+        $this->deleteID($actionID);
+
+        // replace the reaction table to move reactions to a new action
+        $reactionModel = Gdn::getContainer()->get(ReactionModel::class);
+
+        if ($replacementID && $this->exists($replacementID)) {
+            $reactionModel->update(
+                ['ActionID' => $replacementID],
+                ['ActionID' => $actionID]
+            );
+        } else {
+            $reactionModel->delete(['ActionID' => $actionID]);
+        }
+
+        return true;
+    }
+
+    /**
+     * Updates the sort field for each action in the sort array
+     *
+     * @param array $sortArray
+     * @return boolean
+     */
+    public function saveSort($sortArray) {
+        foreach ($sortArray as $index => $action) {
+            // remove the 'ActionID_' prefix
+            $actionID = substr($action, 9);
+            $this->setField($actionID, 'Sort', $index);
+        }
+        return true;
+    }
 
 }

@@ -1,4 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
+
 /**
  * A collection of hooks that are enabled when Yaga is.
  * 
@@ -7,35 +8,40 @@
  * @copyright (c) 2013-2014, Zachary Doll
  */
 
+use Vanilla\Formatting\DateTimeFormatter;
+
 /**
  * Writes a discussion out for use in a module
  * 
- * @param stdClass $Discussion
- * @param string $Px
+ * @param stdClass $discussion
+ * @param string $px
  */
-function WriteModuleDiscussion($Discussion, $Px = 'Bookmark') {
+function writeModuleDiscussion($discussion, $px = 'Bookmark') {
+    $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+
 ?>
-<li id="<?php echo "{$Px}_{$Discussion->DiscussionID}"; ?>" class="<?php echo CssClass($Discussion); ?>">
-   <span class="Options">
-      <?php
-//      echo OptionsList($Discussion);
-      echo BookmarkButton($Discussion);
-      ?>
-   </span>
-   <div class="Title"><?php
-      echo Anchor(Gdn_Format::Text($Discussion->Name, FALSE), DiscussionUrl($Discussion).($Discussion->CountCommentWatch > 0 ? '#Item_'.$Discussion->CountCommentWatch : ''), 'DiscussionLink');
-   ?></div>
-   <div class="Meta">
-      <?php
-         $Last = new stdClass();
-         $Last->UserID = $Discussion->LastUserID;
-         $Last->Name = $Discussion->LastName;
+<li id="<?php echo "{$px}_{$discussion->DiscussionID}"; ?>" class="<?php echo cssClass($discussion); ?>">
+     <span class="Options">
+        <?php
+//      echo optionsList($discussion);
+        echo bookmarkButton($discussion);
+        ?>
+     </span>
+     <div class="Title"><?php
+        echo anchor(htmlspecialchars($discussion->Name), discussionUrl($discussion).($discussion->CountCommentWatch > 0 ? '#Item_'.$discussion->CountCommentWatch : ''), 'DiscussionLink');
+     ?></div>
+     <div class="Meta">
+        <?php
+            $last = [
+                'UserID' => $discussion->LastUserID,
+                'Name' => $discussion->LastName
+            ];
 
-         echo NewComments($Discussion);
+            echo newComments($discussion);
 
-         echo '<span class="MItem">'.Gdn_Format::Date($Discussion->LastDate, 'html').UserAnchor($Last).'</span>';
-      ?>
-   </div>
+            echo '<span class="MItem">'.$dateFormatter->formatDate($badge->DateInserted, true).userAnchor($last).'</span>';
+        ?>
+     </div>
 </li>
 <?php
 }
@@ -43,73 +49,87 @@ function WriteModuleDiscussion($Discussion, $Px = 'Bookmark') {
 /**
  * Writes a discussion or comment out for use in a module
  * 
- * @staticvar boolean $UserPhotoFirst
- * @param array $Content
- * @param mixed $Sender calling object.
+ * @staticvar boolean $userPhotoFirst
+ * @param array $content
+ * @param mixed $sender calling object.
  */
-function WritePromotedContent($Content, $Sender) {
-   static $UserPhotoFirst = NULL;
-   if ($UserPhotoFirst === NULL) {
-      $UserPhotoFirst = C('Vanilla.Comment.UserPhotoFirst', TRUE);
-   }
+function writePromotedContent($content, $sender) {
+    static $userPhotoFirst = null;
+    if ($userPhotoFirst === null) {
+        $userPhotoFirst = Gdn::config('Vanilla.Comment.UserPhotoFirst', true);
+    }
 
-   $ContentType = GetValue('ItemType', $Content);
-   $ContentID = GetValue("{$ContentType}ID", $Content);
-   $Author = GetValue('Author', $Content);
+    $dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
 
-   switch (strtolower($ContentType)) {
-      case 'comment':
-         $ContentURL = CommentUrl($Content);
-         break;
-      case 'discussion':
-         $ContentURL = DiscussionUrl($Content);
-         break;
-   }
-   $Sender->EventArgs['Content'] = $Content;
-   $Sender->EventArgs['ContentUrl'] = $ContentURL;
+    $contentType = $content['ItemType'];
+    $contentID = $content['ContentID'];
+    $author = $content['Author'] ?? false;
+
+    switch (strtolower($contentType)) {
+        case 'comment':
+            $contentURL = commentUrl($content);
+            break;
+        case 'discussion':
+            $contentURL = discussionUrl($content);
+            break;
+    }
+     $sender->EventArgs['Content'] = $content;
+     $sender->EventArgs['ContentUrl'] = $contentURL;
 ?>
-   <div id="<?php echo "Promoted_{$ContentType}_{$ContentID}"; ?>" class="<?php echo CssClass($Content); ?>">
-      <div class="AuthorWrap">
-         <span class="Author">
-            <?php
-            if ($UserPhotoFirst) {
-               echo UserPhoto($Author);
-               echo UserAnchor($Author, 'Username');
-            } else {
-               echo UserAnchor($Author, 'Username');
-               echo UserPhoto($Author);
-            }
-            $Sender->FireEvent('AuthorPhoto');
-            ?>
-         </span>
-         <span class="AuthorInfo">
-            <?php
-            echo ' '.WrapIf(htmlspecialchars(GetValue('Title', $Author)), 'span', array('class' => 'MItem AuthorTitle'));
-            echo ' '.WrapIf(htmlspecialchars(GetValue('Location', $Author)), 'span', array('class' => 'MItem AuthorLocation'));
-            $Sender->FireEvent('AuthorInfo');
-            ?>
-         </span>
-      </div>
-      <div class="Meta CommentMeta CommentInfo">
-         <span class="MItem DateCreated">
-            <?php echo Anchor(Gdn_Format::Date($Content['DateInserted'], 'html'), $ContentURL, 'Permalink', array('rel' => 'nofollow')); ?>
-         </span>
-         <?php
-         // Include source if one was set
-         if ($Source = GetValue('Source', $Content)) {
-            echo Wrap(sprintf(T('via %s'), T($Source.' Source', $Source)), 'span', array('class' => 'MItem Source'));
-         }
+     <div id="<?php echo "Promoted_{$contentType}_{$contentID}"; ?>" class="<?php echo cssClass($content); ?>">
+            <div class="AuthorWrap">
+                <span class="Author">
+                    <?php
+                    if ($userPhotoFirst) {
+                        echo userPhoto($author);
+                        echo userAnchor($author, 'Username');
+                    } else {
+                        echo userAnchor($author, 'Username');
+                        echo userPhoto($author);
+                    }
+                    $sender->fireEvent('AuthorPhoto');
+                    ?>
+                </span>
+                <span class="AuthorInfo">
+                    <?php
+                    echo ' '.wrapIf(htmlspecialchars($author['Title'] ?? ''), 'span', ['class' => 'MItem AuthorTitle']);
+                    echo ' '.wrapIf(htmlspecialchars($author['Location'] ?? ''), 'span', ['class' => 'MItem AuthorLocation']);
+                    $sender->fireEvent('AuthorInfo');
+                    ?>
+                </span>
+            </div>
+            <div class="Meta CommentMeta CommentInfo">
+                <span class="MItem DateCreated">
+                    <?php
+                        echo anchor(
+                            $dateFormatter->formatDate($content['DateInserted'], true),
+                            $contentURL,
+                            'Permalink',
+                            ['rel' => 'nofollow']
+                        );
+                    ?>
+                </span>
+                <?php
+                // Include source if one was set
+                $source = $content['Source'] ?? false;
+                if ($source) {
+                   echo wrap(sprintf(Gdn::translate('via %s'), Gdn::translate($source.' Source', $source)), 'span', ['class' => 'MItem Source']);
+                }
 
-         $Sender->FireEvent('ContentInfo');
-         ?>
-      </div>
-      <div class="Title"><?php echo Anchor(Gdn_Format::Text($Content['Name'], FALSE), $ContentURL, 'DiscussionLink'); ?></div>
-      <div class="Body">
-      <?php
-         echo Anchor(strip_tags(Gdn_Format::To($Content['Body'], $Content['Format'])), $ContentURL, 'BodyLink');
-         $Sender->FireEvent('AfterBody'); // seperate event to account for less space.
-      ?>
-      </div>
-   </div>
+                $sender->fireEvent('ContentInfo');
+                ?>
+            </div>
+            <div class="Title"><?php echo anchor(htmlspecialchars($content['Name']), $contentURL, 'DiscussionLink'); ?></div>
+            <div class="Body">
+            <?php
+                echo anchor(
+                    strip_tags(Gdn::formatService()->renderHTML($content['Body'], $content['Format'])),
+                    $contentURL,
+                    'BodyLink'
+                );
+                $sender->fireEvent('AfterBody'); // seperate event to account for less space.
+            ?>
+            </div>
+     </div>
 <?php
 }

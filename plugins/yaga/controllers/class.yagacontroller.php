@@ -1,4 +1,5 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013 Zachary Doll */
 
 /**
@@ -9,566 +10,578 @@
  */
 class YagaController extends DashboardController {
 
-  /**
-   * @var array These objects will be created on instantiation and available via
-   * $this->ObjectName
-   */
-  public $Uses = array('Form');
+    /**
+     * @var array These objects will be created on instantiation and available via
+     * $this->ObjectName
+     */
+    public $Uses = ['Form', 'ActionModel', 'BadgeModel', 'RankModel', 'BadgeAwardModel'];
 
-  /**
-   * Make this look like a dashboard page and add the resources
-   *
-   * @since 1.0
-   * @access public
-   */
-  public function Initialize() {
-    parent::Initialize();
-    $this->Application = 'Yaga';
-    Gdn_Theme::Section('Dashboard');
-    if($this->Menu) {
-      $this->Menu->HighlightRoute('/yaga');
-    }
-    $this->setHighlightRoute('yaga/settings');
-
-    $this->AddCssFile('yaga.css');
-    $this->removeCssFile('magnific-popup.css');
-  }
-
-  /**
-   * Redirect to settings by default
-   *
-   * @since 1.0
-   */
-  public function Index() {
-    $this->Settings();
-  }
-
-  /**
-   * This handles all the core settings for the gamification application.
-   *
-   * @since 1.0
-   */
-  public function Settings() {
-    $this->Permission('Garden.Settings.Manage');
-    $this->Title(T('Yaga.Settings'));
-
-    // Get list of actions from the model and pass to the view
-    $ConfigModule = new ConfigurationModule($this);
-
-    $ConfigModule->Initialize(array(
-        'Yaga.Reactions.Enabled' => array(
-            'LabelCode' => 'Yaga.Reactions.Use',
-            'Control' => 'Checkbox'
-        ),
-        'Yaga.Badges.Enabled' => array(
-            'LabelCode' => 'Yaga.Badges.Use',
-            'Control' => 'Checkbox'
-        ),
-        'Yaga.Ranks.Enabled' => array(
-            'LabelCode' => 'Yaga.Ranks.Use',
-            'Control' => 'Checkbox'
-        ),
-        'Yaga.MenuLinks.Show' => array(
-            'LabelCode' => 'Yaga.MenuLinks.Show',
-            'Control' => 'Checkbox'
-        ),
-        'Yaga.LeaderBoard.Enabled' => array(
-            'LabelCode' => 'Yaga.LeaderBoard.Use',
-            'Control' => 'Checkbox'
-        ),
-        'Yaga.LeaderBoard.Limit' => array(
-            'LabelCode' => 'Yaga.LeaderBoard.Max',
-            'Control' => 'Textbox',
-            'Options' => array(
-                'Size' => 45,
-                'class' => 'SmallInput'
-            )
-        )
-    ));
-    $this->ConfigurationModule = $ConfigModule;
-
-    $this->Render('settings');
-  }
-
-  /**
-   * Performs the necessary functions to change a backend controller into a
-   * frontend controller
-   *
-   * @since 1.1
-   */
-  private function FrontendStyle() {
-    $this->RemoveCssFile('admin.css');
-    unset($this->Assets['Panel']['SideMenuModule']);
-    $this->AddCssFile('style.css');
-    $this->MasterView = 'default';
-
-    $WeeklyModule = new LeaderBoardModule();
-    $WeeklyModule->SlotType = 'w';
-    $this->AddModule($WeeklyModule);
-    $AllTimeModule = new LeaderBoardModule();
-    $this->AddModule($AllTimeModule);
-  }
-
-  /**
-   * Displays a summary of ranks currently configured on a frontend page to help
-   * users understand what is valued in this community
-   *
-   * @since 1.1
-   */
-  public function Ranks() {
-    $this->permission('Yaga.Ranks.View');
-    $this->FrontendStyle();
-    $this->AddCssFile('ranks.css');
-    $this->Title(T('Yaga.Ranks.All'));
-
-    // Get list of ranks from the model and pass to the view
-    $this->SetData('Ranks', Yaga::RankModel()->Get());
-
-    $this->Render('ranks');
-  }
-
-  /**
-   * Displays a summary of badges currently configured on a frontend page to
-   * help users understand what is valued in this community.
-   *
-   * Also provides a convenience redirect to badge details
-   *
-   * @param int $BadgeID The badge ID you want to see details
-   * @param string $Slug The badge slug you want to see details
-   * @since 1.1
-   */
-  public function Badges($BadgeID = FALSE, $Slug = NULL) {
-    $this->permission('Yaga.Badges.View');
-    $this->FrontendStyle();
-    $this->AddCssFile('badges.css');
-    $this->AddModule('BadgesModule');
-
-    if(is_numeric($BadgeID)) {
-      return $this->BadgeDetail($BadgeID, $Slug);
-    }
-
-    $this->Title(T('Yaga.Badges.All'));
-
-    // Get list of badges from the model and pass to the view
-    $UserID = Gdn::Session()->UserID;
-    $AllBadges = Yaga::BadgeModel()->GetWithEarned($UserID);
-    $this->SetData('Badges', $AllBadges);
-
-    $this->Render('badges');
-  }
-
-  /**
-   * Displays information about the specified badge including recent recipients
-   * of the badge.
-   *
-   * @param int $BadgeID
-   * @param string $Slug
-   */
-  public function BadgeDetail($BadgeID, $Slug = NULL) {
-    $this->permission('Yaga.Badges.View');
-    $Badge = Yaga::BadgeModel()->GetByID($BadgeID);
-
-    if(!$Badge) {
-      throw NotFoundException('Badge');
-    }
-
-    $UserID = Gdn::Session()->UserID;
-    $BadgeAwardModel = Yaga::BadgeAwardModel();
-    $AwardCount = $BadgeAwardModel->GetCount($BadgeID);
-    $UserBadgeAward = $BadgeAwardModel->Exists($UserID, $BadgeID);
-    $RecentAwards = $BadgeAwardModel->GetRecent($BadgeID);
-
-
-    $this->SetData('AwardCount', $AwardCount);
-    $this->SetData('RecentAwards', $RecentAwards);
-    $this->SetData('UserBadgeAward', $UserBadgeAward);
-    $this->SetData('Badge', $Badge);
-
-    $this->Title(T('Yaga.Badge.View') . $Badge->Name);
-
-    $this->Render('badgedetail');
-  }
-
-  /**
-   * Import a Yaga transport file
-   *
-   * @since 1.0
-   */
-  public function Import() {
-    $this->Title(T('Yaga.Import'));
-    $this->SetData('TransportType', 'Import');
-
-    if(!class_exists('ZipArchive')) {
-      $this->Form->AddError(T('Yaga.Error.TransportRequirements'));
-    }
-
-    if($this->Form->IsPostBack() == TRUE) {
-      // Handle the file upload
-      $Upload = new Gdn_Upload();
-      $TmpZip = $Upload->ValidateUpload('FileUpload', FALSE);
-
-      $ZipFile = FALSE;
-      if($TmpZip) {
-        // Generate the target name
-        $TargetFile = $Upload->GenerateTargetName(PATH_UPLOADS, 'zip');
-        $BaseName = pathinfo($TargetFile, PATHINFO_BASENAME);
-
-        // Save the uploaded zip
-        $Parts = $Upload->SaveAs($TmpZip, $BaseName);
-        $ZipFile = PATH_UPLOADS . DS . $Parts['SaveName'];
-        $this->SetData('TransportPath', $ZipFile);
-      }
-
-      $Include = $this->_FindIncludes();
-      if(count($Include)) {
-        $Info = $this->_ExtractZip($ZipFile);
-        $this->_ImportData($Info, $Include);
-        Gdn_FileSystem::RemoveFolder(PATH_UPLOADS . DS . 'import' . DS . 'yaga');
-      }
-      else {
-        $this->Form->AddError(T('Yaga.Error.Includes'));
-      }
-    }
-
-    if($this->Form->ErrorCount() == 0 && $this->Form->IsPostBack()) {
-      $this->Render('transport-success');
-    }
-    else {
-      $this->Render();
-    }
-  }
-
-  /**
-   * Create a Yaga transport file
-   *
-   * @since 1.0
-   */
-  public function Export() {
-    $this->Title(T('Yaga.Export'));
-    $this->SetData('TransportType', 'Export');
-
-    if(!class_exists('ZipArchive')) {
-      $this->Form->AddError(T('Yaga.Error.TransportRequirements'));
-    }
-
-    if($this->Form->IsPostBack()) {
-      $Include = $this->_FindIncludes();
-      if(count($Include)) {
-        $Filename = $this->_ExportData($Include);
-        $this->SetData('TransportPath', $Filename);
-      }
-      else {
-        $this->Form->AddError(T('Yaga.Error.Includes'));
-      }
-    }
-
-    if($this->Form->ErrorCount() == 0 && $this->Form->IsPostBack()) {
-      $this->Render('transport-success');
-    }
-    else {
-      $this->Render();
-    }
-  }
-
-  /**
-   * This searches through the submitted checkboxes and constructs an array of
-   * Yaga sections to be included in the transport file.
-   *
-   * @return array
-   * @since 1.0
-   */
-  protected function _FindIncludes() {
-    $FormValues = $this->Form->FormValues();
-    $Sections = $FormValues['Checkboxes'];
-
-    // Figure out which boxes were checked
-    $Include = array();
-    foreach($Sections as $Section) {
-      $Include[$Section] = $FormValues[$Section];
-    }
-    return $Include;
-  }
-
-  /**
-   * Creates a transport file for easily transferring Yaga configurations across
-   * installs
-   *
-   * @param array An array containing the config areas to transfer
-   * @param string Where to save the transport file
-   * @return mixed False on failure, the path to the transport file on success
-   * @since 1.0
-   */
-  protected function _ExportData($Include = array(), $Path = NULL) {
-    $StartTime = microtime(TRUE);
-    $Info = new stdClass();
-    $Info->Version = C('Yaga.Version', '?.?');
-    $Info->StartDate = date('Y-m-d H:i:s');
-
-    if(is_null($Path)) {
-      $Path = PATH_UPLOADS . DS . 'export' . date('Y-m-d-His') . '.yaga.zip';
-    }
-    $FH = new ZipArchive();
-    $Images = array();
-    $Hashes = array();
-
-    if($FH->open($Path, ZipArchive::CREATE) !== TRUE) {
-      $this->Form->AddError(sprintf(T('Yaga.Error.ArchiveCreate'), $FH->getStatusString()));
-      return FALSE;
-    }
-
-    // Add configuration items
-    $Info->Config = 'configs.yaga';
-    $Configs = Gdn::Config('Yaga', array());
-    unset($Configs['Version']);
-    $ConfigData = serialize($Configs);
-    $FH->addFromString('configs.yaga', $ConfigData);
-    $Hashes[] = md5($ConfigData);
-
-    // Add actions
-    if($Include['Action']) {
-      $Info->Action = 'actions.yaga';
-      $Actions = Yaga::ActionModel()->Get('Sort', 'asc');
-      $this->SetData('ActionCount', count($Actions));
-      $ActionData = serialize($Actions);
-      $FH->addFromString('actions.yaga', $ActionData);
-      $Hashes[] = md5($ActionData);
-    }
-
-    // Add ranks and associated image
-    if($Include['Rank']) {
-      $Info->Rank = 'ranks.yaga';
-      $Ranks = Yaga::RankModel()->Get('Level', 'asc');
-      $this->SetData('RankCount', count($Ranks));
-      $RankData = serialize($Ranks);
-      $FH->addFromString('ranks.yaga', $RankData);
-      array_push($Images, C('Yaga.Ranks.Photo'), NULL);
-      $Hashes[] = md5($RankData);
-    }
-
-    // Add badges and associated images
-    if($Include['Badge']) {
-      $Info->Badge = 'badges.yaga';
-      $Badges = Yaga::BadgeModel()->Get();
-      $this->SetData('BadgeCount', count($Badges));
-      $BadgeData = serialize($Badges);
-      $FH->addFromString('badges.yaga', $BadgeData);
-      $Hashes[] = md5($BadgeData);
-      foreach($Badges as $Badge) {
-        array_push($Images, $Badge->Photo);
-      }
-    }
-
-    // Add in any images
-    $FilteredImages = array_filter($Images);
-    $ImageCount = count($FilteredImages);
-    $this->SetData('ImageCount', $ImageCount);
-    if($ImageCount > 0) {
-      $FH->addEmptyDir('images');
-    }
-
-    foreach($FilteredImages as $Image) {
-      if($FH->addFile('.' . $Image, 'images/' . $Image) === FALSE) {
-        $this->Form->AddError(sprintf(T('Yaga.Error.AddFile'), $FH->getStatusString()));
-        //return FALSE;
-      }
-      $Hashes[] = md5_file('.' . $Image);
-    }
-
-    // Save all the hashes
-    sort($Hashes);
-    $Info->MD5 = md5(implode(',', $Hashes));
-    $Info->EndDate = date('Y-m-d H:i:s');
-
-    $EndTime = microtime(TRUE);
-    $TotalTime = $EndTime - $StartTime;
-    $m = floor($TotalTime / 60);
-    $s = $TotalTime - ($m * 60);
-
-    $Info->ElapsedTime = sprintf('%02d:%02.2f', $m, $s);
-
-    $FH->setArchiveComment(serialize($Info));
-    if($FH->close()) {
-      return $Path;
-    }
-    else {
-      $this->Form->AddError(sprintf(T('Yaga.Error.ArchiveSave'), $FH->getStatusString()));
-      return FALSE;
-    }
-  }
-
-  /**
-   * Extract the transport file and validate
-   *
-   * @param string The transport file path
-   * @return boolean Whether or not the transport file was extracted successfully
-   * @since 1.0
-   */
-  protected function _ExtractZip($Filename) {
-    if(!file_exists($Filename)) {
-      $this->Form->AddError(T('Yaga.Error.FileDNE'));
-			return FALSE;
-		}
-
-    $ZipFile = new ZipArchive();
-    $Result = $ZipFile->open($Filename);
-    if($Result !== TRUE) {
-      $this->Form->AddError(T('Yaga.Error.ArchiveOpen'));
-      return FALSE;
-    }
-
-    // Get the metadata from the comment
-    $Comment = $ZipFile->comment;
-    $MetaData = unserialize($Comment);
-
-    $Result = $ZipFile->extractTo(PATH_UPLOADS . DS . 'import' . DS . 'yaga');
-    if($Result !== TRUE) {
-      $this->Form->AddError(T('Yaga.Error.ArchiveExtract'));
-      return FALSE;
-    }
-
-    $ZipFile->close();
-
-    // Validate checksum
-    if($this->_ValidateChecksum($MetaData) === TRUE) {
-      return $MetaData;
-    }
-    else {
-      $this->Form->AddError(T('Yaga.Error.ArchiveChecksum'));
-      return FALSE;
-    }
-  }
-
-  /**
-   * Overwrites Yaga configurations, dumps Yaga db tables, inserts data via the
-   * model, and copies uploaded files to the server
-   *
-   * @param stdClass The info object read in from the archive
-   * @param array Which tables should be overwritten
-   * @return bool Pass/Fail on the import being executed. Errors can exist on the
-   * form with a passing return value.
-   * @since 1.0
-   */
-  protected function _ImportData($Info, $Include) {
-    if(!$Info) {
-      return FALSE;
-    }
-
-    // Import Configs
-    $Configs = unserialize(file_get_contents(PATH_UPLOADS . DS . 'import' . DS . 'yaga' . DS . $Info->Config));
-    $Configurations = $this->_NestedToDotNotation($Configs, 'Yaga');
-    foreach($Configurations as $Name => $Value) {
-      SaveToConfig($Name, $Value);
-    }
-
-    // Import model data
-    foreach($Include as $Key => $Value) {
-      if($Value) {
-        $Data = unserialize(file_get_contents(PATH_UPLOADS . DS . 'import' . DS . 'yaga' . DS . $Info->$Key));
-        Gdn::SQL()->EmptyTable($Key);
-        $ModelName = $Key . 'Model';
-        $Model = Yaga::$ModelName();
-        foreach($Data as $Datum) {
-          $Model->Insert((array)$Datum);
+    /**
+     * Make this look like a dashboard page and add the resources
+     *
+     * @since 1.0
+     * @access public
+     */
+    public function initialize() {
+        parent::initialize();
+        $this->Application = 'Yaga';
+        $this->ApplicationFolder = 'yaga';
+        Gdn_Theme::section('Dashboard');
+        if ($this->Menu) {
+            $this->Menu->highlightRoute('/yaga');
         }
-        $this->SetData($Key . 'Count', $Model->GetCount());
-      }
+        $this->setHighlightRoute('yaga/settings');
+
+        $this->addCssFile('yaga.css', 'plugins/yaga');
+        $this->removeCssFile('magnific-popup.css');
     }
 
-    // Import uploaded files
-    if(Gdn_FileSystem::Copy(PATH_UPLOADS . DS . 'import' . DS . 'yaga' . DS . 'images' . DS . 'uploads' . DS, PATH_UPLOADS . DS) === FALSE) {
-      $this->Form->AddError(T('Yaga.Error.TransportCopy'));
+    /**
+     * Redirect to settings by default
+     *
+     * @since 1.0
+     */
+    public function index() {
+        $this->settings();
     }
 
-    return TRUE;
-  }
+    /**
+     * This handles all the core settings for the gamification application.
+     *
+     * @since 1.0
+     */
+    public function settings() {
+        $this->permission('Garden.Settings.Manage');
+        $this->title(Gdn::translate('Yaga.Settings'));
 
-  /**
-   * Converted a nest config array into an array where indexes are the configuration
-   * strings and the value is the value
-   *
-   * @param array The nested array
-   * @param string What should the configuration strings be prefixed with
-   * @return array
-   * @since 1.0
-   */
-  protected function _NestedToDotNotation($Configs, $Prefix = '') {
-    $ConfigStrings = array();
+        // Get list of actions from the model and pass to the view
+        $configModule = new ConfigurationModule($this);
 
-    foreach($Configs as $Name => $Value) {
-      if(is_array($Value)) {
-        $ConfigStrings = array_merge($ConfigStrings, $this->_NestedToDotNotation($Value, "$Prefix.$Name"));
-      }
-      else {
-        $ConfigStrings["$Prefix.$Name"] = $Value;
-      }
+        $configModule->initialize([
+            'Yaga.Reactions.Enabled' => [
+                'LabelCode' => 'Yaga.Reactions.Use',
+                'Control' => 'toggle'
+            ],
+            'Yaga.Badges.Enabled' => [
+                'LabelCode' => 'Yaga.Badges.Use',
+                'Control' => 'toggle'
+            ],
+            'Yaga.Ranks.Enabled' => [
+                'LabelCode' => 'Yaga.Ranks.Use',
+                'Control' => 'toggle'
+            ],
+            'Yaga.MenuLinks.Show' => [
+                'LabelCode' => 'Yaga.MenuLinks.Show',
+                'Control' => 'toggle'
+            ],
+            'Yaga.LeaderBoard.Enabled' => [
+                'LabelCode' => 'Yaga.LeaderBoard.Use',
+                'Control' => 'toggle'
+            ],
+            'Yaga.LeaderBoard.Limit' => [
+                'LabelCode' => 'Yaga.LeaderBoard.Max',
+                'Control' => 'Textbox',
+                'Options' => ['type' => 'number']
+            ]
+        ]);
+        $this->ConfigurationModule = $configModule;
+
+        $this->render('settings', '', 'plugins/yaga');
     }
 
-    return $ConfigStrings;
-  }
+    /**
+     * Performs the necessary functions to change a backend controller into a
+     * frontend controller
+     *
+     * @since 1.1
+     */
+    private function frontendStyle() {
+        $this->removeCssFile('admin.css');
+        unset($this->Assets['Panel']['SideMenuModule']);
+        $this->addCssFile('style.css');
+        $this->MasterView = 'default';
 
-  /**
-   * Inspects the Yaga transport files and calculates a checksum
-   *
-   * @param stdClass The metadata object read in from the transport file
-   * @return boolean Whether or not the checksum is valid
-   * @since 1.0
-   */
-  protected function _ValidateChecksum($MetaData) {
-    $Hashes = array();
+        $weeklyModule = new LeaderBoardModule($this);
+        $weeklyModule->setSlotType('w');
+        $this->addModule($weeklyModule);
 
-    // Hash the config file
-    $Hashes[] = md5_file(PATH_UPLOADS . DS . 'import' . DS . 'yaga' . DS . $MetaData->Config);
-
-    // Hash the data files
-    if(property_exists($MetaData, 'Action')) {
-      $Hashes[] = md5_file(PATH_UPLOADS . DS . 'import' . DS . 'yaga' . DS . $MetaData->Action);
+        $allTimeModule = new LeaderBoardModule($this);
+        $this->addModule($allTimeModule);
     }
 
-    if(property_exists($MetaData, 'Badge')) {
-      $Hashes[] = md5_file(PATH_UPLOADS . DS . 'import' . DS . 'yaga' . DS . $MetaData->Badge);
+    /**
+     * Displays a summary of ranks currently configured on a frontend page to help
+     * users understand what is valued in this community
+     *
+     * @since 1.1
+     */
+    public function ranks() {
+        $this->permission('Yaga.Ranks.View');
+        $this->frontendStyle();
+        $this->addCssFile('ranks.css', 'plugins/yaga');
+        $this->title(Gdn::translate('Yaga.Ranks.All'));
+
+        // Get list of ranks from the model and pass to the view
+        $this->setData('Ranks', $this->RankModel->get());
+
+        $this->render('ranks', '', 'plugins/yaga');
     }
 
-    if(property_exists($MetaData, 'Rank')) {
-      $Hashes[] = md5_file(PATH_UPLOADS . DS . 'import' . DS . 'yaga' . DS . $MetaData->Rank);
+    /**
+     * Displays a summary of badges currently configured on a frontend page to
+     * help users understand what is valued in this community.
+     *
+     * Also provides a convenience redirect to badge details
+     *
+     * @param int $badgeID The badge ID you want to see details
+     * @param string $slug The badge slug you want to see details
+     * @since 1.1
+     */
+    public function badges($badgeID = false, $slug = null) {
+        $this->permission('Yaga.Badges.View');
+        $this->frontendStyle();
+        $this->addCssFile('badges.css', 'plugins/yaga');
+        $this->addModule('BadgesModule');
+
+        if (is_numeric($badgeID)) {
+            return $this->badgeDetail($badgeID, $slug);
+        }
+
+        $this->title(Gdn::translate('Yaga.Badges.All'));
+
+        // Get list of badges from the model and pass to the view
+        $userID = Gdn::session()->UserID;
+        $allBadges = $this->BadgeAwardModel->getWithEarned($userID);
+        $this->setData('Badges', $allBadges);
+
+        $this->render('badges', '', 'plugins/yaga');
     }
 
-    // Hash the image files
-		$Files = $this->_GetFiles(PATH_UPLOADS . DS . 'import' . DS . 'yaga' . DS . 'images');
-    $this->SetData('ImageCount', count($Files));
-		foreach($Files as $File) {
-			$Hashes[] = md5_file($File);
+    /**
+     * Displays information about the specified badge including recent recipients
+     * of the badge.
+     *
+     * @param int $badgeID
+     * @param string $slug
+     */
+    public function badgeDetail($badgeID, $slug = null) {
+        $this->permission('Yaga.Badges.View');
+        $badge = $this->BadgeModel->getID($badgeID);
+
+        if (!$badge) {
+            throw NotFoundException('Badge');
+        }
+
+        $userID = Gdn::session()->UserID;
+        $awardCount = $this->BadgeAwardModel->getCount(['BadgeID' => $badgeID]);
+        $userBadgeAward = $this->BadgeAwardModel->getWhere(['BadgeID' => $badgeID, 'UserID' => $userID])->firstRow();
+        $recentAwards = $this->BadgeAwardModel->getRecent($badgeID, Gdn::config('Yaga.Badges.RecentAwards'));
+
+        $this->setData('AwardCount', $awardCount);
+        $this->setData('RecentAwards', $recentAwards);
+        $this->setData('UserBadgeAward', $userBadgeAward);
+        $this->setData('Badge', $badge);
+
+        $this->title(Gdn::translate('Yaga.Badge.View').$badge->Name);
+
+        $this->render('badgedetail', '', 'plugins/yaga');
+    }
+
+    /**
+     * Import a Yaga transport file
+     *
+     * @since 1.0
+     */
+    public function import() {
+        $this->title(Gdn::translate('Yaga.Import'));
+        $this->setData('TransportType', 'Import');
+
+        if (!class_exists('ZipArchive')) {
+            $this->Form->addError(Gdn::translate('Yaga.Error.TransportRequirements'));
+        }
+
+        if ($this->Form->isPostBack() == true) {
+            // Handle the file upload
+            $upload = new Gdn_Upload();
+            $upload->allowFileExtension('zip');
+            $tmpZip = $upload->validateUpload('FileUpload', false);
+
+            $zipFile = false;
+            if ($tmpZip) {
+                // Generate the target name
+                $targetFile = $upload->generateTargetName(PATH_UPLOADS, 'zip');
+                $baseName = pathinfo($targetFile, PATHINFO_BASENAME);
+
+                // Save the uploaded zip
+                $parts = $upload->saveAs($tmpZip, $baseName);
+                $zipFile = PATH_UPLOADS.'/'.$parts['SaveName'];
+                $this->setData('TransportPath', $zipFile);
+            }
+
+            $include = $this->_findIncludes();
+            if (count($include)) {
+                $info = $this->_extractZip($zipFile);
+                $this->_importData($info, $include);
+                Gdn_FileSystem::removeFolder(PATH_UPLOADS.'/import/yaga');
+            } else {
+                $this->Form->addError(Gdn::translate('Yaga.Error.Includes'));
+            }
+        }
+
+        if ($this->Form->errorCount() == 0 && $this->Form->isPostBack()) {
+            $this->render('transport-success', '', 'plugins/yaga');
+        } else {
+            $this->render('import', '', 'plugins/yaga');
+        }
+    }
+
+    /**
+     * Create a Yaga transport file
+     *
+     * @since 1.0
+     */
+    public function export() {
+        $this->title(Gdn::translate('Yaga.Export'));
+        $this->setData('TransportType', 'Export');
+
+        if (!class_exists('ZipArchive')) {
+            $this->Form->addError(Gdn::translate('Yaga.Error.TransportRequirements'));
+        }
+
+        if ($this->Form->isPostBack()) {
+            $include = $this->_findIncludes();
+            if (count($include)) {
+                $filename = $this->_exportData($include);
+                $this->setData('TransportPath', $filename);
+            } else {
+                $this->Form->addError(Gdn::translate('Yaga.Error.Includes'));
+            }
+        }
+
+        if ($this->Form->errorCount() == 0 && $this->Form->isPostBack()) {
+            $this->render('transport-success');
+        } else {
+            $this->render('import', '', 'plugins/yaga');
+        }
+    }
+
+    /**
+     * Proxy endpoint for DBA methods. See YagaPlugin::dbaController_countJobs_handler
+     *
+     * @param string $method
+     */
+    public function dba($method = '', $from = false, $to = false) {
+        $this->permission('Garden.Settings.Manage');
+        $data = [];
+
+        if ($method === 'countbadges') {
+            $data = Gdn::getContainer()->get(BadgeAwardModel::class)->counts('CountBadges');
+        } elseif ($method === 'userpoints') {
+            $data = Gdn::getContainer()->get(BadgeAwardModel::class)->counts('Points');
+        } elseif ($method === 'latestreaction') {
+            $data = Gdn::getContainer()->get(ReactionModel::class)->counts('Latest', $from, $to);
+        }
+
+        $this->setData('Result', $data);
+        $this->renderData();
+    }
+
+    /**
+     * This searches through the submitted checkboxes and constructs an array of
+     * Yaga sections to be included in the transport file.
+     *
+     * @return array
+     * @since 1.0
+     */
+    protected function _findIncludes() {
+        $formValues = $this->Form->formValues();
+        $sections = $formValues['Checkboxes'];
+
+        // Figure out which boxes were checked
+        $include = [];
+        foreach ($sections as $section) {
+            $include[$section] = $formValues[$section];
+        }
+        return $include;
+    }
+
+    /**
+     * Creates a transport file for easily transferring Yaga configurations across
+     * installs
+     *
+     * @param array An array containing the config areas to transfer
+     * @param string Where to save the transport file
+     * @return mixed false on failure, the path to the transport file on success
+     * @since 1.0
+     */
+    protected function _exportData($include = [], $path = null) {
+        $startTime = microtime(true);
+        $info = [];
+        $info['Version'] = Gdn::config('Yaga.Version', '?.?');
+        $info['StartDate'] = date('Y-m-d H:i:s');
+
+        if (is_null($path)) {
+            $path = PATH_UPLOADS.'/export'.date('Y-m-d-His').'.yaga.zip';
+        }
+        $fh = new ZipArchive();
+        $images = [];
+        $hashes = [];
+
+        if ($fh->open($path, ZipArchive::CREATE) !== true) {
+            $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.ArchiveCreate'), $fh->getStatusString()));
+            return false;
+        }
+
+        // Add configuration items
+        $info['Config'] = 'configs.json';
+        $configs = Gdn::config('Yaga', []);
+        unset($configs['Version']);
+        $configData = dbencode($configs);
+        $fh->addFromString('configs.json', $configData);
+        $hashes[] = md5($configData);
+
+        // Add actions
+        if ($include['Action']) {
+            $info['Action'] = 'actions.json';
+            $actions = $this->ActionModel()->get('Sort', 'asc');
+            $this->setData('ActionCount', count($actions));
+            $actionData = dbencode($actions);
+            $fh->addFromString('actions.json', $actionData);
+            $hashes[] = md5($actionData);
+        }
+
+        // Add ranks and associated image
+        if ($include['Rank']) {
+            $info['Rank'] = 'ranks.json';
+            $ranks = $this->RankModel()->get('Level', 'asc');
+            $this->setData('RankCount', count($ranks));
+            $rankData = dbencode($ranks);
+            $fh->addFromString('ranks.json', $rankData);
+            array_push($images, Gdn::config('Yaga.Ranks.Photo'), null);
+            $hashes[] = md5($rankData);
+        }
+
+        // Add badges and associated images
+        if ($include['Badge']) {
+            $info['Badge'] = 'badges.json';
+            $badges = $this->BadgeModel()->get();
+            $this->setData('BadgeCount', count($badges));
+            $badgeData = dbencode($badges);
+            $fh->addFromString('badges.json', $badgeData);
+            $hashes[] = md5($badgeData);
+            foreach ($badges as $badge) {
+                array_push($images, $badge->Photo);
+            }
+        }
+
+        // Add in any images
+        $filteredImages = array_filter($images);
+        $imageCount = count($filteredImages);
+        $this->setData('ImageCount', $imageCount);
+        if ($imageCount > 0) {
+            $fh->addEmptyDir('images');
+        }
+
+        foreach ($filteredImages as $image) {
+            $image = ltrim($image, '/');
+            if ($fh->addFile('./'.$image, 'images/'.$image) === false) {
+                $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.AddFile'), $fh->getStatusString()));
+                //return false;
+            }
+            $hashes[] = md5_file('./'.$image);
+        }
+
+        // Save all the hashes
+        sort($hashes);
+        $info['MD5'] = md5(implode(',', array_unique($hashes)));
+        $info['EndDate'] = date('Y-m-d H:i:s');
+
+        $endTime = microtime(true);
+        $totalTime = $endTime - $startTime;
+        $m = floor($totalTime / 60);
+        $s = $totalTime - ($m * 60);
+
+        $info['ElapsedTime'] = sprintf('%02d:%02.2f', $m, $s);
+
+        $fh->setArchiveComment(dbencode($info));
+        if ($fh->close()) {
+            return $path;
+        } else {
+            $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.ArchiveSave'), $fh->getStatusString()));
+            return false;
+        }
+    }
+
+    /**
+     * Extract the transport file and validate
+     *
+     * @param string The transport file path
+     * @return boolean Whether or not the transport file was extracted successfully
+     * @since 1.0
+     */
+    protected function _extractZip($filename) {
+        if (!file_exists($filename)) {
+            $this->Form->addError(Gdn::translate('Yaga.Error.FileDNE'));
+			return false;
 		}
 
-    sort($Hashes);
-		$CalculatedChecksum = md5(implode(',', $Hashes));
+        $zipFile = new ZipArchive();
+        $result = $zipFile->open($filename);
+        if ($result !== true) {
+            $this->Form->addError(Gdn::translate('Yaga.Error.ArchiveOpen'));
+            return false;
+        }
 
-    if($CalculatedChecksum != $MetaData->MD5) {
-      return FALSE;
-		}
-		else {
-      return TRUE;
-		}
-  }
+        // Get the metadata from the comment
+        $comment = $zipFile->comment;
+        $metaData = (array)dbdecode($comment);
 
-  /**
-   * Returns a list of all files in a directory, recursively (Thanks @businessdad)
-   *
-   * @param string Directory The directory to scan for files
-   * @return array A list of Files and, optionally, Directories.
-   * @since 1.0
-   */
-  protected function _GetFiles($Directory) {
-    $Files = array_diff(scandir($Directory), array('.', '..'));
-    $Result = array();
-    foreach($Files as $File) {
-      $FileName = $Directory . '/' . $File;
-      if(is_dir($FileName)) {
-        $Result = array_merge($Result, $this->_GetFiles($FileName));
-        continue;
-      }
-      $Result[] = $FileName;
+        $result = $zipFile->extractTo(PATH_UPLOADS.'/import/yaga');
+        if ($result !== true) {
+            $this->Form->addError(Gdn::translate('Yaga.Error.ArchiveExtract'));
+            return false;
+        }
+
+        $zipFile->close();
+
+        // Validate checksum
+        if ($this->_validateChecksum($metaData) === true) {
+            return $metaData;
+        } else {
+            $this->Form->addError(Gdn::translate('Yaga.Error.ArchiveChecksum'));
+            return false;
+        }
     }
-    return $Result;
-  }
+
+    /**
+     * Overwrites Yaga configurations, dumps Yaga db tables, inserts data via the
+     * model, and copies uploaded files to the server
+     *
+     * @param stdClass The info object read in from the archive
+     * @param array Which tables should be overwritten
+     * @return bool Pass/Fail on the import being executed. Errors can exist on the
+     * form with a passing return value.
+     * @since 1.0
+     */
+    protected function _importData($info, $include) {
+        if (!$info) {
+            return false;
+        }
+
+        // Import Configs
+        $configs = dbdecode(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info['Config']));
+        $configurations = self::_nestedToDotNotation($configs, 'Yaga');
+        foreach ($configurations as $name => $value) {
+            Gdn::config()->saveToConfig($name, $value);
+        }
+
+        // Import model data
+        foreach ($include as $key => $value) {
+            // Trim "Yaga" prefix to make old imports work.
+            $key = StringBeginsWith($key, 'Yaga', false, true);
+
+            if ($value) {
+                $data = dbdecode(file_get_contents(PATH_UPLOADS.'/import/yaga/'.$info[$key]));
+                Gdn::sql()->emptyTable('Yaga'.$key);
+                $modelName = $key.'Model';
+                $model = Gdn::getContainer()->get($modelName);
+                foreach ($data as $datum) {
+                    $model->insert((array)$datum);
+                }
+                $this->setData($key.'Count', $model->getCount());
+            }
+        }
+
+        // Import uploaded files
+        $path = PATH_UPLOADS.'/import/yaga/images/uploads/';
+        if (file_exists($path) && Gdn_FileSystem::copy($path, PATH_UPLOADS.'/') === false) {
+            $this->Form->addError(Gdn::translate('Yaga.Error.TransportCopy'));
+        }
+
+        return true;
+    }
+
+    /**
+     * Converted a nest config array into an array where indexes are the configuration
+     * strings and the value is the value
+     *
+     * @param array The nested array
+     * @param string What should the configuration strings be prefixed with
+     * @return array
+     * @since 1.0
+     */
+    protected static function _nestedToDotNotation($configs, $prefix = '') {
+        $configStrings = [];
+
+        foreach ($configs as $name => $value) {
+            if (is_array($value)) {
+                $configStrings = array_merge($configStrings, self::_nestedToDotNotation($value, "$prefix.$name"));
+            } else {
+                $configStrings["$prefix.$name"] = $value;
+            }
+        }
+
+        return $configStrings;
+    }
+
+    /**
+     * Inspects the Yaga transport files and calculates a checksum
+     *
+     * @param stdClass The metadata object read in from the transport file
+     * @return boolean Whether or not the checksum is valid
+     * @since 1.0
+     */
+    protected function _validateChecksum($metaData) {
+        $hashes = [];
+
+        // Hash the config file
+        $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData['Config']);
+
+        // Hash the data files
+        if (array_key_exists('Action', $metaData)) {
+            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData['Action']);
+        }
+
+        if (array_key_exists('Badge', $metaData)) {
+            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData['Badge']);
+        }
+
+        if (array_key_exists('Rank', $metaData)) {
+            $hashes[] = md5_file(PATH_UPLOADS.'/import/yaga/'.$metaData['Rank']);
+        }
+
+        // Hash the image files
+		$files = self::_getFiles(PATH_UPLOADS.'/import/yaga/images');
+        $this->setData('ImageCount', count($files));
+		foreach ($files as $file) {
+			$hashes[] = md5_file($file);
+		}
+
+        sort($hashes);
+		$calculatedChecksum = md5(implode(',', array_unique($hashes)));
+
+        return $calculatedChecksum == $metaData['MD5'];
+    }
+
+    /**
+     * Returns a list of all files in a directory, recursively (Thanks @businessdad)
+     *
+     * @param string Directory The directory to scan for files
+     * @return array A list of Files and, optionally, Directories.
+     * @since 1.0
+     */
+    protected static function _getFiles($directory) {
+        $files = array_diff(scandir($directory), ['.', '..']);
+        $result = [];
+        foreach ($files as $file) {
+            $fileName = $directory.'/'.$file;
+            if (is_dir($fileName)) {
+                $result = array_merge($result, self::_getFiles($fileName));
+                continue;
+            }
+            $result[] = $fileName;
+        }
+        return $result;
+    }
 
 }

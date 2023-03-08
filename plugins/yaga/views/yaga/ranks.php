@@ -1,73 +1,83 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2015 Zachary Doll */
-echo Wrap($this->Title(), 'h1');
-$User = (Gdn::Session()->User) ?: (object)array('RankID' => 0);
+
+use Vanilla\Formatting\DateTimeFormatter;
+
+$user = (Gdn::session()->User) ?: (object)['RankID' => 0];
+$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+
+echo heading($this->title());
+
 echo '<ul class="DataList Ranks">';
-foreach($this->Data('Ranks') as $Rank) {
-  $Row = '';
-  
-  // Construct the description of requirements only if it has auto enabled
-  // TODO: Move this to a helper_functions file
-  $MetaString = T('Yaga.Ranks.Story.Manual');
-  if($Rank->Enabled) {
-    $Reqs = array();
-    $Posts = FALSE;
-    if($Rank->PostReq > 0) {
-      $Reqs[] = sprintf(T('Yaga.Ranks.Story.PostReq'), $Rank->PostReq);
-      $Posts = TRUE;
-    }
-    if($Rank->PointReq > 0) {
-      if($Posts) {
-        $Reqs[] = sprintf(T('Yaga.Ranks.Story.PostAndPointReq'), $Rank->PointReq);
-      }
-      else {
-        $Reqs[] = sprintf(T('Yaga.Ranks.Story.PointReq'), $Rank->PointReq);
-      }
-    }
-    if($Rank->AgeReq > 0) {
-      $Reqs[] = sprintf(T('Yaga.Ranks.Story.AgeReq'), Gdn_Format::Seconds($Rank->AgeReq));
-    }
-    
-    switch(count($Reqs)) {
-      case 3:
-        $MetaString = sprintf(T('Yaga.Ranks.Story.3Reqs'), $Reqs[0], $Reqs[1], $Reqs[2]);
-        break;
-      case 2:
-        $MetaString = sprintf(T('Yaga.Ranks.Story.2Reqs'), $Reqs[0], $Reqs[1]);
-        break;
-      case 1:
-        $MetaString = sprintf(T('Yaga.Ranks.Story.1Reqs'), $Reqs[0]);
-        break;
-      default:
-      case 0:
-        $MetaString = T('Yaga.Ranks.Story.Auto');
-        break;
-    }
-  }
-  
-  $ReadClass = ($User->RankID == $Rank->RankID) ? ' ' : ' Read';
 
-  // TODO: Add rank photos
-  //if($Rank->Photo) {
-  //  $Row .= Img($Rank->Photo, array('class' => 'RankPhoto'));
-  //}
-  //else {
-    $Row .= Img('applications/yaga/design/images/default_promotion.png', array('class' => 'RankPhoto'));
-  //}
+foreach ($this->data('Ranks') as $rank) {
+    $row = '';
 
-  $Row .= Wrap(
-          Wrap(
-                  $Rank->Name, 'div', array('class' => 'Title')
-          ) .
-          Wrap($Rank->Description, 'div', array('class' => 'Description')) .
-          Wrap(
-                  WrapIf($MetaString, 'span', array('class' => 'MItem RankRequirements')),
-                  'div',
-                  array('class' => 'Meta')),
-          'div',
-          array('class' => 'ItemContent Rank')
-  );
-  echo Wrap($Row, 'li', array('class' => 'Item ItemRank' . $ReadClass));
+    // Construct the description of requirements only if it has auto enabled
+    // TODO: Move this to a helper_functions file
+    $metaString = Gdn::translate('Yaga.Ranks.Story.Manual');
+    if ($rank->Enabled) {
+        $reqs = [];
+        $posts = false;
+        if ($rank->PostReq > 0) {
+            $reqs[] = sprintf(Gdn::translate('Yaga.Ranks.Story.PostReq'), $rank->PostReq);
+            $posts = true;
+        }
+        if ($rank->PointReq > 0) {
+            if ($posts) {
+                $reqs[] = sprintf(Gdn::translate('Yaga.Ranks.Story.PostAndPointReq'), $rank->PointReq);
+            } else {
+                $reqs[] = sprintf(Gdn::translate('Yaga.Ranks.Story.PointReq'), $rank->PointReq);
+            }
+        }
+        if ($rank->AgeReq > 0) {
+            $reqs[] = sprintf(
+                Gdn::translate('Yaga.Ranks.Story.AgeReq'),
+                $dateFormatter->formatSeconds($rank->AgeReq)
+            );
+        }
+
+        switch(count($reqs)) {
+            case 3:
+                $metaString = sprintf(Gdn::translate('Yaga.Ranks.Story.3Reqs'), $reqs[0], $reqs[1], $reqs[2]);
+                break;
+            case 2:
+                $metaString = sprintf(Gdn::translate('Yaga.Ranks.Story.2Reqs'), $reqs[0], $reqs[1]);
+                break;
+            case 1:
+                $metaString = sprintf(Gdn::translate('Yaga.Ranks.Story.1Reqs'), $reqs[0]);
+                break;
+            default:
+            case 0:
+                $metaString = Gdn::translate('Yaga.Ranks.Story.Auto');
+                break;
+        }
+    }
+
+    $readClass = ($user->RankID == $rank->RankID) ? ' ' : ' Read';
+
+    // TODO: Add rank photos
+    //if ($rank->Photo) {
+    //    $row .= img($rank->Photo, ['class' => 'RankPhoto']);
+    //} else {
+        $row .= img('plugins/yaga/design/images/default_promotion.png', ['class' => 'RankPhoto']);
+    //}
+
+    $row .= wrap(
+        wrap(
+            $rank->Name, 'div', ['class' => 'Title']
+        ).
+        wrap($rank->Description, 'div', ['class' => 'Description']).
+        wrap(
+            wrapIf($metaString, 'span', ['class' => 'MItem RankRequirements']),
+            'div',
+            ['class' => 'Meta']
+        ),
+        'div',
+        ['class' => 'ItemContent Rank']
+    );
+    echo wrap($row, 'li', ['class' => 'Item ItemRank'.$readClass]);
 }
 
 echo '</ul>';

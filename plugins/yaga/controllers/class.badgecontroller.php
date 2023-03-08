@@ -1,4 +1,5 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013 Zachary Doll */
 
 /**
@@ -9,325 +10,343 @@
  */
 class BadgeController extends DashboardController {
 
-  /**
-   * @var array These objects will be created on instantiation and available via
-   * $this->ObjectName
-   */
-  public $Uses = array('Form', 'BadgeModel', 'BadgeAwardModel');
+    /**
+     * @var array These objects will be created on instantiation and available via
+     * $this->ObjectName
+     */
+    public $Uses = ['Form', 'BadgeModel', 'BadgeAwardModel'];
 
-  private $EditFormFields = ['TransientKey', 'hpt', 'BadgeID', 'Name', 'Description', 'RuleClass', 'AwardValue', 'Checkboxes', 'Save', 'Enabled'];
+    private $editFormFields = [
+        'TransientKey',
+        'BadgeID',
+        'Name',
+        'Description',
+        'RuleClass',
+        'AwardValue',
+        'Checkboxes',
+        'Save',
+        'Enabled',
+        'Photo',
+        'PhotoUpload'
+    ];
 
-  /**
-   * Make this look like a dashboard page and add the resources
-   *
-   * @since 1.0
-   * @access public
-   */
-  public function Initialize() {
-    parent::Initialize();
-    $this->Application = 'Yaga';
-    Gdn_Theme::Section('Dashboard');
-    if($this->Menu) {
-      $this->Menu->HighlightRoute('/badge');
-    }
-    $this->AddJsFile('jquery-ui-1.10.0.custom.min.js');
-    $this->AddJsFile('admin.badges.js');
-    $this->AddCssFile('badges.css');
-    $this->removeCssFile('magnific-popup.css');
-  }
-
-  /**
-   * Manage the current badges and add new ones
-   *
-   * @param int $Page
-   */
-  public function Settings($Page = '') {
-    $this->Permission('Yaga.Badges.Manage');
-    $this->setHighlightRoute('badge/settings');
-
-    $this->Title(T('Yaga.Badges.Manage'));
-
-    // Get list of badges from the model and pass to the view
-    list($Offset, $Limit) = OffsetLimit($Page, PagerModule::$DefaultPageSize);
-    $this->SetData('Badges', $this->BadgeModel->GetLimit($Limit, $Offset));
-    $this->SetData('Rules', RulesController::GetRules());
-
-    $this->Render();
-  }
-
-  /**
-   * Edit an existing badge or add a new one
-   *
-   * @param int $BadgeID
-   * @throws ForbiddenException if no proper rules are found
-   */
-  public function Edit($BadgeID = NULL) {
-    $this->Permission('Yaga.Badges.Manage');
-    $this->setHighlightRoute('badge/settings');
-    $this->Form->SetModel($this->BadgeModel);
-
-    // Only allow editing if some rules exist
-    if(!RulesController::GetRules()) {
-      throw new Gdn_UserException(T('Yaga.Error.NoRules'));
-    }
-
-    $Edit = FALSE;
-    if($BadgeID) {
-      $this->Title(T('Yaga.Badge.Edit'));
-      $this->Badge = $this->BadgeModel->GetByID($BadgeID);
-      $this->Form->AddHidden('BadgeID', $BadgeID);
-      $Edit = TRUE;
-    }
-    else {
-      $this->Title(T('Yaga.Badge.Add'));
-    }
-
-    if($this->Form->IsPostBack() == FALSE) {
-      if(property_exists($this, 'Badge')) {
-        // Manually merge the criteria into the badge object
-        $Criteria = (array) unserialize($this->Badge->RuleCriteria);
-        $BadgeArray = (array) $this->Badge;
-
-        $Data = array_merge($BadgeArray, $Criteria);
-        $this->Form->SetData($Data);
-      }
-    }
-    else {
-      // Handle the photo upload
-      $Upload = new Gdn_Upload();
-      $TmpImage = $Upload->ValidateUpload('PhotoUpload', FALSE);
-
-      if($TmpImage) {
-        // Generate the target image name
-        $TargetImage = $Upload->GenerateTargetName(PATH_UPLOADS, FALSE);
-        $ImageBaseName = pathinfo($TargetImage, PATHINFO_BASENAME);
-
-        // Save the uploaded image
-        $Parts = $Upload->SaveAs($TmpImage, 'yaga' . DS . $ImageBaseName);
-        $AssetRoot = Gdn::Request()->UrlDomain(TRUE).Gdn::Request()->AssetRoot();
-        $RelativeUrl = StringBeginsWith($Parts['Url'], $AssetRoot, TRUE, TRUE);
-
-        $this->Form->SetFormValue('Photo', $RelativeUrl);
-      }
-      else if(!$Edit) {
-        // Use default photo from config if this is a new badge
-        $this->Form->SetFormValue('Photo', C('Yaga.Badges.DefaultPhoto'));
-      }
-
-      // Find the rule criteria
-      $FormValues = $this->Form->FormValues();
-      $Criteria = array_diff_key($FormValues, array_flip($this->EditFormFields));
-
-      // Validate the criteria
-      $RuleClass = new $FormValues['RuleClass'];
-      $Rule = new $RuleClass();
-
-      $Rule->Validate($Criteria, $this->Form);
-
-      $SerializedCriteria = serialize($Criteria);
-      $this->Form->SetFormValue('RuleCriteria', $SerializedCriteria);
-      if($this->Form->Save()) {
-        if($Edit) {
-          $this->InformMessage(T('Yaga.Badge.Updated'));
+    /**
+     * Make this look like a dashboard page and add the resources
+     *
+     * @since 1.0
+     * @access public
+     */
+    public function initialize() {
+        parent::initialize();
+        $this->Application = 'Yaga';
+        Gdn_Theme::section('Dashboard');
+        if ($this->Menu) {
+            $this->Menu->highlightRoute('/badge');
         }
-        else {
-          $this->InformMessage(T('Yaga.Badge.Added'));
-        }
-        Redirect('/badge/settings');
-      }
+        $this->addJsFile('jquery-ui-1.10.0.custom.min.js');
+        $this->addJsFile('admin.badges.js');
+        $this->addCssFile('badges.css');
+        $this->removeCssFile('magnific-popup.css');
+
+        $this->editFormFields[] = Gdn::config('Garden.Forms.HoneypotName');
     }
 
-    $this->Render('edit');
-  }
+    /**
+     * Manage the current badges and add new ones
+     *
+     * @param int $page
+     */
+    public function settings($page = '') {
+        $this->permission('Yaga.Badges.Manage');
+        $this->setHighlightRoute('badge/settings');
 
-  /**
-   * Convenience function for nice URLs
-   */
-  public function Add() {
-    $this->Edit();
-  }
+        $this->title(Gdn::translate('Yaga.Badges.Manage'));
 
-  /**
-   * Remove the badge via model.
-   *
-   * @param int $BadgeID
-   * @throws NotFoundException
-   */
-  public function Delete($BadgeID) {
-    $Badge = $this->BadgeModel->GetByID($BadgeID);
+        // Get list of badges from the model and pass to the view
+        list($offset, $limit) = offsetLimit($page, PagerModule::$DefaultPageSize);
 
-    if(!$Badge) {
-      throw NotFoundException(T('Yaga.Badge'));
+        // This page cannot have a pager as this would interfere with sorting.
+        $this->setData('Badges', $this->BadgeModel->get());
+        $this->setData('Rules', $this->BadgeModel->getRules());
+
+        $this->render();
     }
 
-    $this->Permission('Yaga.Badges.Manage');
+    /**
+     * Edit an existing badge or add a new one
+     *
+     * @param int $badgeID
+     * @throws ForbiddenException if no proper rules are found
+     */
+    public function edit($badgeID = null) {
+        $this->permission('Yaga.Badges.Manage');
+        $this->setHighlightRoute('badge/settings');
+        $this->Form->setModel($this->BadgeModel);
 
-    if($this->Form->IsPostBack()) {
-      if(!$this->BadgeModel->DeleteID($BadgeID)) {
-        $this->Form->AddError(sprintf(T('Yaga.Error.DeleteFailed'), T('Yaga.Badge')));
-      }
-
-      if($this->Form->ErrorCount() == 0) {
-        if($this->_DeliveryType === DELIVERY_TYPE_ALL) {
-          Redirect('badge/settings');
+        // Only allow editing if some rules exist
+        if (!$this->BadgeModel->getRules()) {
+            throw new Gdn_UserException(Gdn::translate('Yaga.Error.NoRules'));
         }
 
-        $this->JsonTarget('#BadgeID_' . $BadgeID, NULL, 'SlideUp');
-      }
-    }
-
-    $this->setHighlightRoute('badge/settings');
-    $this->SetData('Title', T('Yaga.Badge.Delete'));
-    $this->Render();
-  }
-
-  /**
-   * Toggle the enabled state of a badge. Must be done via JS.
-   *
-   * @param int $BadgeID
-   * @throws PermissionException
-   */
-  public function Toggle($BadgeID) {
-    if(!$this->Request->IsPostBack()) {
-      throw new Gdn_UserException(T('Yaga.Error.NeedJS'));
-    }
-    $this->Permission('Yaga.Badges.Manage');
-    $this->setHighlightRoute('badge/settings');
-
-    $Badge = $this->BadgeModel->GetByID($BadgeID);
-
-    if($Badge->Enabled) {
-      $Enable = FALSE;
-      $ToggleText = T('Disabled');
-      $ActiveClass = 'InActive';
-    }
-    else {
-      $Enable = TRUE;
-      $ToggleText = T('Enabled');
-      $ActiveClass = 'Active';
-    }
-
-    $Slider = Wrap(Wrap(Anchor($ToggleText, 'badge/toggle/' . $Badge->BadgeID, 'Hijack Button'), 'span', array('class' => "ActivateSlider ActivateSlider-{$ActiveClass}")), 'td');
-    $this->BadgeModel->Enable($BadgeID, $Enable);
-    $this->JsonTarget('#BadgeID_' . $BadgeID . ' td:nth-child(6)', $Slider, 'ReplaceWith');
-    $this->Render('Blank', 'Utility', 'Dashboard');
-  }
-
-  /**
-   * Remove the photo association of a badge. This does not remove the actual file
-   *
-   * @param int $BadgeID
-   * @param string $TransientKey
-   */
-  public function DeletePhoto($BadgeID = FALSE, $TransientKey = '') {
-      // Check permission
-      $this->Permission('Yaga.Badges.Manage');
-
-      $RedirectUrl = 'badge/edit/'.$BadgeID;
-
-      if (Gdn::Session()->ValidateTransientKey($TransientKey)) {
-         $this->BadgeModel->SetField($BadgeID, 'Photo', C('Yaga.Badges.DefaultPhoto'));
-         $this->InformMessage(T('Yaga.Badge.PhotoDeleted'));
-      }
-
-      if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
-          Redirect($RedirectUrl);
-      } else {
-         $this->ControllerName = 'Home';
-         $this->View = 'FileNotFound';
-         $this->RedirectUrl = Url($RedirectUrl);
-         $this->Render();
-      }
-   }
-
-   /**
-    * You can manually award badges to users for special cases
-    *
-    * @param int $UserID
-    * @throws Gdn_UserException
-    */
-   public function Award($UserID) {
-    // Check permission
-    $this->Permission('Yaga.Badges.Add');
-    $this->setHighlightRoute('badge/settings');
-
-    // Only allow awarding if some badges exist
-    if(!$this->BadgeModel->GetCount()) {
-      throw new Gdn_UserException(T('Yaga.Error.NoBadges'));
-    }
-
-    $UserModel = Gdn::UserModel();
-    $User = $UserModel->GetID($UserID);
-
-    $this->SetData('Username', $User->Name);
-
-    $Badges = $this->BadgeModel->Get();
-    $Badgelist = array();
-    foreach($Badges as $Badge) {
-      $Badgelist[$Badge->BadgeID] = $Badge->Name;
-    }
-    $this->SetData('Badges', $Badgelist);
-
-    if($this->Form->IsPostBack() == FALSE) {
-      // Add the user id field
-      $this->Form->AddHidden('UserID', $User->UserID);
-    }
-    else {
-      $Validation = new Gdn_Validation();
-      $Validation->ApplyRule('UserID', 'ValidateRequired');
-      $Validation->ApplyRule('BadgeID', 'ValidateRequired');
-      if($Validation->Validate($this->Request->Post())) {
-        $FormValues = $this->Form->FormValues();
-        if($this->BadgeAwardModel->Exists($FormValues['UserID'], $FormValues['BadgeID'])) {
-          $this->Form->AddError(sprintf(T('Yaga.Badge.AlreadyAwarded'), $User->Name), 'BadgeID');
-          // Need to respecify the user id
-          $this->Form->AddHidden('UserID', $User->UserID);
+        $edit = false;
+        if ($badgeID) {
+            $this->title(Gdn::translate('Yaga.Badge.Edit'));
+            $this->Badge = $this->BadgeModel->getID($badgeID);
+            $this->Form->addHidden('BadgeID', $badgeID);
+            $edit = true;
+        } else {
+            $this->title(Gdn::translate('Yaga.Badge.Add'));
         }
 
-        if($this->Form->ErrorCount() == 0) {
-          $this->BadgeAwardModel->Award($FormValues['BadgeID'], $FormValues['UserID'], Gdn::Session()->UserID, $FormValues['Reason']);
+        if ($this->Form->isPostBack() == false) {
+            if (property_exists($this, 'Badge')) {
+                // Manually merge the criteria into the badge object
+                $criteria = (array)dbdecode($this->Badge->RuleCriteria);
+                $badgeArray = (array)$this->Badge;
 
-          if($this->Request->Get('Target')) {
-            $this->RedirectUrl = $this->Request->Get('Target');
-          }
-          elseif($this->DeliveryType() == DELIVERY_TYPE_ALL) {
-            $this->RedirectUrl = Url(UserUrl($User));
-          }
-          else {
-            $this->JsonTarget('', '', 'Refresh');
-          }
+                $data = array_merge($badgeArray, $criteria);
+                $this->Form->setData($data);
+            }
+        } else {
+            // Handle the photo upload
+            $upload = new Gdn_Upload();
+            $tmpImage = $upload->validateUpload('PhotoUpload', false);
+
+            if ($tmpImage) {
+                // Generate the target image name
+                $targetImage = $upload->generateTargetName(PATH_UPLOADS, false);
+                $imageBaseName = pathinfo($targetImage, PATHINFO_BASENAME);
+
+                // Save the uploaded image
+                $parts = $upload->saveAs($tmpImage, 'yaga/'.$imageBaseName);
+                $assetRoot = Gdn::request()->urlDomain(true).Gdn::request()->assetRoot();
+                $relativeUrl = stringBeginsWith($parts['Url'], $assetRoot, true, true);
+
+                $this->Form->setFormValue('Photo', $relativeUrl);
+            } elseif (!$edit) {
+                // Use default photo from config if this is a new badge
+                $this->Form->setFormValue('Photo', Gdn::config('Yaga.Badges.DefaultPhoto'));
+            }
+
+            // Find the rule criteria
+            $formValues = $this->Form->formValues();
+            $criteria = array_diff_key($formValues, array_flip($this->editFormFields));
+
+            // Validate the criteria
+            $ruleClass = $formValues['RuleClass'];
+            $rule = new $ruleClass();
+
+            $rule->validate($criteria, $this->Form);
+
+            $serializedCriteria = dbencode($criteria);
+            $this->Form->setFormValue('RuleCriteria', $serializedCriteria);
+            if ($this->Form->save()) {
+                if ($edit) {
+                    $this->informMessage(Gdn::translate('Yaga.Badge.Updated'));
+                } else {
+                    $this->informMessage(Gdn::translate('Yaga.Badge.Added'));
+                }
+                redirectTo('/badge/settings');
+            }
         }
-      }
-      else {
-        $this->Form->SetValidationResults($Validation->Results());
-      }
+
+        $this->render('edit');
     }
 
-    $this->Render();
-  }
+    /**
+     * Convenience function for nice URLs
+     */
+    public function add() {
+        $this->edit();
+    }
 
-  /**
-   * This takes in a sort array and updates the badge sort order.
-   *
-   * Renders the Save tree and/or the Result of the sort update.
-   *
-   * @since 1.1
-   */
-  public function Sort() {
-      // Check permission
-      $this->Permission('Yaga.Badges.Manage');
+    /**
+     * Remove the badge via model.
+     *
+     * @param int $badgeID
+     * @throws NotFoundException
+     */
+    public function delete($badgeID) {
+        $badge = $this->BadgeModel->getID($badgeID);
 
-      $Request = Gdn::Request();
-      if($Request->IsPostBack()) {
-         $SortArray = $Request->GetValue('SortArray', NULL);
-         $Saves = $this->BadgeModel->SaveSort($SortArray);
-         $this->SetData('Result', TRUE);
-         $this->SetData('Saves', $Saves);
-      }
-      else {
-        $this->SetData('Result', FALSE);
-      }
+        if (!$badge) {
+            throw NotFoundException(Gdn::translate('Yaga.Badge'));
+        }
 
-      $this->RenderData();
-   }
+        $this->permission('Yaga.Badges.Manage');
+
+        if ($this->Form->isPostBack()) {
+            if (!$this->BadgeModel->deleteID($badgeID)) {
+                $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.DeleteFailed'), Gdn::translate('Yaga.Badge')));
+            }
+
+            if ($this->Form->errorCount() == 0) {
+                if ($this->_DeliveryType === DELIVERY_TYPE_ALL) {
+                    redirectTo('badge/settings');
+                }
+
+                $this->jsonTarget('#BadgeID_'.$badgeID, null, 'SlideUp');
+            }
+        }
+
+        $this->setHighlightRoute('badge/settings');
+        $this->setData('Title', Gdn::translate('Yaga.Badge.Delete'));
+        $this->render();
+    }
+
+    /**
+     * Toggle the enabled state of a badge. Must be done via JS.
+     *
+     * @param int $badgeID
+     * @throws PermissionException
+     */
+    public function toggle($badgeID) {
+        if (!$this->Request->isPostBack()) {
+            throw new Gdn_UserException(Gdn::translate('Yaga.Error.NeedJS'));
+        }
+        $this->permission('Yaga.Badges.Manage');
+        $this->setHighlightRoute('badge/settings');
+
+        $badge = $this->BadgeModel->getID($badgeID);
+
+        $badge->Enabled = !$badge->Enabled;
+        $this->BadgeModel->enable($badgeID, $badge->Enabled);
+
+        $slider = renderYagaToggle('badge/toggle/'.$badge->BadgeID, $badge->Enabled, $badge->BadgeID);
+        $this->jsonTarget('#toggle-'.$badge->BadgeID, $slider, 'ReplaceWith');
+        $this->render('blank', 'utility', 'dashboard');
+    }
+
+    /**
+     * Remove the photo association of a badge. This does not remove the actual file
+     *
+     * @param int $badgeID
+     * @param string $transientKey
+     */
+    public function deletePhoto($badgeID = false, $transientKey = '') {
+            // Check permission
+            $this->permission('Yaga.Badges.Manage');
+
+            $redirectUrl = 'badge/edit/'.$badgeID;
+
+            if (Gdn::session()->validateTransientKey($transientKey)) {
+                $this->BadgeModel->setField($badgeID, 'Photo', Gdn::config('Yaga.Badges.DefaultPhoto'));
+                $this->informMessage(Gdn::translate('Yaga.Badge.PhotoDeleted'));
+            }
+
+            if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
+                redirectTo($redirectUrl);
+            } else {
+                $this->RedirectUrl = url($redirectUrl);
+                $this->render('blank', 'utility', 'dashboard');
+            }
+     }
+
+    /**
+     * You can manually award badges to users for special cases
+     *
+     * @param int $userID
+     * @throws Gdn_UserException
+     */
+    public function award($userID) {
+        // Check permission
+        $this->permission('Yaga.Badges.Add');
+        $this->setHighlightRoute('badge/settings');
+
+        // Only allow awarding if some badges exist
+        if (!$this->BadgeModel->getCount()) {
+            throw new Gdn_UserException(Gdn::translate('Yaga.Error.NoBadges'));
+        }
+
+        $userModel = Gdn::userModel();
+        $user = $userModel->getID($userID);
+
+        $this->setData('Username', $user->Name);
+
+        $badges = $this->BadgeModel->get();
+        $badgelist = [];
+        foreach ($badges as $badge) {
+            $badgelist[$badge->BadgeID] = $badge->Name;
+        }
+        $this->setData('Badges', $badgelist);
+
+        if ($this->Form->isPostBack() == false) {
+            // Add the user id field
+            $this->Form->addHidden('UserID', $user->UserID);
+        } else {
+            $validation = new Gdn_Validation();
+            $validation->applyRule('UserID', 'ValidateRequired');
+            $validation->applyRule('BadgeID', 'ValidateRequired');
+            if ($validation->validate($this->Request->post())) {
+                $formValues = $this->Form->formValues();
+                if ($this->BadgeAwardModel->exists($formValues['UserID'], $formValues['BadgeID'])) {
+                    $this->Form->addError(sprintf(Gdn::translate('Yaga.Badge.AlreadyAwarded'), $user->Name), 'BadgeID');
+                    // Need to respecify the user id
+                    $this->Form->addHidden('UserID', $user->UserID);
+                }
+
+                if ($this->Form->errorCount() == 0) {
+                    $this->BadgeAwardModel->award($formValues['BadgeID'], $formValues['UserID'], Gdn::session()->UserID, $formValues['Reason']);
+
+                    if ($this->Request->get('Target')) {
+                        $this->RedirectUrl = $this->Request->get('Target');
+                    } elseif ($this->deliveryType() == DELIVERY_TYPE_ALL) {
+                        $this->RedirectUrl = url(userUrl($user));
+                    } else {
+                        $this->jsonTarget('', '', 'Refresh');
+                    }
+                }
+            } else {
+                $this->Form->setValidationResults($validation->results());
+            }
+        }
+
+        $this->render();
+    }
+
+    /**
+     * This takes in a sort array and updates the badge sort order.
+     *
+     * Renders the Save tree and/or the Result of the sort update.
+     *
+     * @since 1.1
+     */
+    public function sort() {
+        // Check permission
+        $this->permission('Yaga.Badges.Manage');
+
+        $request = Gdn::request();
+        if ($request->isPostBack()) {
+            $sortArray = $request->getValue('SortArray', null);
+            $saves = $this->BadgeModel->saveSort($sortArray);
+            $this->setData('Result', true);
+            $this->setData('Saves', $saves);
+        } else {
+            $this->setData('Result', false);
+        }
+
+        $this->renderData();
+    }
+
+    /**
+     * This creates a new rule object in a safe way and renders its criteria form.
+     *
+     * @param string $ruleClass
+     */
+    public function ruleCriteriaForm($ruleClass) {
+        if (class_exists($ruleClass) && in_array('YagaRule', class_implements($ruleClass))) {
+            $rule = new $ruleClass();
+            $this->Form->setStyles('bootstrap');
+
+            $this->renderData([
+                'CriteriaForm' => $rule->form($this->Form),
+                'RuleClass' => $ruleClass,
+                'Name' => $rule->name(),
+                'Description' => $rule->description()
+            ]);
+        } else {
+            $this->renderException(new Gdn_UserException(Gdn::translate('Yaga.Error.Rule404')));
+        }
+    }
+
 }

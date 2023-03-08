@@ -1,38 +1,53 @@
 <?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2014 Zachary Doll */
 
-$TransportType = $this->Data('TransportType');
-echo Wrap($this->Title(), 'h1');
-echo $this->Form->Open(array('enctype' => 'multipart/form-data'));
-echo $this->Form->Errors();
+$transportType = $this->data('TransportType');
 
-echo Wrap(Wrap(T("Yaga.$TransportType.Desc"), 'div'), 'div', array('class' => 'Wrap'));
+echo heading($this->title());
+
+echo wrap(Gdn::translate("Yaga.$transportType.Desc"), 'div', ['class' => 'padded']);
+
+echo $this->Form->open(['enctype' => 'multipart/form-data']);
+echo $this->Form->errors();
+
 ?>
 <ul>
-  <li>
-    <?php
-    echo $this->Form->Label('Yaga.Transport.File', 'FileUpload');
-    echo $this->Form->Input('FileUpload', 'file');
-    ?>
-  </li>
-  <li>
-    <?php
-    echo $this->Form->Label('Yaga.Reactions', 'Action');
-    echo $this->Form->Checkbox('Action');
-    ?>
-  </li>
-  <li>
-    <?php
-    echo $this->Form->Label('Yaga.Badges', 'Badge');
-    echo $this->Form->Checkbox('Badge');
-    ?>
-  </li>
-  <li>
-    <?php
-    echo $this->Form->Label('Yaga.Ranks', 'Rank');
-    echo $this->Form->Checkbox('Rank');
-    ?>
-  </li>
+    <?php if ($transportType === 'Import') { ?>
+        <li class="form-group">
+            <div class="label-wrap">
+                <?php echo $this->Form->label('Yaga.Transport.File', 'FileUpload'); ?>
+            </div>
+            <div class="input-wrap">
+                <?php echo $this->Form->input('FileUpload', 'file'); ?>
+            </div>
+        </li>
+    <?php } ?>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Yaga.Reactions', 'Action'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->checkbox('Action'); ?>
+        </div>
+    </li>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Yaga.Badges', 'Badge'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->checkbox('Badge'); ?>
+        </div>
+    </li>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Yaga.Ranks', 'Rank'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->checkbox('Rank'); ?>
+        </div>
+    </li>
 </ul>
+
 <?php
-echo $this->Form->Close($TransportType);
+echo $this->Form->close($transportType);

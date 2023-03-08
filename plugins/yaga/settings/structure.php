@@ -1,92 +1,172 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013 Zachary Doll */
 
-if(!isset($Drop)) {
-  $Drop = FALSE; // Safe default - Set to TRUE to drop the table if it already exists.
+if (!isset($drop)) {
+    $drop = false; // Safe default - Set to true to drop the table if it already exists.
 }
 
-if(!isset($Explicit)) {
-  $Explicit = FALSE; // Safe default - Set to TRUE to remove all other columns from table.
+if (!isset($explicit)) {
+    $explicit = false; // Safe default - Set to true to remove all other columns from table.
 }
 
-$Database = Gdn::Database();
-$SQL = $Database->SQL(); // To run queries.
-$Construct = $Database->Structure(); // To modify and add database tables.
-$Px = $Database->DatabasePrefix;
+$database = Gdn::database();
+$sql = $database->sql(); // To run queries.
+$construct = $database->structure(); // To modify and add database tables.
+$px = $database->DatabasePrefix;
+
+// Rename Reaction, Action, Badge, BadgeAward & Rank
+
+$construct->table('Reaction');
+// Differentiate between GDN_reaction (lowercase) and GDN_Reaction on case insensitive systems.
+if ($construct->tableExists() && $construct->columnExists('ActionID')) {
+    $construct->renameTable($px.'Reaction', $px.'YagaReaction', false);
+}
+
+$construct->table('Action');
+if ($construct->tableExists()) {
+    $construct->renameTable($px.'Action', $px.'YagaAction', false);
+}
+
+$construct->table('Badge');
+if ($construct->tableExists()) {
+    $construct->renameTable($px.'Badge', $px.'YagaBadge', false);
+}
+
+$construct->table('BadgeAward');
+if ($construct->tableExists()) {
+    $construct->renameTable($px.'BadgeAward', $px.'YagaBadgeAward', false);
+}
+
+$construct->table('Rank');
+if ($construct->tableExists()) {
+    $construct->renameTable($px.'Rank', $px.'YagaRank', false);
+}
+
+// Delete duplicates from GDN_YagaReaction that violate the UNIQUE constraint (user reacting to the same content twice).
+$construct->table('YagaReaction');
+if ($construct->tableExists()) {
+    $result = $sql->query("show index from {$px}YagaReaction where Key_name = 'UX_YagaReaction_Reaction'")->result();
+    if (!$result) {
+        $sql->query("
+            delete from {$px}YagaReaction
+            where ReactionID in (
+                select * from (
+                    select max(r.ReactionID)
+                    from {$px}YagaReaction as r
+                    group by r.InsertUserID, r.ParentID, r.ParentType
+                    having count(r.ReactionID) > 1
+                ) as r2
+        )", 'delete');
+    }
+}
+
+// Delete duplicates from GDN_YagaBadgeAward that violate the UNIQUE constraint (user receiving the same badge twice).
+$construct->table('YagaBadgeAward');
+if ($construct->tableExists()) {
+    $result = $sql->query("show index from {$px}YagaBadgeAward where Key_name = 'UX_YagaBadgeAward_Award'")->result();
+    if (!$result) {
+        $sql->query("
+            delete from {$px}YagaBadgeAward
+            where BadgeAwardID in (
+                select * from (
+                    select max(a.BadgeAwardID)
+                    from {$px}YagaBadgeAward as a
+                    group by a.BadgeID, a.UserID
+                    having count(a.BadgeAwardID) > 1
+                ) as r2
+        )", 'delete');
+    }
+}
 
 // Tracks the data associated with reacting to content
-$Construct->Table('Reaction')
-        ->PrimaryKey('ReactionID')
-        ->Column('InsertUserID', 'int', FALSE, 'index.1')
-        ->Column('ActionID', 'int', FALSE, 'index')
-        ->Column('ParentID', 'int', TRUE)
-        ->Column('ParentType', 'varchar(100)')
-        ->Column('ParentAuthorID', 'int', FALSE, 'index')
-        ->Column('DateInserted', 'datetime')
-        ->Set($Explicit, $Drop);
-
-$result = $SQL->query("SHOW INDEX FROM ${Px}Reaction WHERE Key_name = 'IX_ParentID_ParentType'")->result(); 
-if(!$result && !$Construct->CaptureOnly) {
-  $SQL->query("ALTER TABLE ${Px}Reaction ADD INDEX IX_ParentID_ParentType (ParentID, ParentType)");
-}
+$construct->table('YagaReaction')
+    ->primaryKey('ReactionID')
+    ->column('InsertUserID', 'int', false, 'unique.Reaction')
+    ->column('ActionID', 'int', false, ['index.Profile', 'index.ProfileCount', 'index.Best'])
+    ->column('ParentID', 'int', false, ['index.Record', 'unique.Reaction'])
+    ->column('ParentType', 'varchar(100)', false, ['index.Record', 'unique.Reaction'])
+    ->column('ParentAuthorID', 'int', false, ['index', 'index.Profile', 'index.ProfileCount'])
+    ->column('DateInserted', 'datetime', false, 'index.Record')
+    ->column('Latest', 'tinyint(1)', '0', ['index.LatestDate', 'index.LatestScore', 'index.ProfileCount'])
+    ->column('ParentPermissionCategoryID', 'int', true)
+    ->column('ParentDateInserted', 'datetime', true, ['index.LatestDate', 'index.Profile'])
+    ->column('ParentScore', 'float', true, ['index.LatestScore', 'index.Best'])
+    ->set($explicit, $drop);
 
 // Describes actions that can be taken on a comment, discussion or activity
-$Construct->Table('Action')
-        ->PrimaryKey('ActionID')
-        ->Column('Name', 'varchar(140)')
-        ->Column('Description', 'varchar(255)')
-        ->Column('Tooltip', 'varchar(255)')
-        ->Column('CssClass', 'varchar(255)')
-        ->Column('AwardValue', 'int', 1)
-        ->Column('Permission', 'varchar(255)', 'Yaga.Reactions.Add')
-        ->Column('Sort', 'int', TRUE)
-        ->Set($Explicit, $Drop);
+$construct->table('YagaAction')
+    ->primaryKey('ActionID')
+    ->column('Name', 'varchar(140)')
+    ->column('Description', 'varchar(255)')
+    ->column('Tooltip', 'varchar(255)')
+    ->column('CssClass', 'varchar(255)')
+    ->column('AwardValue', 'int', 1)
+    ->column('Permission', 'varchar(255)', 'Yaga.Reactions.Add')
+    ->column('Sort', 'int', true)
+    ->set($explicit, $drop);
 
 // Describes a badge and the associated rule criteria
-$Construct->Table('Badge')
-        ->PrimaryKey('BadgeID')
-        ->Column('Name', 'varchar(140)')
-        ->Column('Description', 'varchar(255)', NULL)
-        ->Column('Photo', 'varchar(255)', NULL)
-        ->Column('RuleClass', 'varchar(255)')
-        ->Column('RuleCriteria', 'text', TRUE)
-        ->Column('AwardValue', 'int', 0)
-        ->Column('Enabled', 'tinyint(1)', '1')
-        ->Column('Sort', 'int', TRUE)
-        ->Set($Explicit, $Drop);
+$construct->table('YagaBadge')
+    ->primaryKey('BadgeID')
+    ->column('Name', 'varchar(140)')
+    ->column('Description', 'varchar(255)', null)
+    ->column('Photo', 'varchar(255)', null)
+    ->column('RuleClass', 'varchar(255)')
+    ->column('RuleCriteria', 'text', true)
+    ->column('AwardValue', 'int', 0)
+    ->column('Enabled', 'tinyint(1)', '1')
+    ->column('Sort', 'int', true)
+    ->set($explicit, $drop);
 
 // Tracks the actual awarding of badges
-$Construct->Table('BadgeAward')
-        ->PrimaryKey('BadgeAwardID')
-        ->Column('BadgeID', 'int')
-        ->Column('UserID', 'int')
-        ->Column('InsertUserID', 'int', NULL)
-        ->Column('Reason', 'text', NULL)
-        ->Column('DateInserted', 'datetime')
-        ->Set($Explicit, $Drop);
+$construct->table('YagaBadgeAward')
+    ->primaryKey('BadgeAwardID')
+    ->column('BadgeID', 'int', false, ['index', 'unique.Award'])
+    ->column('UserID', 'int', false, ['index', 'unique.Award'])
+    ->column('InsertUserID', 'int', null)
+    ->column('Reason', 'text', null)
+    ->column('DateInserted', 'datetime')
+    ->set($explicit, $drop);
 
 // Describes a rank and associated values
-$Construct->Table('Rank')
-        ->PrimaryKey('RankID')
-        ->Column('Name', 'varchar(140)')
-        ->Column('Description', 'varchar(255)', NULL)
-        ->Column('Sort', 'int', TRUE)
-        ->Column('PointReq', 'int', 0)
-        ->Column('PostReq', 'int', 0)
-        ->Column('AgeReq', 'int', 0)
-        ->Column('Perks', 'text', TRUE)
-        ->Column('Enabled', 'tinyint(1)', '1')
-        ->Set($Explicit, $Drop);
+$construct->table('YagaRank')
+    ->primaryKey('RankID')
+    ->column('Name', 'varchar(140)')
+    ->column('Description', 'varchar(255)', null)
+    ->column('Sort', 'int', true)
+    ->column('PointReq', 'int', 0)
+    ->column('PostReq', 'int', 0)
+    ->column('AgeReq', 'int', 0)
+    ->column('Perks', 'text', true)
+    ->column('Enabled', 'tinyint(1)', '1')
+    ->set($explicit, $drop);
 
 // Tracks the current rank a user has
-$Construct->Table('User')
-        ->Column('CountBadges', 'int', 0)
-        ->Column('RankID', 'int', TRUE)
-        ->Column('RankProgression', 'tinyint(1)', '1')
-        ->Set();
+$construct->table('User')
+    ->column('CountBadges', 'int', 0)
+    ->column('RankID', 'int', true)
+    ->column('RankProgression', 'tinyint(1)', '1')
+    ->set();
 
 // Add activity types for Badge and Rank awards
-if ($SQL->GetWhere('ActivityType', array('Name' => 'BadgeAward'))->NumRows() == 0)
-   $SQL->Insert('ActivityType', array('AllowComments' => '1', 'Name' => 'BadgeAward', 'FullHeadline' => '%1$s earned a badge.', 'ProfileHeadline' => '%1$s earned a badge.', 'Notify' => 1));
-if ($SQL->GetWhere('ActivityType', array('Name' => 'RankPromotion'))->NumRows() == 0)
-   $SQL->Insert('ActivityType', array('AllowComments' => '1', 'Name' => 'RankPromotion', 'FullHeadline' => '%1$s was promoted.', 'ProfileHeadline' => '%1$s was promoted.', 'Notify' => 1));
+if ($sql->getWhere('ActivityType', ['Name' => 'BadgeAward'])->numRows() == 0  && !$construct->CaptureOnly) {
+    $sql->insert('ActivityType', ['AllowComments' => '1', 'Name' => 'BadgeAward', 'FullHeadline' => '%1$s earned a badge.', 'ProfileHeadline' => '%1$s earned a badge.', 'Notify' => 1]);
+}
+if ($sql->getWhere('ActivityType', ['Name' => 'RankPromotion'])->numRows() == 0 && !$construct->CaptureOnly) {
+    $sql->insert('ActivityType', ['AllowComments' => '1', 'Name' => 'RankPromotion', 'FullHeadline' => '%1$s was promoted.', 'ProfileHeadline' => '%1$s was promoted.', 'Notify' => 1]);
+}
+
+// Correct the urls to the old default icons.
+if (!$construct->CaptureOnly) {
+    $oldPath = 'applications/yaga/design/images/';
+    $newPath = 'plugins/yaga/design/images/';
+
+    $sql->update('YagaBadge', ['Photo' => $newPath.'default_badge.png'], ['Photo' => $oldPath.'default_badge.png'])->put();
+    $sql->update('YagaBadge', ['Photo' => $newPath.'default_promotion.png'], ['Photo' => $oldPath.'default_promotion.png'])->put();
+
+    $sql->update('YagaBadge')->set('Photo', "replace(`Photo`, '$oldPath', '$newPath')", false)->put();
+
+    $yagaTypes = array_column($sql->getWhere('ActivityType', ['Name' => ['BadgeAward', 'RankPromotion']])->resultArray(), 'ActivityTypeID');
+    $sql->update('Activity')->set('Photo', "replace(`Photo`, '$oldPath', '$newPath')", false)->whereIn('ActivityTypeID', $yagaTypes)->put();
+}

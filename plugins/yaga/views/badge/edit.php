@@ -1,82 +1,101 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013 Zachary Doll */
 
 // Grab the rules so we can render the first criteria form by default
-$Rules = RulesController::GetRules();
-$RuleClass = key($Rules);
+$rules = $this->BadgeModel->getRules();
+$ruleClass = key($rules);
 
 // Use the defined rule class if we are editing
-if(property_exists($this, 'Badge')) {
-  $RuleClass = $this->Badge->RuleClass;
+if (property_exists($this, 'Badge')) {
+    $ruleClass = $this->Badge->RuleClass;
 }
 
-if(class_exists($RuleClass)) {
-  $Rule = new $RuleClass();
-}
-else {
-  $Rule = new UnknownRule();
-}
+$rule = $this->BadgeModel->createRule($ruleClass);
 
-echo Wrap($this->Title(), 'h1');
+echo heading($this->title());
 
-echo $this->Form->Open(array('enctype' => 'multipart/form-data', 'class' => 'Badge'));
-echo $this->Form->Errors();
+echo $this->Form->open(['enctype' => 'multipart/form-data', 'class' => 'Badge']);
+echo $this->Form->errors();
 ?>
-<ul>
-  <li>
-    <?php
-    echo $this->Form->Label('Photo', 'PhotoUpload');
-    $Photo = $this->Form->GetValue('Photo');
-    if($Photo) {
-      echo Img($Photo);
-      echo '<br />'.Anchor(T('Delete Photo'),
-        CombinePaths(array('badge/deletephoto', $this->Badge->BadgeID, Gdn::Session()->TransientKey())),
-      'Button Danger PopConfirm');
-    }
-    echo $this->Form->Input('PhotoUpload', 'file');
-    ?>
-  </li>
-  <li>
-    <?php
-    echo $this->Form->Label('Name', 'Name');
-    echo $this->Form->TextBox('Name');
-    ?>
-  </li>
-  <li>
-    <?php
-    echo $this->Form->Label('Description', 'Description');
-    echo $this->Form->TextBox('Description', array('multiline' => TRUE));
-    ?>
-  </li>
-  <li>
-    <?php
-    echo $this->Form->Label('Rule', 'RuleClass');
-    echo $this->Form->Dropdown('RuleClass', $Rules);
-    ?>
-  </li>
-  <li id="Rule-Description">
-    <?php
-    echo $Rule->Description();
-    ?>
-  </li>
-  <li id="Rule-Criteria">
-    <?php
-    echo $Rule->Form($this->Form);
-    ?>
-  </li>
-  <li>
-    <?php
-    echo $this->Form->Label('Award Value', 'AwardValue');
-    echo $this->Form->TextBox('AwardValue');
-    ?>
-  </li>
-  <li>
-    <?php
-    echo $this->Form->Label('Automatically Award', 'Enabled');
-    echo $this->Form->CheckBox('Enabled');
-    ?>
-  </li>
 
+<ul>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php
+            echo $this->Form->label('Photo', 'PhotoUpload');
+            $photo = $this->Form->getValue('Photo');
+            if ($photo) {
+                echo '<br />';
+                echo img($photo);
+                if ($photo !== Gdn::config('Yaga.Badges.DefaultPhoto')) {
+                    echo '<br />'.anchor(
+                        Gdn::translate('Delete Photo'),
+                        combinePaths(['badge/deletephoto', $this->Badge->BadgeID, Gdn::session()->transientKey()]),
+                        'btn btn-primary js-modal-confirm',
+                        ['data-body' => sprintf(Gdn::translate('Are you sure you want to delete this %s?'), Gdn::translate('Photo'))]
+                    );
+                }
+            }
+            ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->input('PhotoUpload', 'file'); ?>
+        </div>
+    </li>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Name', 'Name'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('Name'); ?>
+        </div>
+    </li>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Description', 'Description'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('Description', ['multiline' => true]); ?>
+        </div>
+    </li>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Rule', 'RuleClass'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->dropdown('RuleClass', $rules); ?>
+        </div>
+    </li>
+    <li class="form-group">
+        <div class="label-wrap">
+            <div id="Rule-Description">
+                <?php echo $rule->description(); ?>
+            </div>
+        </div>
+        <div class="input-wrap">
+            <div id="Rule-Criteria">
+                <?php echo $rule->form($this->Form); ?>
+            </div>
+        </div>
+    </li>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Award Value', 'AwardValue'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->textBox('AwardValue', ['type' => 'number']); ?>
+        </div>
+    </li>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->label('Automatically Award', 'Enabled'); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->toggle('Enabled'); ?>
+        </div>
+    </li>
 </ul>
+
 <?php
-echo $this->Form->Close('Save');
+echo $this->Form->close('Save');

@@ -1,6 +1,11 @@
 <?php if (!defined('APPLICATION')) exit();
 
 // Misc
+$Definition['Taso 1'] = 'Level 1';
+$Definition['Taso 2'] = 'Level 2';
+$Definition['Taso 3'] = 'Level 3';
+$Definition['Taso 4'] = 'Level 4';
+$Definition['Taso 5'] = 'Level 5';
 $Definition['1 year'] = '1 year';
 $Definition['3 months'] = '3 months';
 $Definition['5 years'] = '5 years';
@@ -10,6 +15,7 @@ $Definition['Automatically Award'] = 'Automatically Award';
 $Definition['Award Value'] = 'Award Value';
 $Definition['Css Class'] = 'Css Class';
 $Definition['Days'] = 'Days';
+$Definition['Delete Photo'] = 'Delete Photo';
 $Definition['Description'] = 'Description';
 $Definition['Export'] = 'Export';
 $Definition['Grant'] = 'Grant';
@@ -32,6 +38,7 @@ $Definition['Yaga.MenuLinks.Show'] = 'Show links in the main menu that describe 
 $Definition['Yaga.Action'] = 'Action';
 $Definition['Yaga.Action.Add'] = 'Add Action';
 $Definition['Yaga.Action.Added'] = 'Action added successfully!';
+$Definition['Yaga.Action.ConfirmDelete'] = 'Are you sure you want to delete the <em>%s</em> action?';
 $Definition['Yaga.Action.Delete'] = 'Delete Action';
 $Definition['Yaga.Action.Edit'] = 'Edit Action';
 $Definition['Yaga.Action.Invalid'] = 'Invalid Action';

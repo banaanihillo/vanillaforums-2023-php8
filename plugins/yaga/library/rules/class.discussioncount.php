@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges based on a user's discussion count
@@ -7,68 +7,68 @@
  * @since 1.0
  * @package Yaga
  */
-class DiscussionCount implements YagaRule{
+class DiscussionCount implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $Result = FALSE;
-    switch($Criteria->Comparison) {
-      case 'gt':
-        if($User->CountDiscussions > $Criteria->Target) {
-          $Result = TRUE;
+    public function award($sender, $user, $criteria) {
+        $result = false;
+        switch($criteria->Comparison) {
+            case 'gt':
+                if ($user->CountDiscussions > $criteria->Target) {
+                    $result = true;
+                }
+                break;
+            case 'lt':
+                if ($user->CountDiscussions < $criteria->Target) {
+                    $result = true;
+                }
+                break;
+            default:
+            case 'gte':
+                if ($user->CountDiscussions >= $criteria->Target) {
+                    $result = true;
+                }
+                break;
         }
-        break;
-      case 'lt':
-        if($User->CountDiscussions < $Criteria->Target) {
-          $Result = TRUE;
-        }
-        break;
-      default:
-      case 'gte':
-        if($User->CountDiscussions >= $Criteria->Target) {
-          $Result = TRUE;
-        }
-        break;
+
+        return $result;
     }
 
-    return $Result;
-  }
+    public function form($form) {
+        $comparisons = [
+            'gt' => Gdn::translate('More than:'),
+            'lt' => Gdn::translate('Less than:'),
+            'gte' => Gdn::translate('More than or:')
+        ];
 
-  public function Form($Form) {
-    $Comparisons = array(
-        'gt' => T('More than:'),
-        'lt' => T('Less than:'),
-        'gte' => T('More than or:')
-    );
+        $string = $form->label('Yaga.Rules.DiscussionCount.Criteria.Head', 'DiscussionCount');
+        $string .= $form->dropDown('Comparison', $comparisons);
+        $string .= $form->textbox('Target');
 
-    $String = $Form->Label('Yaga.Rules.DiscussionCount.Criteria.Head', 'DiscussionCount');
-    $String .= $Form->DropDown('Comparison', $Comparisons) . ' ';
-    $String .= $Form->Textbox('Target', array('class' => 'SmallInput'));
+        return $string;
+    }
 
-    return $String;
-  }
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('Target', ['Required', 'Integer']);
+        $validation->applyRule('Comparison', 'Required');
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('Target', array('Required', 'Integer'));
-    $Validation->ApplyRule('Comparison', 'Required');
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
+    public function hooks() {
+        return ['gdn_dispatcher_appStartup'];
+    }
 
-  public function Hooks() {
-    return array('gdn_dispatcher_appStartup');
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.DiscussionCount.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Description() {
-    $Description = T('Yaga.Rules.DiscussionCount.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.DiscussionCount');
+    }
 
-  public function Name() {
-    return T('Yaga.Rules.DiscussionCount');
-  }
-  
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 }

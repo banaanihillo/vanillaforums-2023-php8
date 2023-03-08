@@ -1,31 +1,26 @@
 <?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013-2014 Zachary Doll */
 
-echo Wrap($this->Title(), 'h1');
+echo heading($this->title());
 
-echo $this->ConfigurationModule->ToString();
+echo $this->ConfigurationModule->toString();
 
-echo Wrap(T('Yaga.Transport'), 'h3');
+echo subheading(Gdn::translate('Yaga.Transport'), Gdn::translate('Yaga.Transport.Desc'));
 
-echo Wrap(T('Yaga.Transport.Desc'), 'div', array('class' => 'Wrap'));
-
-echo Wrap(
-        Anchor(
-                T('Import'),
-                'yaga/import',
-                array('class' => 'Button')
-                ) .
-        Anchor(
-                T('Export'),
-                'yaga/export',
-                array('class' => 'Button')),
-        'div',
-        array(
-            'class' => 'Wrap')
-        );
+echo wrap(
+    anchor(
+        Gdn::translate('Import'),
+        'yaga/import',
+        ['class' => 'Button']
+    ).
+    anchor(
+        Gdn::translate('Export'),
+        'yaga/export',
+        ['class' => 'Button']
+    ),
+    'div',
+    ['class' => 'form-footer']
+);
 
 ?>
-
-<div class="Footer">
-	
-</div>

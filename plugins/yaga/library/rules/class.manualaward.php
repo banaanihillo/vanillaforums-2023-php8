@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule never awards badges. It can safely be used for special badges that
@@ -10,32 +10,32 @@
  */
 class ManualAward implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    return FALSE;
-  }
+    public function award($sender, $user, $criteria) {
+        return false;
+    }
 
-  public function Form($Form) {
-    return '';
-  }
+    public function form($form) {
+        return '';
+    }
 
-  public function Validate($Criteria, $Form) {
-    return;
-  }
+    public function validate($criteria, $form) {
+        return;
+    }
 
-  public function Hooks() {
-    return array();
-  }
+    public function hooks() {
+        return [];
+    }
 
-  public function Description() {
-    $Description = T('Yaga.Rules.ManualAward.Desc');
-    return Wrap($Description, 'div', array('class' => 'AlertMessage'));
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.ManualAward.Desc');
+        return wrap($description, 'div', ['class' => 'AlertMessage']);
+    }
 
-  public function Name() {
-    return T('Yaga.Rules.ManualAward');
-  }
-  
-  public function Interacts() {
-    return FALSE;
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.ManualAward');
+    }
+
+    public function interacts() {
+        return false;
+    }
 }

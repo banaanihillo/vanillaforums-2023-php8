@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges if the user has a profile photo
@@ -9,37 +9,32 @@
  */
 class PhotoExists implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    if($User->Photo) {
-      return TRUE;
+    public function award($sender, $user, $criteria) {
+        return (bool)$user->Photo;
     }
-    else {
-      return FALSE;
+
+    public function form($form) {
+        return '';
     }
-  }
 
-  public function Form($Form) {
-    return '';
-  }
+    public function validate($criteria, $form) {
+        return;
+    }
 
-  public function Validate($Criteria, $Form) {
-    return;
-  }
+    public function hooks() {
+        return ['gdn_dispatcher_appStartup'];
+    }
 
-  public function Hooks() {
-    return array('gdn_dispatcher_appStartup');
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.PhotoExists.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Description() {
-    $Description = T('Yaga.Rules.PhotoExists.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.PhotoExists');
+    }
 
-  public function Name() {
-    return T('Yaga.Rules.PhotoExists');
-  }
-  
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 }

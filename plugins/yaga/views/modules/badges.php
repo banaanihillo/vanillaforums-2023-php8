@@ -1,18 +1,20 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013 Zachary Doll */
 
-echo '<div id="Badges" class="Box BadgeGrid">';
-echo '<h4>' . $this->Title . '</h4>';
+echo '<div id="Badges" class="Box Badges">';
+echo '<h4>'.$this->Title.'</h4>';
 echo '<div class="PhotoGrid">';
-foreach($this->Data as $Badge) {
-  echo Anchor(
-          Img(
-                  $Badge['Photo'],
-                  array('class' => 'ProfilePhoto ProfilePhotoSmall')
-             ),
-          'yaga/badges/' . $Badge['BadgeID'] . '/' . Gdn_Format::Url($Badge['Name']),
-          array('title' => $Badge['Name'])
-      );
+
+foreach ($this->Data as $badge) {
+    echo anchor(
+        img(
+            $badge['Photo'],
+            ['class' => 'ProfilePhoto ProfilePhotoSmall']
+        ),
+        'yaga/badges/'.$badge['BadgeID'].'/'.rawurlencode($badge['Name']),
+        ['title' => $badge['Name']]
+    );
 }
 echo '</div>';
 echo '</div>';

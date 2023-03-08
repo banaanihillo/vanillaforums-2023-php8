@@ -1,20 +1,31 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
-$ActionName = $this->Data('ActionName');
-$OtherActions = $this->Data('OtherActions', NULL);
+$actionName = $this->data('ActionName');
+$otherActions = $this->data('OtherActions', null);
 
-echo Wrap($this->Data('Title'), 'h1');
+echo heading($this->data('Title'));
 
-echo $this->Form->Open();
-echo $this->Form->Errors();
+echo $this->Form->open(['id' => 'DeleteAction']);
+echo $this->Form->errors();
 
-echo Wrap(
-        $this->Form->Checkbox('Move', sprintf(T('Yaga.Action.Move'), $ActionName)) . ' ' . $this->Form->DropDown('ReplacementID', $OtherActions), 'div', array('class' => 'Info'));
-echo Wrap(
-        sprintf(T('Are you sure you want to delete this %s?'), $ActionName . ' ' . T('Yaga.Action')) .
-        Wrap(
-                $this->Form->Button('OK', array('class' => 'Button Primary')) .
-                $this->Form->Button('Cancel', array('type' => 'button', 'class' => 'Button Close')), 'div', array('class' => 'Buttons Buttons-Confirm')
-        ), 'div', array('class' => 'Info'));
+echo wrap(sprintf(Gdn::translate('Yaga.Action.ConfirmDelete'), $actionName), 'div', ['class' => 'padded']);
+?>
 
-echo $this->Form->Close();
+<ul>
+    <li class="form-group">
+        <div class="label-wrap">
+            <?php echo $this->Form->checkbox('Move', sprintf(Gdn::translate('Yaga.Action.Move'), $actionName), ['id' => 'MoveAction']); ?>
+        </div>
+        <div class="input-wrap">
+            <?php echo $this->Form->dropDown('ReplacementID', $otherActions, ['id' => 'ReplacementAction']); ?>
+        </div>
+    </li>
+</ul>
+
+<?php
+echo '<div class="js-modal-footer form-footer">';
+echo $this->Form->button('Delete Action');
+echo $this->Form->button('Cancel', ['type' => 'button', 'class' => 'btn btn-secondary js-modal-close']);
+echo '</div>';
+
+echo $this->Form->close();

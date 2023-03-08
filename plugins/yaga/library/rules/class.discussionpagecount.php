@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges if a discussion reaches the target number of pages
@@ -7,50 +7,49 @@
  * @since 1.0
  * @package Yaga
  */
-class DiscussionPageCount implements YagaRule{
+class DiscussionPageCount implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $Discussion = $Sender->EventArguments['Discussion'];
-    $CommentCount = $Discussion->CountComments;
-    $PageSize = C('Vanilla.Comments.PerPage');
-    
-    $PageCount = floor($CommentCount / $PageSize);
-    
-    if($PageCount >= $Criteria->Pages) {
-      return $Discussion->InsertUserID;
+    public function award($sender, $user, $criteria) {
+        $discussion = $sender->EventArguments['Discussion'];
+        $commentCount = $discussion->CountComments;
+        $pageSize = Gdn::config('Vanilla.Comments.PerPage');
+
+        $pageCount = floor($commentCount / $pageSize);
+
+        if ($pageCount >= $criteria->Pages) {
+            return $discussion->InsertUserID;
+        } else {
+            return false;
+        }
     }
-    else {
-      return FALSE;
+
+    public function form($form) {
+        $string = $form->label('Yaga.Rules.DiscussionPageCount.Criteria.Head', 'DiscussionPageCount');
+        $string .= $form->textbox('Pages');
+        return $string;
     }
-  }
 
-  public function Form($Form) {
-    $String = $Form->Label('Yaga.Rules.DiscussionPageCount.Criteria.Head', 'DiscussionPageCount');
-    $String .= $Form->Textbox('Pages', array('class' => 'SmallInput'));
-    return $String;
-  }
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('Pages', ['Required', 'Integer']);
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('Pages', array('Required', 'Integer'));
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
+    public function hooks() {
+        return ['commentModel_beforeNotification'];
+    }
 
-  public function Hooks() {
-    return array('commentModel_beforeNotification');
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.DiscussionPageCount.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Description() {
-    $Description = T('Yaga.Rules.DiscussionPageCount.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.DiscussionPageCount');
+    }
 
-  public function Name() {
-    return T('Yaga.Rules.DiscussionPageCount');
-  }
-  
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 }

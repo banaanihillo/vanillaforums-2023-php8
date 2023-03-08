@@ -1,51 +1,69 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013 Zachary Doll */
 
-$Badge = $this->Data('Badge');
-$UserBadgeAward = $this->Data('UserBadgeAward', FALSE);
-$RecentAwards = $this->Data('RecentAwards', FALSE);
-$AwardCount = $this->Data('AwardCount', 0);
+use Vanilla\Formatting\DateTimeFormatter;
 
-echo Wrap(
-        Img($Badge->Photo, array('class' => 'BadgePhotoDisplay')) .
-        Wrap($Badge->Name, 'h1') .
-        Wrap($Badge->Description, 'p'),
-        'div',
-        array('class' => 'Badge-Details'));
+$badge = $this->data('Badge');
+$userBadgeAward = $this->data('UserBadgeAward', false);
+$recentAwards = $this->data('RecentAwards', false);
+$awardCount = $this->data('AwardCount', 0);
+$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+
+echo wrap(
+    img($badge->Photo, ['class' => 'BadgePhotoDisplay']).
+    wrap($badge->Name, 'h1').
+    wrap($badge->Description, 'p'),
+    'div',
+    ['class' => 'Badge-Details']
+);
 
 echo '<div class="Badge-Earned">';
 
-if($UserBadgeAward) {
-  echo Wrap(
-          UserPhoto(Gdn::Session()->User) .
-          T('Yaga.Badge.Earned') . ' ' .
-          Wrap(Gdn_Format::Date($UserBadgeAward->DateInserted, 'html'), 'span', array('class' => 'DateReceived')),
-          'div',
-          array('class' => 'EarnedThisBadge'));
+if ($userBadgeAward) {
+    echo wrap(
+        userPhoto(Gdn::session()->User).
+        Gdn::translate('Yaga.Badge.Earned').' '.
+        wrap(
+            $dateFormatter->formatDate($userBadgeAward->DateInserted, true),
+            'span',
+            ['class' => 'DateReceived']
+        ),
+        'div',
+        ['class' => 'EarnedThisBadge']
+    );
 }
 
-if($AwardCount) {
-  echo Wrap(Plural($AwardCount, 'Yaga.Badge.EarnedBySingle', 'Yaga.Badge.EarnedByPlural'), 'p', array('class' => 'BadgeCountDisplay'));
-}
-else {
-  echo Wrap(T('Yaga.Badge.EarnedByNone'), 'p');
+if ($awardCount) {
+    echo wrap(plural($awardCount, 'Yaga.Badge.EarnedBySingle', 'Yaga.Badge.EarnedByPlural'), 'p', ['class' => 'BadgeCountDisplay']);
+} else {
+    echo wrap(Gdn::translate('Yaga.Badge.EarnedByNone'), 'p');
 }
 
-if($RecentAwards) {
-  echo Wrap(T('Yaga.Badge.RecentRecipients'), 'h2');
-  echo '<div class="RecentRecipients">';
-  foreach($RecentAwards as $Award) {
-    $User = UserBuilder($Award);
-    echo Wrap(
-            Wrap(
-                    UserPhoto($User) .
-                    UserAnchor($User) . ' ' .
-                    Wrap(Gdn_Format::Date($Award->DateInserted, 'html'), 'span', array('class' => 'DateReceived')),
-                    'div',
-                    array('class' => 'Cell')),
+if ($recentAwards) {
+    // Prefetch users for userPhoto()
+    Gdn::userModel()->getIDs(array_column($recentAwards, 'UserID'));
+
+    echo wrap(Gdn::translate('Yaga.Badge.RecentRecipients'), 'h2');
+    echo '<div class="RecentRecipients">';
+    foreach ($recentAwards as $award) {
+        $user = userBuilder($award);
+        echo wrap(
+            wrap(
+                userPhoto($user).
+                userAnchor($user).' '.
+                wrap(
+                    $dateFormatter->formatDate($award->DateInserted, true),
+                    'span',
+                    ['class' => 'DateReceived']
+                ),
+                'div',
+                ['class' => 'Cell']
+            ),
             'div',
-            array('class' => 'CellWrap'));
-  }
-  echo '</div>';
+            ['class' => 'CellWrap']
+        );
+    }
+    echo '</div>';
 }
 echo '</div>';

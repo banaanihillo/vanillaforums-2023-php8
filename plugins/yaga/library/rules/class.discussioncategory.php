@@ -1,4 +1,5 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
 /**
  * This rule awards badges if a discussion is posted in the right category
  *
@@ -8,44 +9,43 @@
  */
 class DiscussionCategory implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $Discussion = $Sender->EventArguments['Discussion'];
-    $ID = ($Discussion->CategoryID);
-    if($ID == $Criteria->CategoryID) {
-      return $Discussion->InsertUserID;
+    public function award($sender, $user, $criteria) {
+        $discussion = $sender->EventArguments['Discussion'];
+        $id = ($discussion->CategoryID);
+        if ($id == $criteria->CategoryID) {
+            return $discussion->InsertUserID;
+        } else {
+            return false;
+        }
     }
-    else {
-      return FALSE;
+
+    public function form($form) {
+        $string = $form->label('Yaga.Rules.DiscussionCategory.Criteria.Head', 'DiscussionCategory');
+        $string .= $form->categoryDropDown('CategoryID');
+        return $string;
     }
-  }
 
-  public function Form($Form) {
-    $String  = $Form->Label('Yaga.Rules.DiscussionCategory.Criteria.Head', 'DiscussionCategory');
-    $String .= $Form->CategoryDropDown('CategoryID');
-    return $String;
-  }
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('CategoryID', ['Required', 'Integer']);
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('CategoryID', array('Required', 'Integer'));
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
+    public function hooks() {
+        return ['discussionModel_afterSaveDiscussion'];
+    }
 
-  public function Hooks() {
-    return array('discussionModel_afterSaveDiscussion');
-  }
+    public function description() {
+        return wrap(Gdn::translate('Yaga.Rules.DiscussionCategory.Desc'), 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Description() {
-    return Wrap(T('Yaga.Rules.DiscussionCategory.Desc'), 'div', array('class' => 'InfoMessage'));
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.DiscussionCategory');
+    }
 
-  public function Name() {
-    return T('Yaga.Rules.DiscussionCategory');
-  }
-
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 
 }

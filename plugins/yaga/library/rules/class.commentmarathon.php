@@ -1,7 +1,9 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
+use Vanilla\Formatting\DateTimeFormatter;
 
 /**
- * This rule awards badges based on a user's comment count withing a specified time frame.
+ * This rule awards badges based on a user's comment count within a specified time frame.
  *
  * @author Zachary Doll
  * @since 1.0
@@ -9,65 +11,59 @@
  */
 class CommentMarathon implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $Target = $Criteria->Target;
-    Gdn_Format::toDateTime(strtotime($Criteria->Duration . ' ' . $Criteria->Period . ' ago'));
+    public function award($sender, $user, $criteria) {
+        $targetDate = DateTimeFormatter::timeStampToDateTime((int)strtotime($criteria->Duration.' '.$criteria->Period.' ago'));
 
-    $SQL = Gdn::SQL();
-    $Count = $SQL->Select('count(CommentID) as Count')
-         ->From('Comment')
-         ->Where('InsertUserID', $User->UserID)
-         ->Where('DateInserted >=', $TargetDate)
-         ->Get()
-            ->FirstRow();
+        $count = Gdn::sql()
+            ->select('count(CommentID) as Count')
+            ->from('Comment')
+            ->where('InsertUserID', $user->UserID)
+            ->where('DateInserted >=', $targetDate)
+            ->get()
+            ->firstRow();
 
-    if($Count->Count >= $Target) {
-      return TRUE;
+        return $count->Count >= $criteria->Target;
     }
-    else {
-      return FALSE;
+
+    public function form($form) {
+        $lengths = [
+            'day' => Gdn::translate('Days'),
+            'week' => Gdn::translate('Weeks'),
+            'year' => Gdn::translate('Years')
+        ];
+
+        $string = $form->label('Yaga.Rules.CommentMarathon.Criteria.Head', 'CommentMarathon');
+        $string .= $form->textbox('Target');
+        $string .= $form->label('Time Frame');
+        $string .= $form->textbox('Duration');
+        $string .= $form->dropDown('Period', $lengths);
+
+        return $string;
     }
-  }
 
-  public function Form($Form) {
-    $Lengths = array(
-        'day' => T('Days'),
-        'week' => T('Weeks'),
-        'year' => T('Years')
-    );
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('Target', ['Required', 'Integer']);
+        $validation->applyRule('Duration', ['Required', 'Integer']);
+        $validation->applyRule('Period', 'Required');
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
+    }
 
-    $String = $Form->Label('Yaga.Rules.CommentMarathon.Criteria.Head', 'CommentMarathon');
-    $String .= $Form->Textbox('Target', array('class' => 'SmallInput'));
-    $String .= $Form->Label('Time Frame');
-    $String .= $Form->Textbox('Duration', array('class' => 'SmallInput')) . ' ';
-    $String .= $Form->DropDown('Period', $Lengths);
+    public function hooks() {
+        return ['commentModel_afterSaveComment'];
+    }
 
-    return $String;
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.CommentMarathon.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('Target', array('Required', 'Integer'));
-    $Validation->ApplyRule('Duration', array('Required', 'Integer'));
-    $Validation->ApplyRule('Period', 'Required');
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.CommentMarathon');
+    }
 
-  public function Hooks() {
-    return array('commentModel_afterSaveComment');
-  }
-
-  public function Description() {
-    $Description = T('Yaga.Rules.CommentMarathon.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
-
-  public function Name() {
-    return T('Yaga.Rules.CommentMarathon');
-  }
-
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 }

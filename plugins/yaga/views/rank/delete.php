@@ -1,15 +1,19 @@
-<?php if (!defined('APPLICATION')) exit(); ?>
+<?php if (!defined('APPLICATION')) exit();
 
-<h1><?php echo $this->Data('Title'); ?></h1>
+echo heading($this->data('Title'));
 
-<?php
-echo $this->Form->Open();
-echo $this->Form->Errors();
+echo $this->Form->open();
+echo $this->Form->errors();
 
-echo '<div class="P">'.sprintf(T('Are you sure you want to delete this %s?'), T('Yaga.Rank')).'</div>';
+echo wrap(
+    sprintf(Gdn::translate('Are you sure you want to delete this %s?'), Gdn::translate('Yaga.Rank')),
+    'div',
+    ['class' => 'padded']
+);
 
-echo '<div class="Buttons Buttons-Confirm">';
-echo $this->Form->Button('OK', array('class' => 'Button Primary'));
-echo $this->Form->Button('Cancel', array('type' => 'button', 'class' => 'Button Close'));
-echo '<div>';
-echo $this->Form->Close();
+echo '<div class="js-modal-footer form-footer">';
+echo $this->Form->button('OK');
+echo $this->Form->button('Cancel', ['type' => 'button', 'class' => 'btn btn-secondary js-modal-close']);
+echo '</div>';
+
+echo $this->Form->close();

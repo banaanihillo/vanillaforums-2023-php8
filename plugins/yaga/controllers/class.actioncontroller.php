@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * Manage actions that are available for reactions
@@ -9,183 +9,259 @@
  */
 class ActionController extends DashboardController {
 
-  /**
-   * @var array These objects will be created on instantiation and available via
-   * $this->ObjectName
-   */
-  public $Uses = array('Form', 'ActionModel');
+    /**
+     * @var array These objects will be created on instantiation and available via
+     * $this->ObjectName
+     */
+    public $Uses = ['Form', 'ActionModel'];
 
-  /**
-   * Make this look like a dashboard page and add the resources
-   *
-   * @since 1.0
-   * @access public
-   */
-  public function Initialize() {
-    parent::Initialize();
-    $this->Application = 'Yaga';
-    Gdn_Theme::Section('Dashboard');
-    if($this->Menu) {
-      $this->Menu->HighlightRoute('/action');
-    }
-    $this->AddJsFile('jquery-ui-1.10.0.custom.min.js');
-    $this->AddJsFile('admin.actions.js');
-    $this->AddCssFile('reactions.css');
-    $this->removeCssFile('magnific-popup.css');
-  }
-
-  /**
-   * Manage the available actions for reactions
-   *
-   * @param int $Page
-   */
-  public function Settings($Page = '') {
-    $this->Permission('Yaga.Reactions.Manage');
-    $this->setHighlightRoute('action/settings');
-
-    $this->Title(T('Yaga.Actions.Manage'));
-
-    // Get list of actions from the model and pass to the view
-    $this->SetData('Actions', $this->ActionModel->Get());
-
-    $this->Render();
-  }
-
-  /**
-   * Edit an existing action or add a new one
-   *
-   * @param int $ActionID
-   */
-  public function Edit($ActionID = NULL) {
-    $this->Permission('Yaga.Reactions.Manage');
-    $this->setHighlightRoute('action/settings');
-    $this->Form->SetModel($this->ActionModel);
-
-    $Edit = FALSE;
-    $this->Title(T('Yaga.Action.Add'));
-    if($ActionID) {
-      $this->Action = $this->ActionModel->GetByID($ActionID);
-      $this->Form->AddHidden('ActionID', $ActionID);
-      $Edit = TRUE;
-      $this->Title(T('Yaga.Action.Edit'));
-    }
-
-    // This is just a list of all the images in the action icons folder
-    $this->SetData('Icons', array('Happy', 'Happy2', 'Smiley', 'Smiley2', 'Tongue', 'Tongue2', 'Sad', 'Sad2', 'Wink', 'Wink2', 'Grin', 'Shocked', 'Confused', 'Confused2', 'Neutral', 'Neutral2', 'Wondering', 'Wondering2', 'PointUp', 'PointRight', 'PointDown', 'PointLeft', 'ThumbsUp', 'ThumbsUp2', 'Shocked2', 'Evil', 'Evil2', 'Angry', 'Angry2', 'Heart', 'Heart2', 'HeartBroken', 'Star', 'Star2', 'Grin2', 'Cool', 'Cool2', 'Question', 'Notification', 'Warning', 'Spam', 'Blocked', 'Eye', 'Eye2', 'EyeBlocked', 'Flag', 'BrightnessMedium', 'QuotesLeft', 'Music', 'Pacman', 'Bullhorn', 'Rocket', 'Fire', 'Hammer', 'Target', 'Lightning', 'Shield', 'CheckmarkCircle', 'Lab', 'Leaf', 'Dashboard', 'Droplet', 'Feed', 'Support', 'Hammer2', 'Wand', 'Cog', 'Gift', 'Trophy', 'Magnet', 'Switch', 'Globe', 'Bookmark', 'Bookmarks', 'Star3', 'Info', 'Info2', 'CancelCircle', 'Checkmark', 'Close'));
-
-    // Load up all permissions
-    $PermissionModel = new PermissionModel();
-    $Permissions = $PermissionModel->PermissionColumns();
-    unset($Permissions['PermissionID']);
-    $PermissionKeys = array_keys($Permissions);
-    $PermissionList = array_combine($PermissionKeys, $PermissionKeys);
-    $this->SetData('Permissions', $PermissionList);
-
-    if($this->Form->IsPostBack() == FALSE) {
-      if(property_exists($this, 'Action')) {
-        $this->Form->SetData($this->Action);
-      }
-      else {
-        $this->Form->SetData(array('Permission' => 'Yaga.Reactions.Add'));
-      }
-    }
-    else {
-      $NewID = $this->Form->Save();
-      if($NewID) {
-        $Action = $this->ActionModel->GetByID($NewID);
-        $ActionRow = RenderActionRow($Action);
-
-        if($Edit) {
-          $this->JsonTarget('#ActionID_' . $this->Action->ActionID, $ActionRow, 'ReplaceWith');
-          $this->InformMessage(T('Yaga.ActionUpdated'));
+    /**
+     * Make this look like a dashboard page and add the resources
+     *
+     * @since 1.0
+     * @access public
+     */
+    public function initialize() {
+        parent::initialize();
+        $this->Application = 'Yaga';
+        Gdn_Theme::section('Dashboard');
+        if ($this->Menu) {
+            $this->Menu->highlightRoute('/action');
         }
-        else {
-          $this->JsonTarget('#Actions', $ActionRow, 'Append');
-          $this->InformMessage(T('Yaga.Action.Added'));
-        }
-      }
+        $this->addJsFile('jquery-ui-1.10.0.custom.min.js');
+        $this->addJsFile('admin.actions.js');
+        $this->addCssFile('reactions.css');
+        $this->removeCssFile('magnific-popup.css');
     }
 
-    $this->Render('edit');
-  }
+    /**
+     * Manage the available actions for reactions
+     *
+     * @param int $page
+     */
+    public function settings($page = '') {
+        $this->permission('Yaga.Reactions.Manage');
+        $this->setHighlightRoute('action/settings');
 
-  /**
-   * Convenience function for nice URLs
-   */
-  public function Add() {
-    $this->Edit();
-  }
+        $this->title(Gdn::translate('Yaga.Actions.Manage'));
 
-  /**
-   * Remove the action via model.
-   *
-   * @param int $ActionID
-   * @throws NotFoundException
-   */
-  public function Delete($ActionID) {
-    $Action = $this->ActionModel->GetID($ActionID);
+        // Get list of actions from the model and pass to the view
+        $this->setData('Actions', $this->ActionModel->get());
 
-    if(!$Action) {
-      throw NotFoundException(T('Yaga.Action'));
+        $this->render();
     }
 
-    $this->Permission('Yaga.Reactions.Manage');
+    /**
+     * Edit an existing action or add a new one
+     *
+     * @param int $actionID
+     */
+    public function edit($actionID = null) {
+        $this->permission('Yaga.Reactions.Manage');
+        $this->setHighlightRoute('action/settings');
+        $this->Form->setModel($this->ActionModel);
 
-    $Actions = $this->ActionModel->Get();
-    // Cast to array of arrays until vanillaforums/Garden issue #1879 is fixed
-    foreach($Actions as $Index => $ActionObject) {
-      $Actions[$Index] = (array)$ActionObject;
-    }
-
-    $Actions = array_column($Actions, 'ActionID', 'Name');
-    unset($Actions[$ActionID]);
-
-    $this->SetData('OtherActions', $Actions);
-    $this->SetData('ActionName', $Action->Name);
-
-    if($this->Form->IsPostBack()) {
-      $FormValues = $this->Form->FormValues();
-      $ReplacementID = $FormValues['Move'] ? $FormValues['ReplacementID'] : NULL;
-
-      //$Replacement
-      if(!$this->ActionModel->DeleteAction($ActionID, $ReplacementID)) {
-        $this->Form->AddError(sprintf(T('Yaga.Error.DeleteFailed'), T('Yaga.Action')));
-      }
-
-      if($this->Form->ErrorCount() == 0) {
-        if($this->_DeliveryType === DELIVERY_TYPE_ALL) {
-          Redirect('action/settings');
+        $edit = false;
+        $this->title(Gdn::translate('Yaga.Action.Add'));
+        if ($actionID) {
+            $this->Action = $this->ActionModel->getID($actionID);
+            $this->Form->addHidden('ActionID', $actionID);
+            $edit = true;
+            $this->title(Gdn::translate('Yaga.Action.Edit'));
         }
 
-        $this->JsonTarget('#ActionID_' . $ActionID, NULL, 'SlideUp');
-      }
+        // This is just a list of all the images in the action icons folder
+        $this->setData('Icons', [
+            'Happy',
+            'Happy2',
+            'Smiley',
+            'Smiley2',
+            'Tongue',
+            'Tongue2',
+            'Sad',
+            'Sad2',
+            'Wink',
+            'Wink2',
+            'Grin',
+            'Shocked',
+            'Confused',
+            'Confused2',
+            'Neutral',
+            'Neutral2',
+            'Wondering',
+            'Wondering2',
+            'PointUp',
+            'PointRight',
+            'PointDown',
+            'PointLeft',
+            'ThumbsUp',
+            'ThumbsUp2',
+            'Shocked2',
+            'Evil',
+            'Evil2',
+            'Angry',
+            'Angry2',
+            'Heart',
+            'Heart2',
+            'HeartBroken',
+            'Star',
+            'Star2',
+            'Grin2',
+            'Cool',
+            'Cool2',
+            'Question',
+            'Notification',
+            'Warning',
+            'Spam',
+            'Blocked',
+            'Eye',
+            'Eye2',
+            'EyeBlocked',
+            'Flag',
+            'BrightnessMedium',
+            'QuotesLeft',
+            'Music',
+            'Pacman',
+            'Bullhorn',
+            'Rocket',
+            'Fire',
+            'Hammer',
+            'Target',
+            'Lightning',
+            'Shield',
+            'CheckmarkCircle',
+            'Lab',
+            'Leaf',
+            'Dashboard',
+            'Droplet',
+            'Feed',
+            'Support',
+            'Hammer2',
+            'Wand',
+            'Cog',
+            'Gift',
+            'Trophy',
+            'Magnet',
+            'Switch',
+            'Globe',
+            'Bookmark',
+            'Bookmarks',
+            'Star3',
+            'Info',
+            'Info2',
+            'CancelCircle',
+            'Checkmark',
+            'Close'
+        ]);
+
+        // Load up all permissions
+        $permissions = Gdn::permissionModel()->permissionColumns();
+        unset($permissions['PermissionID']);
+        $permissionKeys = array_keys($permissions);
+        $permissionList = array_combine($permissionKeys, $permissionKeys);
+        $this->setData('Permissions', $permissionList);
+
+        if ($this->Form->isPostBack() == false) {
+            if (property_exists($this, 'Action')) {
+                $this->Form->setData($this->Action);
+            } else {
+                $this->Form->setData(['Permission' => 'Yaga.Reactions.Add']);
+            }
+        } else {
+            $newID = $this->Form->save();
+            if ($newID) {
+                $action = $this->ActionModel->getID($newID);
+                $actionRow = renderActionRow($action);
+
+                if ($edit) {
+                    $this->jsonTarget('#ActionID_'.$this->Action->ActionID, $actionRow, 'ReplaceWith');
+                    $this->informMessage(Gdn::translate('Yaga.ActionUpdated'));
+                } else {
+                    $this->jsonTarget('#Actions', $actionRow, 'Append');
+                    $this->informMessage(Gdn::translate('Yaga.Action.Added'));
+                }
+            }
+        }
+
+        $this->render('edit');
     }
 
-    $this->setHighlightRoute('action/settings');
-    $this->SetData('Title', T('Yaga.Action.Delete'));
-    $this->Render();
-  }
+    /**
+     * Convenience function for nice URLs
+     */
+    public function add() {
+        $this->edit();
+    }
 
-  /**
-   * This takes in a sort array and updates the action sort order.
-   *
-   * Renders the Save tree and/or the Result of the sort update.
-   */
-  public function Sort() {
-      // Check permission
-      $this->Permission('Yaga.Reactions.Manage');
+    /**
+     * Remove the action via model.
+     *
+     * @param int $actionID
+     * @throws NotFoundException
+     */
+    public function delete($actionID) {
+        $action = $this->ActionModel->getID($actionID);
 
-      $Request = Gdn::Request();
-      if($Request->IsPostBack()) {
-         $SortArray = $Request->GetValue('SortArray', NULL);
-         $Saves = $this->ActionModel->SaveSort($SortArray);
-         $this->SetData('Result', TRUE);
-         $this->SetData('Saves', $Saves);
-      }
-      else {
-        $this->SetData('Result', FALSE);
-      }
+        if (!$action) {
+            throw NotFoundException(Gdn::translate('Yaga.Action'));
+        }
 
-      $this->RenderData();
-   }
+        $this->permission('Yaga.Reactions.Manage');
+
+        $actions = $this->ActionModel->get();
+        // Cast to array of arrays until vanillaforums/Garden issue #1879 is fixed
+        foreach ($actions as $index => $actionObject) {
+            $actions[$index] = (array)$actionObject;
+        }
+
+        $actions = array_column($actions, 'Name', 'ActionID');
+        unset($actions[$actionID]);
+
+        $this->setData('OtherActions', $actions);
+        $this->setData('ActionName', $action->Name);
+
+        if ($this->Form->isPostBack()) {
+            $formValues = $this->Form->formValues();
+            $replacementID = $formValues['Move'] ? $formValues['ReplacementID'] : null;
+
+            //$replacement
+            if (!$this->ActionModel->deleteAction($actionID, $replacementID)) {
+                $this->Form->addError(sprintf(Gdn::translate('Yaga.Error.DeleteFailed'), Gdn::translate('Yaga.Action')));
+            }
+
+            if ($this->Form->errorCount() == 0) {
+                if ($this->_DeliveryType === DELIVERY_TYPE_ALL) {
+                    redirectTo('action/settings');
+                }
+
+                $this->jsonTarget('#ActionID_'.$actionID, null, 'SlideUp');
+            }
+        }
+
+        $this->setHighlightRoute('action/settings');
+        $this->setData('Title', Gdn::translate('Yaga.Action.Delete'));
+        $this->render();
+    }
+
+    /**
+     * This takes in a sort array and updates the action sort order.
+     *
+     * Renders the Save tree and/or the Result of the sort update.
+     */
+    public function sort() {
+        // Check permission
+        $this->permission('Yaga.Reactions.Manage');
+
+        $request = Gdn::request();
+        if ($request->isPostBack()) {
+            $sortArray = $request->getValue('SortArray', null);
+            $saves = $this->ActionModel->saveSort($sortArray);
+            $this->setData('Result', true);
+            $this->setData('Saves', $saves);
+        } else {
+            $this->setData('Result', false);
+        }
+
+        $this->renderData();
+     }
 }

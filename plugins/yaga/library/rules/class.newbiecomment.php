@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges if a comment is placed on a new member's first discussion
@@ -7,75 +7,73 @@
  * @since 1.0
  * @package Yaga
  */
-class NewbieComment implements YagaRule{
+class NewbieComment implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $Discussion = $Sender->EventArguments['Discussion'];
-    $NewbUserID = $Discussion->InsertUserID;
-    
-    // Don't award to the newb on his own discussion
-    if($NewbUserID == $User->UserID) {
-      return FALSE;
+    public function award($sender, $user, $criteria) {
+        $discussion = $sender->EventArguments['Discussion'];
+        $newbUserID = $discussion->InsertUserID;
+
+        // Don't award to the newb on his own discussion
+        if ($newbUserID == $user->UserID) {
+            return false;
+        }
+
+        $currentDiscussionID = $discussion->DiscussionID;
+        $targetDate = strtotime($criteria->Duration.' '.$criteria->Period.' ago');
+
+        $sql = Gdn::sql();
+        $firstDiscussion = $sql->select('DiscussionID, DateInserted')
+            ->from('Discussion')
+            ->where('InsertUserID', $newbUserID)
+            ->orderBy('DateInserted')
+            ->get()
+            ->firstRow();
+
+        $insertDate = strtotime($firstDiscussion->DateInserted);
+
+        if ($currentDiscussionID == $firstDiscussion->DiscussionID && $insertDate > $targetDate) {
+            return $user->UserID;
+        } else {
+            return false;
+        }
     }
-    
-    $CurrentDiscussionID = $Discussion->DiscussionID;
-    $TargetDate = strtotime($Criteria->Duration . ' ' . $Criteria->Period . ' ago');
 
-    $SQL = Gdn::SQL();
-    $FirstDiscussion = $SQL->Select('DiscussionID, DateInserted')
-            ->From('Discussion')
-            ->Where('InsertUserID', $NewbUserID)
-            ->OrderBy('DateInserted')
-            ->Get()
-            ->FirstRow();
+    public function form($form) {
+        $lengths = [
+            'day' => Gdn::translate('Days'),
+            'week' => Gdn::translate('Weeks'),
+            'year' => Gdn::translate('Years')
+        ];
 
-    $InsertDate = strtotime($FirstDiscussion->DateInserted);
+        $string = $form->label('Yaga.Rules.NewbieComment.Criteria.Head', 'NewbieComment');
+        $string .= $form->textbox('Duration');
+        $string .= $form->dropDown('Period', $lengths);
 
-    if($CurrentDiscussionID == $FirstDiscussion->DiscussionID
-            && $InsertDate > $TargetDate) {
-      return $User->UserID;
+        return $string;
     }
-    else {
-      return FALSE;
+
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('Duration', ['Required', 'Integer']);
+        $validation->applyRule('Period', 'Required');
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
     }
-  }
 
-  public function Form($Form) {
-    $Lengths = array(
-        'day' => T('Days'),
-        'week' => T('Weeks'),
-        'year' => T('Years')
-    );
+    public function hooks() {
+        return ['commentModel_beforeNotification'];
+    }
 
-    $String = $Form->Label('Yaga.Rules.NewbieComment.Criteria.Head', 'NewbieComment');
-    $String .= $Form->Textbox('Duration', array('class' => 'SmallInput')) . ' ';
-    $String .= $Form->DropDown('Period', $Lengths);
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.NewbieComment.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-    return $String;
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.NewbieComment');
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('Duration', array('Required', 'Integer'));
-    $Validation->ApplyRule('Period', 'Required');
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
-
-  public function Hooks() {
-    return array('commentModel_beforeNotification');
-  }
-
-  public function Description() {
-    $Description = T('Yaga.Rules.NewbieComment.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
-
-  public function Name() {
-    return T('Yaga.Rules.NewbieComment');
-  }
-  
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 }

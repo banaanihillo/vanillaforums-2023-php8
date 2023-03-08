@@ -1,46 +1,57 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013 Zachary Doll */
 
-echo Wrap($this->Title(), 'h1');
+use Vanilla\Formatting\DateTimeFormatter;
+
+$dateFormatter = Gdn::getContainer()->get(DateTimeFormatter::class);
+
+echo heading($this->title());
+
 echo '<ul class="DataList Badges">';
-foreach($this->Data('Badges') as $Badge) {
-  // Don't show disabled badges
-  //if(!$Badge->Enabled) {
-  //  continue;
-  //}
-  $Row = '';
-  $AwardDescription = '';
-  $ReadClass = ' Read';
 
-  if($Badge->UserID) {
-    $ReadClass = '';
-    $AwardDescription = sprintf(T('Yaga.Badge.Earned.Format'), Gdn_Format::Date($Badge->DateInserted, 'html'), $Badge->InsertUserName);
-    if($Badge->Reason) {
-      $AwardDescription .= ': "' . $Badge->Reason . '"';
+foreach ($this->data('Badges') as $badge) {
+    // Don't show disabled badges
+    //if (!$badge->Enabled) {
+    //    continue;
+    //}
+    $row = '';
+    $awardDescription = '';
+    $readClass = ' Read';
+
+    if ($badge->UserID) {
+        $readClass = '';
+        $awardDescription = sprintf(
+            Gdn::translate('Yaga.Badge.Earned.Format'),
+            $dateFormatter->formatDate($badge->DateInserted, true),
+            $badge->InsertUserName
+        );
+        if ($badge->Reason) {
+            $awardDescription .= ': "'.$badge->Reason.'"';
+        }
     }
-  }
 
-  if($Badge->Photo) {
-    $Row .= Img($Badge->Photo, array('class' => 'BadgePhoto'));
-  }
-  else {
-    $Row .= Img('applications/yaga/design/images/default_badge.png', array('class' => 'BadgePhoto'));
-  }
+    if ($badge->Photo) {
+        $row .= img($badge->Photo, ['class' => 'BadgePhoto']);
+    } else {
+        $row .= img('plugins/yaga/design/images/default_badge.png', ['class' => 'BadgePhoto']);
+    }
 
-  $Row .= Wrap(
-          Wrap(
-                  Anchor($Badge->Name, 'yaga/badges/' . $Badge->BadgeID . '/' . Gdn_Format::Url($Badge->Name), array('class' => 'Title')), 'div', array('class' => 'Title')
-          ) .
-          Wrap(
-                  Wrap($Badge->Description, 'span', array('class' => 'MItem BadgeDescription')) .
-                  Wrap($Badge->AwardValue . ' points.', 'span', array('class' => 'MItem BadgePoints')) .
-                  WrapIf($AwardDescription, 'p'),
-                  'div',
-                  array('class' => 'Meta')),
-          'div',
-          array('class' => 'ItemContent Badge')
-  );
-  echo Wrap($Row, 'li', array('class' => 'Item ItemBadge' . $ReadClass));
+    $row .= wrap(
+        wrap(
+            anchor($badge->Name, 'yaga/badges/'.$badge->BadgeID.'/'.rawurlencode($badge->Name), ['class' => 'Title']), 'div', ['class' => 'Title']
+        ).
+        wrap(
+            wrap($badge->Description, 'span', ['class' => 'MItem BadgeDescription']).
+            wrap($badge->AwardValue.' points.', 'span', ['class' => 'MItem BadgePoints']).
+            wrapIf($awardDescription, 'p'),
+            'div',
+            ['class' => 'Meta']
+        ),
+        'div',
+        ['class' => 'ItemContent Badge']
+    );
+    echo wrap($row, 'li', ['class' => 'Item ItemBadge'.$readClass]);
 }
 
 echo '</ul>';

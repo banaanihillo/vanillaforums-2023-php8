@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges based on a user's received reactions
@@ -7,64 +7,63 @@
  * @since 1.0
  * @package Yaga
  */
-class ReactionCount implements YagaRule{
+class ReactionCount implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $ActionID = $Sender->EventArguments['ActionID'];
+    public function award($sender, $user, $criteria) {
+        $actionID = $sender->EventArguments['ActionID'];
 
-    if($Criteria->ActionID != $ActionID) {
-      return FALSE;
+        if ($criteria->ActionID != $actionID) {
+            return false;
+        }
+
+        $count = Gdn::getContainer()
+            ->get(ReactionModel::class)
+            ->getUserCount($sender->EventArguments['ParentUserID'], $actionID);
+
+        if ($count >= $criteria->Target) {
+            // Award the badge to the user that got the reaction
+            return $sender->EventArguments['ParentUserID'];
+        } else {
+            return false;
+        }
     }
 
-    $ReactionModel = new ReactionModel();
-    $Count = $ReactionModel->GetUserCount($Sender->EventArguments['ParentUserID'], $ActionID);
+    public function form($form) {
+        $actions = Gdn::getContainer()->get(ActionModel::class)->get();
+        $reactions = [];
+        foreach ($actions as $action) {
+            $reactions[$action->ActionID] = $action->Name;
+        }
 
-    if($Count >= $Criteria->Target) {
-      // Award the badge to the user that got the reaction
-      return $Sender->EventArguments['ParentUserID'];
-    }
-    else {
-      return FALSE;
-    }
-  }
+        $string = $form->label('Yaga.Rules.ReactionCount.Criteria.Head', 'ReactionCount');
+        $string .= $form->textbox('Target');
+        $string .= $form->dropDown('ActionID', $reactions);
 
-  public function Form($Form) {
-    $ActionModel = new ActionModel();
-    $Actions = $ActionModel->Get();
-    $Reactions = array();
-    foreach($Actions as $Action) {
-      $Reactions[$Action->ActionID] = $Action->Name;
+        return $string;
     }
 
-    $String = $Form->Label('Yaga.Rules.ReactionCount.Criteria.Head', 'ReactionCount');
-    $String .= $Form->Textbox('Target', array('class' => 'SmallInput')) . ' ';
-    $String .= $Form->DropDown('ActionID', $Reactions);
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('Target', ['Required', 'Integer']);
+        $validation->applyRule('ActionID', ['Required', 'Integer']);
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
+    }
 
-    return $String;
-  }
+    public function hooks() {
+        return ['reactionModel_afterReactionSave'];
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('Target', array('Required', 'Integer'));
-    $Validation->ApplyRule('ActionID', array('Required', 'Integer'));
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.ReactionCount.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Hooks() {
-    return array('reactionModel_afterReactionSave');
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.ReactionCount');
+    }
 
-  public function Description() {
-    $Description = T('Yaga.Rules.ReactionCount.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
-
-  public function Name() {
-    return T('Yaga.Rules.ReactionCount');
-  }
-  
-  public function Interacts() {
-    return TRUE;
-  }
+    public function interacts() {
+        return true;
+    }
 }

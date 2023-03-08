@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges when the user connects social accounts
@@ -7,52 +7,47 @@
  * @since 1.0
  * @package Yaga
  */
-class SocialConnection implements YagaRule{
+class SocialConnection implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $Network = $Sender->EventArguments['Provider'];
+    public function award($sender, $user, $criteria) {
+        $network = $sender->EventArguments['Provider'];
 
-    if($Network == $Criteria->SocialNetwork) {
-      return TRUE;
+        return $network == $criteria->SocialNetwork;
     }
-    else {
-      return FALSE;
+
+    public function form($form) {
+        $socialNetworks = [
+            'Twitter' => 'Twitter',
+            'Facebook' => 'Facebook'
+        ];
+
+        $string = $form->label('Yaga.Rules.SocialConnection.Criteria.Head', 'SocialConnection');
+        $string .= $form->dropDown('SocialNetwork', $socialNetworks);
+
+        return $string;
     }
-  }
 
-  public function Form($Form) {
-    $SocialNetworks = array(
-        'Twitter' => 'Twitter',
-        'Facebook' => 'Facebook'
-    );
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+        $validation->applyRule('SocialNetwork', 'Required');
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
+    }
 
-    $String = $Form->Label('Yaga.Rules.SocialConnection.Criteria.Head', 'SocialConnection');
-    $String .= $Form->DropDown('SocialNetwork', $SocialNetworks);
+    public function hooks() {
+        return ['base_afterConnection'];
+    }
 
-    return $String;
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.SocialConnection.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-    $Validation->ApplyRule('SocialNetwork', 'Required');
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.SocialConnection');
+    }
 
-  public function Hooks() {
-    return array('base_afterConnection');
-  }
-
-  public function Description() {
-    $Description = T('Yaga.Rules.SocialConnection.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
-
-  public function Name() {
-    return T('Yaga.Rules.SocialConnection');
-  }
-  
-  public function Interacts() {
-    return FALSE;
-  }
+    public function interacts() {
+        return false;
+    }
 }

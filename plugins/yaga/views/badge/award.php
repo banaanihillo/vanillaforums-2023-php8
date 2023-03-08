@@ -1,31 +1,31 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2013 Zachary Doll */
 
-$Badges = $this->Data('Badges');
-$Username = $this->Data('Username', 'Unknown');
+$badges = $this->data('Badges');
+$username = $this->data('Username', 'Unknown');
 
 $this->Form->setStyles('legacy');
+
 echo '<div id="UserBadgeForm">';
-echo Wrap(sprintf(T('Yaga.Badge.GiveTo'), $Username), 'h1');
-echo $this->Form->Open();
-echo $this->Form->Errors();
+echo wrap(sprintf(Gdn::translate('Yaga.Badge.GiveTo'), $username), 'h1');
+echo $this->Form->open();
+echo $this->Form->errors();
 
-echo Wrap(
-      Wrap(
-        $this->Form->Label('Yaga.Badge', 'BadgeID') .
-        $this->Form->Dropdown('BadgeID', $Badges),
-        'li') .
-
-      Wrap(
-        $this->Form->Label('Yaga.Badge.Reason', 'Reason') .
-        $this->Form->TextBox('Reason', array('Multiline' => TRUE)),
-        'li') .
-      Wrap(
-              Anchor(T('Cancel'), 'badge/settings'),
-              'li'),
-        'ul'
+echo wrap(
+    wrap(
+        $this->Form->label('Yaga.Badge', 'BadgeID').
+        $this->Form->dropdown('BadgeID', $badges),
+        'li'
+    ).
+    wrap(
+        $this->Form->label('Yaga.Badge.Reason', 'Reason').
+        $this->Form->textBox('Reason', ['Multiline' => true]),
+        'li'
+    ),
+    'ul'
 );
 
-echo $this->Form->Close('Yaga.Badge.Award');
+echo $this->Form->close('Yaga.Badge.Award');
 
 echo '</div>';

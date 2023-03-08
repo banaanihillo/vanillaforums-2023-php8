@@ -1,4 +1,4 @@
-<?php if(!defined('APPLICATION')) exit();
+<?php if (!defined('APPLICATION')) exit();
 
 /**
  * This rule awards badges to a particular post's owner when it receives the
@@ -10,88 +10,85 @@
  */
 class PostReactions implements YagaRule {
 
-  public function Award($Sender, $User, $Criteria) {
-    $Args = $Sender->EventArguments;
-    // Check to see if the submitted action is a target
-    $Prop = 'ActionID_' . $Sender->EventArguments['ActionID'];
-    if(property_exists($Criteria, $Prop)) {
-      $Value = $Criteria->$Prop;
-      if($Value <= 0 || $Value == FALSE) {
-        return FALSE;
-      }
-    }
-    else {
-      return FALSE;
-    }
+    public function award($sender, $user, $criteria) {
+        $args = $sender->EventArguments;
+        // Check to see if the submitted action is a target
+        $prop = 'ActionID_'.$sender->EventArguments['ActionID'];
+        if (property_exists($criteria, $prop)) {
+            $value = $criteria->$prop;
+            if ($value <= 0 || $value == false) {
+                return false;
+            }
+        } else {
+            return false;
+        }
 
-    // Get the reaction counts for this parent item
-    $ReactionModel = Yaga::ReactionModel();
-    $Reactions = $ReactionModel->GetList($Args['ParentID'], $Args['ParentType']);
+        // Get the reaction counts for this parent item
+        $reactionModel = Gdn::getContainer()->get(ReactionModel::class);
+        $reactions = $reactionModel->getList($args['ParentID'], $args['ParentType']);
 
-    // Squash the dataset into an array
-    $Counts = array();
-    foreach($Reactions as $Reaction) {
-      $Counts['ActionID_' . $Reaction->ActionID] = $Reaction->Count;
-    }
-    
-    // Actually check for the reaction counts
-    foreach($Criteria as $ActionID => $Target) {
-      if($Counts[$ActionID] < $Target) {
-        return FALSE;
-      }
-    }
+        // Squash the dataset into an array
+        $counts = [];
+        foreach ($reactions as $reaction) {
+            $counts['ActionID_'.$reaction->ActionID] = $reaction->Count;
+        }
 
-    // The owner should be awarded
-    return $Args['ParentUserID'];
-  }
+        // Actually check for the reaction counts
+        foreach ($criteria as $actionID => $target) {
+            if ($counts[$actionID] < $target) {
+                return false;
+            }
+        }
 
-  public function Form($Form) {
-    $ActionModel = new ActionModel();
-    $Actions = $ActionModel->Get();
-
-    $String = $Form->Label('Yaga.Rules.PostReactions.Criteria.Head', 'ReactionCount');
-
-    $ActionList = '';
-    foreach($Actions as $Action) {
-      $ActionList .= Wrap(sprintf(T('Yaga.Rules.PostReactions.LabelFormat'), $Action->Name) . ' ' . $Form->Textbox('ActionID_' . $Action->ActionID, array('class' => 'SmallInput')), 'li');
+        // The owner should be awarded
+        return $args['ParentUserID'];
     }
 
-    if($ActionList == '') {
-      $String .= T('Yaga.Error.NoActions');
+    public function form($form) {
+        $actions = Gdn::getContainer()->get(ActionModel::class)->get();
+
+        $string = $form->label('Yaga.Rules.PostReactions.Criteria.Head', 'ReactionCount');
+
+        $actionList = '';
+        foreach ($actions as $action) {
+            $actionList .= wrap(sprintf(Gdn::translate('Yaga.Rules.PostReactions.LabelFormat'), $action->Name).$form->textbox('ActionID_'.$action->ActionID), 'li');
+        }
+
+        if ($actionList == '') {
+            $string .= Gdn::translate('Yaga.Error.NoActions');
+        } else {
+            $string .= wrap($actionList, 'ul');
+        }
+
+        return $string;
     }
-    else {
-      $String .= Wrap($ActionList, 'ul');
+
+    public function validate($criteria, $form) {
+        $validation = new Gdn_Validation();
+
+        foreach ($criteria as $actionID => $target) {
+            $validation->applyRule($actionID, 'Integer');
+        }
+
+        $validation->validate($criteria);
+        $form->setValidationResults($validation->results());
     }
 
-    return $String;
-  }
-
-  public function Validate($Criteria, $Form) {
-    $Validation = new Gdn_Validation();
-
-    foreach($Criteria as $ActionID => $Target) {
-      $Validation->ApplyRule($ActionID, 'Integer');
+    public function hooks() {
+        return ['reactionModel_afterReactionSave'];
     }
 
-    $Validation->Validate($Criteria);
-    $Form->SetValidationResults($Validation->Results());
-  }
+    public function description() {
+        $description = Gdn::translate('Yaga.Rules.PostReactions.Desc');
+        return wrap($description, 'div', ['class' => 'alert alert-info padded']);
+    }
 
-  public function Hooks() {
-    return array('reactionModel_afterReactionSave');
-  }
+    public function name() {
+        return Gdn::translate('Yaga.Rules.PostReactions');
+    }
 
-  public function Description() {
-    $Description = T('Yaga.Rules.PostReactions.Desc');
-    return Wrap($Description, 'div', array('class' => 'InfoMessage'));
-  }
-
-  public function Name() {
-    return T('Yaga.Rules.PostReactions');
-  }
-
-  public function Interacts() {
-    return TRUE;
-  }
+    public function interacts() {
+        return true;
+    }
 
 }

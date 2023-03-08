@@ -1,4 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
+
 /* Copyright 2014 Zachary Doll */
 
 /**
@@ -8,43 +9,44 @@
  * @since 1.0
  */
 class BestFilterModule extends Gdn_Module {
-  
-  /**
-   * Load up the action list.
-   * 
-   * @param string $Sender
-   */
-  public function __construct($Sender = '') {
-    parent::__construct($Sender);
-    
-    $ActionModel = Yaga::ActionModel();
-    $actions = $ActionModel->Get();
-    
-    foreach($actions as $index => $action) {
-        if($action->AwardValue < 0) {
-            unset($actions[$index]);
+
+    /**
+     * Load up the action list.
+     * 
+     * @param string $sender
+     */
+    public function __construct($sender = '') {
+        parent::__construct($sender);
+
+        if ($sender) {
+            $actions = $sender->ActionModel->get();
+
+            foreach ($actions as $index => $action) {
+                if ($action->AwardValue < 0) {
+                    unset($actions[$index]);
+                }
+            }
+
+            $this->Data = $actions;
         }
     }
-    
-    $this->Data = $actions;
-  }
-  
-  /**
-   * Specifies the asset this module should be rendered to.
-   * 
-   * @return string
-   */
-  public function AssetTarget() {
-    return 'Content';
-  }
 
-  /**
-   * Renders an action list.
-   * 
-   * @return string
-   */
-  public function ToString() {
-    return parent::ToString();
-  }
+    /**
+     * Specifies the asset this module should be rendered to.
+     * 
+     * @return string
+     */
+    public function assetTarget() {
+        return 'Content';
+    }
+
+    /**
+     * Renders an action list.
+     * 
+     * @return string
+     */
+    public function toString() {
+        return parent::toString();
+    }
 
 }
