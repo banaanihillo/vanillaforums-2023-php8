@@ -1179,7 +1179,7 @@ if (!function_exists("isUrl")) {
         if (substr($str, 0, 2) == "//") {
             return true;
         }
-        if (preg_match("`^https?://`i", $str)) {
+        if (preg_match("`^https?://`i", $str ?? "")) {
             return true;
         }
         return false;
@@ -1314,16 +1314,16 @@ if (!function_exists("offsetLimit")) {
             $page = $matches[1];
             $offset = $limitOrPageSize * ($page - 1);
             $limit = $limitOrPageSize;
-        } elseif (preg_match("/(\d+)-(\d+)/", $offsetOrPage, $matches)) {
+        } elseif (preg_match("/(\d+)-(\d+)/", $offsetOrPage ?? "", $matches)) {
             $offset = $matches[1] - 1;
             $limit = $matches[2] - $matches[1] + 1;
-        } elseif (preg_match("/(\d+)lim(\d*)/i", $offsetOrPage, $matches)) {
+        } elseif (preg_match("/(\d+)lim(\d*)/i", $offsetOrPage ?? "", $matches)) {
             $offset = (int) $matches[1];
             $limit = (int) $matches[2];
             if (!is_numeric($limit)) {
                 $limit = $limitOrPageSize;
             }
-        } elseif (preg_match("/(\d+)lin(\d*)/i", $offsetOrPage, $matches)) {
+        } elseif (preg_match("/(\d+)lin(\d*)/i", $offsetOrPage ?? "", $matches)) {
             $offset = $matches[1] - 1;
             $limit = (int) $matches[2];
             if (!is_numeric($limit)) {
@@ -1795,7 +1795,7 @@ if (!function_exists("sliceParagraph")) {
                 for ($i = 2; $i < count($sentences); $i++) {
                     $sentence = $sentences[$i];
 
-                    if (strlen($result) + strlen($sentence) <= $maxLength || preg_match("`[.!?:]\s+`", $sentence)) {
+                    if (strlen($result) + strlen($sentence) <= $maxLength || preg_match("`[.!?:]\s+`", $sentence ?? "")) {
                         $result .= $sentence;
                     } else {
                         break;
