@@ -86,6 +86,7 @@ class KeystoneThemeHooks extends \Gdn_Plugin
      */
     private function setSanitizedDescription($sender)
     {
+        $description = "";
         if ($sender->Data["_Description"] ?? false) {
             /** @var $htmlSanitizer */
             $htmlSanitizer = \Gdn::getContainer()->get(\Vanilla\Formatting\Html\HtmlSanitizer::class);
