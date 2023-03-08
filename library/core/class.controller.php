@@ -1031,22 +1031,22 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
         prettyPrint($view);
         if ($view == "") {
             $view = $this->View;
-            prettyPrint("This view");
-            prettyPrint($view);
+            // prettyPrint("This view");
+            // prettyPrint($view);
         }
 
         if ($view == "") {
             $view = $this->RequestMethod;
-            prettyPrint("Request method view");
-            prettyPrint($view);
+            // prettyPrint("Request method view");
+            // prettyPrint($view);
         }
 
-        prettyPrint("Controller name");
-        prettyPrint($controllerName);
+        // prettyPrint("Controller name");
+        // prettyPrint($controllerName);
         if ($controllerName === false) {
             $controllerName = $this->ControllerName;
-            prettyPrint("This controller name");
-            prettyPrint($controllerName);
+            // prettyPrint("This controller name");
+            // prettyPrint($controllerName);
         }
 
         if (stringEndsWith($controllerName, "controller", true)) {
@@ -1057,8 +1057,8 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
             $controllerName = substr($controllerName, 4);
         }
 
-        prettyPrint("Application folder");
-        prettyPrint($applicationFolder);
+        // prettyPrint("Application folder");
+        // prettyPrint($applicationFolder);
         if (!$applicationFolder) {
             $applicationFolder = $this->ApplicationFolder;
             prettyPrint("This application folder");
@@ -1078,23 +1078,23 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
         } elseif ($this->SyndicationMethod == SYNDICATION_RSS) {
             $view .= "_rss";
         }
-        prettyPrint("View is now:");
-        prettyPrint($view);
+        // prettyPrint("View is now:");
+        // prettyPrint($view);
 
         $locationName = concatSep("/", strtolower($applicationFolder), $controllerName, $view);
-        prettyPrint("Location name concatenated");
-        prettyPrint($locationName);
+        // prettyPrint("Location name concatenated");
+        // prettyPrint($locationName);
         $viewPath = val($locationName, $this->_ViewLocations, false);
-        prettyPrint("View path value");
-        prettyPrint($viewPath);
+        // prettyPrint("View path value");
+        // prettyPrint($viewPath);
         if ($viewPath === false) {
-            prettyPrint("View path is false");
+            // prettyPrint("View path is false");
             // Define the search paths differently depending on whether or not we are in a plugin or application.
             $applicationFolder = trim($applicationFolder, "/");
-            prettyPrint("Application folder trimmed");
-            prettyPrint($applicationFolder);
+            // prettyPrint("Application folder trimmed");
+            // prettyPrint($applicationFolder);
             if (stringBeginsWith($applicationFolder, "plugins/")) {
-                prettyPrint("Application folder begins with plugins");
+                // prettyPrint("Application folder begins with plugins");
                 $keyExplode = explode("/", $applicationFolder);
                 $pluginName = array_pop($keyExplode);
                 $pluginInfo = Gdn::pluginManager()->getPluginInfo($pluginName);
@@ -1102,16 +1102,16 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
                 $basePath = val("SearchPath", $pluginInfo);
                 $applicationFolder = val("Folder", $pluginInfo);
             } elseif ($applicationFolder === "core") {
-                prettyPrint("Application folder is core");
+                // prettyPrint("Application folder is core");
                 $basePath = PATH_ROOT;
                 $applicationFolder = "resources";
             } else {
-                prettyPrint("Application folder is something else");
+                // prettyPrint("Application folder is something else");
                 $basePath = PATH_APPLICATIONS;
                 $applicationFolder = strtolower($applicationFolder);
             }
-            prettyPrint("Application folder is now");
-            prettyPrint($applicationFolder);
+            // prettyPrint("Application folder is now");
+            // prettyPrint($applicationFolder);
 
             $subPaths = [];
             // Define the subpath for the view.
@@ -1126,58 +1126,58 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
                     $subPaths[] = "views/" . stringEndsWith($this->ControllerName, "Controller", true, true) . "/$view";
                 }
             }
-            prettyPrint("Sub paths");
-            prettyPrint($subPaths);
+            // prettyPrint("Sub paths");
+            // prettyPrint($subPaths);
 
             // Views come from one of four places:
             $viewPaths = [];
 
             // 1. An explicitly defined path to a view
             if (strpos($view, DS) !== false && stringBeginsWith($view, PATH_ROOT)) {
-                prettyPrint("View begins with path root?");
+                // prettyPrint("View begins with path root?");
                 $viewPaths[] = $view;
             }
-            prettyPrint("View paths is now");
-            prettyPrint($viewPaths);
+            // prettyPrint("View paths is now");
+            // prettyPrint($viewPaths);
 
             if ($this->Theme) {
-                prettyPrint("This is a theme");
+                // prettyPrint("This is a theme");
                 // 2. Application-specific theme view. eg. /path/to/application/themes/theme_name/app_name/views/controller_name/
                 foreach ($subPaths as $subPath) {
-                    prettyPrint("Doing something with subpaths");
+                    // prettyPrint("Doing something with subpaths");
                     $viewPaths[] = PATH_THEMES . "/{$this->Theme}/$applicationFolder/$subPath.*";
                     $viewPaths[] = PATH_ADDONS_THEMES . "/{$this->Theme}/$applicationFolder/$subPath.*";
                 }
-                prettyPrint("View paths is now");
-                prettyPrint($viewPaths);
+                // prettyPrint("View paths is now");
+                // prettyPrint($viewPaths);
 
                 // 3. Garden-wide theme view. eg. /path/to/application/themes/theme_name/views/controller_name/
                 foreach ($subPaths as $subPath) {
-                    prettyPrint("Doing something else with subpaths");
+                    // prettyPrint("Doing something else with subpaths");
                     $viewPaths[] = PATH_THEMES . "/{$this->Theme}/$subPath.*";
                     $viewPaths[] = PATH_ADDONS_THEMES . "/{$this->Theme}/$subPath.*";
                 }
-                prettyPrint("View paths is now");
-                prettyPrint($viewPaths);
+                // prettyPrint("View paths is now");
+                // prettyPrint($viewPaths);
             }
 
             // 4. Application/plugin default. eg. /path/to/application/app_name/views/controller_name/
             foreach ($subPaths as $subPath) {
-                prettyPrint("Doing something with subpaths again");
+                // prettyPrint("Doing something with subpaths again");
                 $viewPaths[] = "$basePath/$applicationFolder/$subPath.*";
                 //$ViewPaths[] = combinePaths(array(PATH_APPLICATIONS, $ApplicationFolder, 'views', $ControllerName, $View . '.*'));
             }
-            prettyPrint("View paths is now");
-            prettyPrint($viewPaths);
+            // prettyPrint("View paths is now");
+            // prettyPrint($viewPaths);
 
             // Find the first file that matches the path.
             $viewPath = false;
             foreach ($viewPaths as $glob) {
-                prettyPrint("Current view paths glob:");
-                prettyPrint($glob);
+                // prettyPrint("Current view paths glob:");
+                // prettyPrint($glob);
                 $paths = safeGlob($glob);
-                prettyPrint("Safe glob:");
-                prettyPrint($paths);
+                // prettyPrint("Safe glob:");
+                // prettyPrint($paths);
                 if (is_array($paths) && count($paths) > 0) {
                     $viewPath = $paths[0];
                     prettyPrint("Will break; view path is now:");
@@ -1185,8 +1185,8 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
                     break;
                 }
             }
-            prettyPrint("View path is now");
-            prettyPrint($viewPath);
+            // prettyPrint("View path is now");
+            // prettyPrint($viewPath);
 
             $this->_ViewLocations[$locationName] = $viewPath;
         }
@@ -1197,8 +1197,8 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
             prettyPrint("Will throw not found");
             throw notFoundException("View");
         }
-        prettyPrint("View path is now");
-        prettyPrint($viewPath);
+        // prettyPrint("View path is now");
+        // prettyPrint($viewPath);
 
         return $viewPath;
     }
