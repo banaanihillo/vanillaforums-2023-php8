@@ -115,6 +115,7 @@ class AddonManager implements LoggerAwareInterface
         foreach ($types as $type) {
             if ($this->isCacheEnabled() && !$this->typeUsesMultiCaching($type)) {
                 $dir = "$cacheDir/$type";
+                print_r($dir);
                 if (!file_exists($dir)) {
                     $r = $r && mkdir($dir, 0755);
                 }
