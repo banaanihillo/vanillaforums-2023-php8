@@ -25,11 +25,11 @@ use Vanilla\Web\MasterViewRenderer;
 use Vanilla\Dashboard\Pages\LegacyDashboardPage;
 
 
-function prettyPrintTwo($value) {
-    echo "<pre>";
-    print_r($value);
-    echo "</pre>";
-}
+// function prettyPrintTwo($value) {
+//     echo "<pre>";
+//     print_r($value);
+//     echo "</pre>";
+// }
 
 /**
  * Controller base class.
@@ -1136,7 +1136,7 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
                 $paths = safeGlob($glob);
                 if (is_array($paths) && count($paths) > 0) {
                     $viewPath = $paths[0];
-                    prettyPrintTwo($viewPath);
+                    // prettyPrintTwo($viewPath);
                     break;
                 }
             }
@@ -1144,7 +1144,7 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
             $this->_ViewLocations[$locationName] = $viewPath;
         }
         if ($viewPath === false && $throwError) {
-            prettyPrintTwo("View path is false");
+            // prettyPrintTwo("View path is false");
             Gdn::dispatcher()->passData("ViewPaths", $viewPaths);
             throw notFoundException("View");
         }
