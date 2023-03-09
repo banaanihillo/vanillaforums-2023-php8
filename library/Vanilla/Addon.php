@@ -16,12 +16,6 @@ use Vanilla\Utility\DebugUtils;
 use Vanilla\Utility\Deprecation;
 use Vanilla\Utility\PhpClassParsed;
 
-function prettyPrintThree($value) {
-    echo "<pre>";
-    print_r($value);
-    echo "</pre>";
-}
-
 /**
  * Contains the information for a single addon.
  */
@@ -301,23 +295,18 @@ class Addon
      */
     public function path($subpath = "", $relative = self::PATH_FULL)
     {
-        $subpathString = $subpath;
-        if (gettype($subpath) === "array") {
-            $subpathString = implode(',', $subpath) ?? null;
-        }
-        prettyPrintThree($subpath);
-        $subpathString = $subpathString ? "/" . ltrim($subpathString, "\\/") : "";
+        $subpath = $subpath ? "/" . ltrim($subpath, "\\/") : "";
 
         switch ($relative) {
             case self::PATH_FULL:
-                return PATH_ROOT . $this->subdir . $subpathString;
+                return PATH_ROOT . $this->subdir . $subpath;
             case self::PATH_ADDON:
-                return $this->subdir . $subpathString;
+                return $this->subdir . $subpath;
             case self::PATH_REAL:
-                return realpath(PATH_ROOT . $this->subdir . $subpathString);
+                return realpath(PATH_ROOT . $this->subdir . $subpath);
             case self::PATH_LOCAL:
             case null:
-                return $subpathString;
+                return $subpath;
             default:
                 throw new \InvalidArgumentException("Invalid path relation: $relative.", 500);
         }
