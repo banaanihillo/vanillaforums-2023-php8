@@ -301,8 +301,12 @@ class Addon
      */
     public function path($subpath = "", $relative = self::PATH_FULL)
     {
+        $subpathString = $subpath;
+        if (gettype($subpath) === "array") {
+            $subpathString = implode(',', $subpath) ?? null;
+        }
         prettyPrintThree($subpath);
-        $subpath = $subpath ? "/" . ltrim($subpath, "\\/") : "";
+        $subpathString = $subpathString ? "/" . ltrim($subpathString, "\\/") : "";
 
         switch ($relative) {
             case self::PATH_FULL:
