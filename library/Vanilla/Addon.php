@@ -310,14 +310,14 @@ class Addon
 
         switch ($relative) {
             case self::PATH_FULL:
-                return PATH_ROOT . $this->subdir . $subpath;
+                return PATH_ROOT . $this->subdir . $subpathString;
             case self::PATH_ADDON:
-                return $this->subdir . $subpath;
+                return $this->subdir . $subpathString;
             case self::PATH_REAL:
-                return realpath(PATH_ROOT . $this->subdir . $subpath);
+                return realpath(PATH_ROOT . $this->subdir . $subpathString);
             case self::PATH_LOCAL:
             case null:
-                return $subpath;
+                return $subpathString;
             default:
                 throw new \InvalidArgumentException("Invalid path relation: $relative.", 500);
         }
