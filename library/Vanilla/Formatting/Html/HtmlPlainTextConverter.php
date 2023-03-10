@@ -187,7 +187,7 @@ HTML;
         // We have to be careful of our code blocks here, so we'll replace them with some well known value.
         // THIS IS NOT A SECURITY MEASURE. YOU STILL NEED TO HTML ESCAPE CONTENT WHERE NECESSARY.
         $result = strip_tags($result);
-        $result = htmlspecialchars_decode($result ?? "");
+        $result = htmlspecialchars_decode($result);
         return $result;
     }
 

@@ -58,8 +58,7 @@ class BlotGroupCollection implements \IteratorAggregate, TextDOMInterface
      *
      * @return NoIdea
      */
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): mixed
     {
         return new \ArrayIterator($this->groups);
     }
