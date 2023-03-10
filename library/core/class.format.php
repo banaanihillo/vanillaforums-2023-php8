@@ -497,7 +497,7 @@ class Gdn_Format
         if (!is_string($mixed)) {
             return self::to($mixed, "Display");
         } else {
-            $mixed = htmlspecialchars($mixed ?? "", ENT_QUOTES, "UTF-8");
+            $mixed = htmlspecialchars($mixed, ENT_QUOTES, "UTF-8");
             $mixed = str_replace(["&quot;", "&amp;"], ['"', "&"], $mixed);
 
             /** @var Html\HtmlEnhancer $htmlEnhancer */
@@ -546,9 +546,9 @@ class Gdn_Format
             return self::to($mixed, "Form");
         } else {
             if (c("Garden.Format.ReplaceNewlines", true)) {
-                return nl2br(htmlspecialchars($mixed ?? "", ENT_QUOTES, "UTF-8"));
+                return nl2br(htmlspecialchars($mixed, ENT_QUOTES, "UTF-8"));
             } else {
-                return htmlspecialchars($mixed ?? "", ENT_QUOTES, "UTF-8");
+                return htmlspecialchars($mixed, ENT_QUOTES, "UTF-8");
             }
         }
     }
@@ -673,7 +673,7 @@ class Gdn_Format
         // it's kind of stuck here since https://github.com/vanilla/vanilla/commit/21c800bb0e326b72a320c6e8f61e89b45e19ec96
         // Some use cases RELY on this sanitization, so if you want to remove this, you'll have to go find those usages.
         // Really just use `FormatInterface::renderPlainText()` instead.
-        $sanitized = htmlspecialchars($plainText ?? "");
+        $sanitized = htmlspecialchars($plainText);
         return $sanitized;
     }
 
@@ -702,7 +702,7 @@ class Gdn_Format
         // it's kind of stuck here since https://github.com/vanilla/vanilla/commit/21c800bb0e326b72a320c6e8f61e89b45e19ec96
         // Some use cases RELY on this sanitization, so if you want to remove this, you'll have to go find those usages.
         // Really just use `FormatInterface::renderExcerpt()` instead.
-        $sanitized = htmlspecialchars($plainText ?? "");
+        $sanitized = htmlspecialchars($plainText);
         return $sanitized;
     }
 
@@ -839,7 +839,7 @@ class Gdn_Format
                 if ($warnLeaving && !isTrustedDomain($domain)) {
                     // If this is valid HTMl, the link text's HTML special characters should be encoded. Decode them to their raw state for URL encoding.
                     if ($isHtml) {
-                        $url = htmlspecialchars_decode($url ?? "");
+                        $url = htmlspecialchars_decode($url);
                     }
                     return url(
                         "/home/leaving?" .
@@ -892,13 +892,13 @@ class Gdn_Format
             $text = $url;
             if (strpos($text, "%") !== false) {
                 $text = rawurldecode($text);
-                $text = htmlspecialchars($text ?? "", ENT_QUOTES, "UTF-8");
+                $text = htmlspecialchars($text, ENT_QUOTES, "UTF-8");
             }
 
             $nofollow = self::$DisplayNoFollow ? ' rel="nofollow"' : "";
 
             // If this is valid HTMl, the link text's HTML special characters should be encoded. Decode them to their raw state for URL encoding.
-            $plainUrl = !$isHtml ? $url : htmlspecialchars_decode($url ?? "");
+            $plainUrl = !$isHtml ? $url : htmlspecialchars_decode($url);
             if ($warnLeaving && isExternalUrl($plainUrl)) {
                 $href =
                     "/home/leaving?" .
@@ -1045,7 +1045,7 @@ class Gdn_Format
             // Text before the mention.
             if ($i == 0) {
                 if (!empty($str)) {
-                    $str[0] = htmlspecialchars(mb_substr($str, 0, 1) ?? "");
+                    $str[0] = htmlspecialchars(mb_substr($str, 0, 1));
                 }
                 continue;
             }
@@ -1057,7 +1057,7 @@ class Gdn_Format
             }
 
             if (preg_match('`\w$`', $parts[$i - 1])) {
-                $str[$i] = htmlspecialchars(mb_substr($str, 0, 1) ?? "");
+                $str[$i] = htmlspecialchars(mb_substr($str, 0, 1));
                 continue;
             }
 

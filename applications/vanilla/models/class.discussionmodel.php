@@ -1528,7 +1528,7 @@ SQL;
     {
         // Fix up output
         $discussion->Name = htmlspecialchars(
-          trim($discussion->Name) ?: t("(Untitled)") ?? ""
+          trim($discussion->Name) ?: t("(Untitled)")
         );
         $discussion->Attributes = dbdecode($discussion->Attributes);
         $discussion->Url = discussionUrl($discussion);
@@ -4662,7 +4662,7 @@ SQL;
     public function fixRow(array &$row): array
     {
         if (array_key_exists("Name", $row)) {
-            $row["Name"] = htmlspecialchars_decode($row["Name"] ?? "");
+            $row["Name"] = htmlspecialchars_decode($row["Name"]);
         }
         return $row;
     }
