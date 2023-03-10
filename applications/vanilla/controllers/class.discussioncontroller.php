@@ -829,7 +829,7 @@ class DiscussionController extends VanillaController
                      * https://higherlogic.atlassian.net/browse/VNLA-901
                      * @psalm-suppress UndefinedClass
                      */
-                    if (!is_null($discussion->GroupID) && class_exists(GroupModel::class)) {
+                    if (!is_null($discussion->GroupID ?? null) && class_exists(GroupModel::class)) {
                         $groupModel = new GroupModel();
                         $groupDelete = $groupModel->canModerate($discussion->GroupID, $session->UserID);
                     }

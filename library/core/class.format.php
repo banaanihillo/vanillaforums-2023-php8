@@ -839,7 +839,7 @@ class Gdn_Format
                 if ($warnLeaving && !isTrustedDomain($domain)) {
                     // If this is valid HTMl, the link text's HTML special characters should be encoded. Decode them to their raw state for URL encoding.
                     if ($isHtml) {
-                        $url = htmlspecialchars_decode($url ?? "");
+                        $url = htmlspecialchars_decode($url);
                     }
                     return url(
                         "/home/leaving?" .
@@ -898,7 +898,7 @@ class Gdn_Format
             $nofollow = self::$DisplayNoFollow ? ' rel="nofollow"' : "";
 
             // If this is valid HTMl, the link text's HTML special characters should be encoded. Decode them to their raw state for URL encoding.
-            $plainUrl = !$isHtml ? $url : htmlspecialchars_decode($url ?? "");
+            $plainUrl = !$isHtml ? $url : htmlspecialchars_decode($url);
             if ($warnLeaving && isExternalUrl($plainUrl)) {
                 $href =
                     "/home/leaving?" .
@@ -1045,7 +1045,9 @@ class Gdn_Format
             // Text before the mention.
             if ($i == 0) {
                 if (!empty($str)) {
-                    $str[0] = htmlspecialchars(mb_substr($str, 0, 1) ?? "");
+                    $str[0] = htmlspecialchars(
+                        mb_substr($str, 0, 1) ?? ""
+                    );
                 }
                 continue;
             }
@@ -1057,7 +1059,9 @@ class Gdn_Format
             }
 
             if (preg_match('`\w$`', $parts[$i - 1])) {
-                $str[$i] = htmlspecialchars(mb_substr($str, 0, 1) ?? "");
+                $str[$i] = htmlspecialchars(
+                    mb_substr($str, 0, 1) ?? ""
+                );
                 continue;
             }
 

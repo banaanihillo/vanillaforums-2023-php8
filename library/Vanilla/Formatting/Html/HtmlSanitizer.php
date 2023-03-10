@@ -41,7 +41,7 @@ class HtmlSanitizer
     public function filter(string $content, bool $allowExtendedContent = false): string
     {
         if (!self::containsHtmlTags($content)) {
-            return htmlspecialchars($content);
+            return htmlspecialchars($content ?? "");
         }
 
         $encodedCodeBlocks = $this->encodeCodeBlocks($content);
@@ -99,7 +99,13 @@ class HtmlSanitizer
         return preg_replace_callback(
             "`<code([^>]*)>(.+?)<\/code>`si",
             function ($matches) {
-                $result = "<code{$matches[1]}>" . htmlspecialchars(htmlspecialchars_decode($matches[2] ?? "")) . "</code>";
+                $result = (
+                    "<code{$matches[1]}>"
+                    . htmlspecialchars(
+                        htmlspecialchars_decode($matches[2]) ?? ""
+                    )
+                    . "</code>"
+                );
                 return $result;
             },
             $value
