@@ -1528,7 +1528,7 @@ SQL;
     {
         // Fix up output
         $discussion->Name = htmlspecialchars(
-          trim($discussion->Name) ?: t("(Untitled)")
+          trim($discussion->Name) ?: t("(Untitled)") ?? ""
         );
         $discussion->Attributes = dbdecode($discussion->Attributes);
         $discussion->Url = discussionUrl($discussion);
