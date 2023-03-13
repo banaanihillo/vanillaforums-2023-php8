@@ -31,6 +31,9 @@ class DiscussionController extends VanillaController
     /** @var Message[] */
     private $messages = [];
 
+    /** Added for PHP8.2+ support */
+    private $Pager;
+
     /**
      *
      *

@@ -243,6 +243,7 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
 
     /** Added for PHP8.2+ support */
     protected $Property;
+    protected $Database;
 
     /**
      * Gdn_Controller constructor.
