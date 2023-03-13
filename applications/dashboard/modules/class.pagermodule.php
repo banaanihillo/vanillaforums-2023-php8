@@ -90,7 +90,7 @@ class PagerModule extends Gdn_Module
     protected $_Totalled;
 
     /** Added for PHP8.2+ support */
-    protected $HtmlBefore;
+    public $HtmlBefore;
 
     /**
      *
