@@ -241,6 +241,9 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
     /** @var bool */
     protected $isReactView = false;
 
+    /** Added for PHP8.2+ support */
+    protected $Property;
+
     /**
      * Gdn_Controller constructor.
      */

@@ -27,6 +27,9 @@ class QuickLink implements \JsonSerializable
     /** @var int|null */
     private $sort;
 
+    /** @var string */
+    private $permission;
+
     /** @var int|null */
     private $countLimit;
 
