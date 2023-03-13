@@ -264,7 +264,7 @@ class PostController extends VanillaController
             $this->Form->setValue(
               "Name",
               htmlspecialchars_decode(
-                $this->Form->getValue("Name")
+                $this->Form->getValue("Name") ?? ""
               )
             );
         } elseif ($this->Form->authenticatedPostBack(true)) {
