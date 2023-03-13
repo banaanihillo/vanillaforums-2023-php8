@@ -55,10 +55,10 @@ class Smarty_Internal_Extension_Handler
     private $resolvedProperties = array();
 
     /** Added for PHP8.2+ support */
-    private $setDebugTemplate;
-    private $setLiterals;
-    private $_codeFrame;
-    private $_foreach;
+    public $setDebugTemplate;
+    public $setLiterals;
+    public $_codeFrame;
+    public $_foreach;
 
     /**
      * Call external Method
