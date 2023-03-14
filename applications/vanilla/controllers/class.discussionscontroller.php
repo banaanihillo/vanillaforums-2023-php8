@@ -35,6 +35,9 @@ class DiscussionsController extends VanillaController
     /** @var boolean Value indicating whether to show the category following filter */
     public $enableFollowingFilter = false;
 
+    /** PHP8.2+ */
+    public $CountCommentsPerPage;
+
     /**
      * "Table" layout for discussions. Mimics more traditional forum discussion layout.
      *
