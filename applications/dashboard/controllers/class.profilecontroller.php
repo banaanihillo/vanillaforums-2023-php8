@@ -52,6 +52,7 @@ class ProfileController extends Gdn_Controller
 
     /** Added for PHP8.2+ support */
     public $Roles;
+    public $_ProfileTabs;
 
     /** @var string View for current tab. */
     protected $_TabView;
