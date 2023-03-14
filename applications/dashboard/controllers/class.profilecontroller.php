@@ -50,9 +50,9 @@ class ProfileController extends Gdn_Controller
     /** @var array List of available tabs. */
     public $ProfileTabs;
 
-    // /** Added for PHP8.2+ support */
-    // public $Roles;
-    // public $_ProfileTabs;
+    /** Added for PHP8.2+ support */
+    public $Roles;
+    public $_ProfileTabs;
 
     /** @var string View for current tab. */
     protected $_TabView;
