@@ -1718,7 +1718,12 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
             $this->finalize();
 
             if (!check_utf8($this->_Json["Data"])) {
-                $this->_Json["Data"] = utf8_encode($this->_Json["Data"]);
+                // $this->_Json["Data"] = utf8_encode($this->_Json["Data"]);
+                $this->_Json["Data"] = mb_convert_encoding(
+                    $this->_Json["Data"],
+                    "UTF-8",
+                    mb_detect_encoding($this->_Json["Data"]),
+                );
             }
 
             $json = ipDecodeRecursive($this->_Json);
