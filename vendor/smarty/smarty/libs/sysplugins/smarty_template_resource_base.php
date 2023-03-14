@@ -1,8 +1,8 @@
 <?php
 
-function prettyPrint($whatToPrint) {
-    print_r("<pre>" . json_encode($whatToPrint) . "</pre>");
-}
+// function prettyPrint($whatToPrint) {
+//     print_r("<pre>" . json_encode($whatToPrint) . "</pre>");
+// }
 
 /**
  * Smarty Template Resource Base Object

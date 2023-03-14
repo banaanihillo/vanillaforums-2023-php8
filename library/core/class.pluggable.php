@@ -1,4 +1,9 @@
 <?php
+
+function prettyPrint($whatToPrint) {
+    print_r("<pre>" . json_encode($whatToPrint) . "</pre>");
+}
+
 /**
  * Gdn_Pluggable
  *
@@ -218,10 +223,13 @@ abstract class Gdn_Pluggable
             $this->HandlerType = HANDLER_TYPE_NEW;
             $return = Gdn::pluginManager()->callNewMethod($this, $className, $referenceMethodName);
         } else {
+            prettyPrint($this);
             // The method has not been overridden.
             if ($this == null) {
                 $return = null;
             } else {
+                prettyPrint($actualMethodName);
+                prettyPrint($arguments);
                 $return = call_user_func_array(
                     [$this, $actualMethodName],
                     $arguments,
