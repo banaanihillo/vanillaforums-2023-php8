@@ -62,6 +62,7 @@ class Smarty_Internal_Extension_Handler
     // public $getTemplateVars;
     // public $getLiterals;
     // public $_writeFile;
+    // public $registerPlugin;
 
     /**
      * Call external Method
