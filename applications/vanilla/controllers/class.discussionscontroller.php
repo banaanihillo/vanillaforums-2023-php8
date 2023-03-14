@@ -38,6 +38,7 @@ class DiscussionsController extends VanillaController
     /** PHP8.2+ */
     public $CountCommentsPerPage;
     public $AnnounceData;
+    public $Announcements;
 
     /**
      * "Table" layout for discussions. Mimics more traditional forum discussion layout.
