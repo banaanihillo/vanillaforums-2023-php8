@@ -61,6 +61,7 @@ class Smarty_Internal_Extension_Handler
     // public $_foreach;
     // public $getTemplateVars;
     // public $getLiterals;
+    // public $_writeFile;
 
     /**
      * Call external Method

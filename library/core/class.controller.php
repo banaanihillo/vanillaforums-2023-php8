@@ -247,6 +247,7 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
     public $DiscussionModel;
     public $UserModel;
     public $RoleData;
+    public $Form;
 
     /**
      * Gdn_Controller constructor.
