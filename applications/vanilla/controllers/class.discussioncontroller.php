@@ -33,6 +33,7 @@ class DiscussionController extends VanillaController
 
     /** Added for PHP8.2+ support */
     private $Pager;
+    public $CanEditDiscussions;
 
     /**
      *
