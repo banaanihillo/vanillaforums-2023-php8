@@ -92,6 +92,7 @@ class PagerModule extends Gdn_Module
     /** Added for PHP8.2+ support */
     public $HtmlBefore;
     public $_PageCount;
+    public $Record;
 
     /**
      *
