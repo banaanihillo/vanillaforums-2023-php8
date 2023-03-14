@@ -232,6 +232,9 @@ class DiscussionModel extends Gdn_Model implements
     /** @var DiscussionStatusModel */
     private $discussionStatusModel;
 
+    /** PHP8.2+ */
+    public $_AnnouncementIDs;
+
     /**
      * Clear out the statically cached values for tests.
      */
