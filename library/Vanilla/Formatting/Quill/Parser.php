@@ -171,8 +171,10 @@ class Parser
         $operations = json_decode($json, true);
         if ($operations == []) {
             prettyPrintThings("Operations was empty");
-            $json = '"' . $json . '"';
+            $json = '"[' . $json . ']"';
+            prettyPrintThings($json);
             $operations = json_decode($json, true);
+            prettyPrintThings("Operations re-decoded");
             prettyPrintThings($operations);
         }
 
