@@ -1,10 +1,10 @@
 <?php
 
-// function prettyPrintThings($thing) {
-//     echo '<pre>';
-//     print_r($thing);
-//     echo '</pre>';
-// }
+function prettyPrintThings($thing) {
+    echo '<pre>';
+    print_r($thing);
+    echo '</pre>';
+}
 
 /**
  * Smarty Extension handler
