@@ -31,6 +31,9 @@ class UserController extends DashboardController
 
     /** PHP8.2+ */
     public $UserData;
+    public $User;
+    public $UserRoleData;
+    public $Method;
 
     /**
      * Configure the controller.
