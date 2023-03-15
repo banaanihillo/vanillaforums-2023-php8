@@ -39,6 +39,10 @@ class DiscussionsController extends VanillaController
     public $CountCommentsPerPage;
     public $AnnounceData;
     public $Announcements;
+    public $DiscussionData;
+    public $Discussions;
+    public $Pager;
+    public $CanEditDiscussions;
 
     /**
      * "Table" layout for discussions. Mimics more traditional forum discussion layout.

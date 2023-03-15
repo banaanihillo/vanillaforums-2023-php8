@@ -31,6 +31,13 @@ class DiscussionController extends VanillaController
     /** @var Message[] */
     private $messages = [];
 
+    /** PHP8.2+ */
+    public $Discussion;
+    public $Offset;
+    public $Pager;
+    public $DiscussionID;
+    public $CanEditComments;
+
     /**
      *
      *
@@ -124,7 +131,15 @@ class DiscussionController extends VanillaController
         }
         $this->setData("CategoryID", $this->CategoryID);
 
-        if (strcasecmp(val("Type", $this->Discussion), "redirect") === 0) {
+        if (
+            strcasecmp(
+                val(
+                    "Type" ?? "",
+                    $this->Discussion,
+                ),
+                "redirect",
+            ) === 0
+        ) {
             $this->redirectDiscussion($this->Discussion);
         }
 
