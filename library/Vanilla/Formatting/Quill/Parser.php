@@ -159,8 +159,9 @@ class Parser
      * @return array
      * @throws FormattingException If valid operations could not be produced.
      */
-    public static function jsonToOperations(string $json): array
+    public static function jsonToOperations(string $jsonParameter): array
     {
+        $json = $jsonParameter;
         // Ensure that empty posts still get some body content.
         // This will ensure that they will render/validate correctly where empty is allowed
         // And that empty bodies by properly caught in length validation.
@@ -168,10 +169,12 @@ class Parser
             return self::SINGLE_NEWLINE_CONTENTS;
         }
         $operations = json_decode($json, true);
-        prettyPrintThings("Raw JSON:");
-        prettyPrintThings($json);
-        prettyPrintThings("Operations decoded:");
-        prettyPrintThings($operations);
+        if ($operations == []) {
+            prettyPrintThings("Operations was empty");
+            $json = '"' . $json . '"';
+            $operations = json_decode($json, true);
+            prettyPrintThings($operations);
+        }
 
         $errMessage = "JSON could not be converted into quill operations.\n $json";
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($operations)) {
