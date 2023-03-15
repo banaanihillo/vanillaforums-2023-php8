@@ -37,6 +37,8 @@ class DiscussionController extends VanillaController
     public $Pager;
     public $DiscussionID;
     public $CanEditComments;
+    public $CurrentComment;
+    public $CheckedComments;
 
     /**
      *
