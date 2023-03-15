@@ -63,8 +63,6 @@ class ProfileController extends Gdn_Controller
     public $Preferences;
     public $PreferenceGroups;
     public $PreferenceTypes;
-    public $LastCommentCount;
-    public $LastCommentID;
     public $ShowOptions;
 
     /** @var string View for current tab. */
