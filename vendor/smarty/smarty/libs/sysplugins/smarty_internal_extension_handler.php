@@ -1,10 +1,10 @@
 <?php
 
-function prettyPrintThings($thing) {
-    echo '<pre>';
-    print_r($thing);
-    echo '</pre>';
-}
+// function prettyPrintThings($thing) {
+//     echo '<pre>';
+//     print_r($thing);
+//     echo '</pre>';
+// }
 
 /**
  * Smarty Extension handler
@@ -61,7 +61,7 @@ class Smarty_Internal_Extension_Handler
     private $resolvedProperties = array();
 
     /** Added for PHP8.2+ support */
-    // public $setDebugTemplate;
+    public $setDebugTemplate;
     // public $setLiterals;
     // public $_codeFrame;
     // public $_foreach;
@@ -146,10 +146,10 @@ class Smarty_Internal_Extension_Handler
         $callback = array($smarty->ext->$name, $name);
         array_unshift($args, $data);
         if (isset($callback) && $callback[ 0 ]->objMap | $data->_objType) {
-            prettyPrintThings("Callback");
-            prettyPrintThings($callback);
-            prettyPrintThings("Args");
-            prettyPrintThings($args);
+            // prettyPrintThings("Callback");
+            // prettyPrintThings($callback);
+            // prettyPrintThings("Args");
+            // prettyPrintThings($args);
             return call_user_func_array($callback, $args);
         }
         return call_user_func_array(array(new Smarty_Internal_Undefined(), $name), $args);
