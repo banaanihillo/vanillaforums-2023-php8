@@ -230,8 +230,7 @@ abstract class Gdn_Pluggable
             $return = Gdn::pluginManager()->callNewMethod($this, $className, $referenceMethodName);
         } else {
             // The method has not been overridden.
-            prettyPrint("The method has not been overridden[sic]");
-            prettyPrint($actualMethodName);
+            // Trying to call method xrender and then errorCount
             $return = call_user_func_array([$this, $actualMethodName], $arguments);
         }
 

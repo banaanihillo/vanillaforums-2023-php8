@@ -1098,7 +1098,7 @@ class ProfileController extends Gdn_Controller
                 ];
                 $newAvatar = $this->saveAvatars($tmpAvatar, $thumbOptions);
             }
-            if ($this->Form->errorCount() == 0) {
+            if ($this->Form?->errorCount() == 0) {
                 if ($newAvatar !== false) {
                     $thumbnailSize = c("Garden.Thumbnail.Size");
                     // Update crop properties.
@@ -1488,7 +1488,7 @@ class ProfileController extends Gdn_Controller
                     "ValidateRequired",
                     sprintf(t("ValidateRequired"), "Password")
                 );
-                if ($this->Form->errorCount() === 0) {
+                if ($this->Form?->errorCount() === 0) {
                     $password = $this->Form->getFormValue("AuthenticatePassword");
                     $result = Gdn::userModel()->validateCredentials("", Gdn::session()->UserID, $password);
                     if ($result !== false) {
@@ -1580,7 +1580,7 @@ class ProfileController extends Gdn_Controller
         } catch (Exception $ex) {
             $this->Form->addError(strip_tags($ex->getMessage()));
         }
-        if ($this->Form->errorCount() == 0) {
+        if ($this->Form?->errorCount() == 0) {
             $this->informMessage(t("The invitation was sent successfully."));
         }
 
@@ -1760,7 +1760,7 @@ EOT;
             $this->Form->addError(strip_tags($ex->getMessage()));
         }
 
-        if ($this->Form->errorCount() == 0) {
+        if ($this->Form?->errorCount() == 0) {
             $this->render("Blank", "Utility");
         }
     }
