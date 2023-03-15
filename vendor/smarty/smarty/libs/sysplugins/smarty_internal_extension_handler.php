@@ -1,10 +1,10 @@
 <?php
 
-function prettyPrintThings($thing) {
-    echo '<pre>';
-    print_r($thing);
-    echo '</pre>';
-}
+// function prettyPrintThings($thing) {
+//     echo '<pre>';
+//     print_r($thing);
+//     echo '</pre>';
+// }
 
 /**
  * Smarty Extension handler
@@ -113,8 +113,6 @@ class Smarty_Internal_Extension_Handler
                         $classObj = new $class();
                         $methodes = get_class_methods($classObj);
                         foreach ($methodes as $method) {
-                            prettyPrintThings("External method");
-                            prettyPrintThings($method);
                             $smarty->ext->$method = $classObj;
                         }
                     }
@@ -164,17 +162,9 @@ class Smarty_Internal_Extension_Handler
                 }
             }
         }
-        prettyPrintThings("Smarty ext dynamic name thing?");
-        prettyPrintThings($smarty?->ext?->$name);
-        prettyPrintThings("Smarty ext name has been set; printing smarty ext");
-        prettyPrintThings($smarty?->ext);
         $callback = array($smarty->ext->$name, $name);
         array_unshift($args, $data);
         if (isset($callback) && $callback[0]?->objMap | $data->_objType) {
-            // prettyPrintThings("Callback objMap");
-            // prettyPrintThings($callback[0]?->objMap);
-            // prettyPrintThings("Data _objType");
-            // prettyPrintThings($data->_objType);
             return call_user_func_array($callback, $args);
         }
         return call_user_func_array(array(new Smarty_Internal_Undefined(), $name), $args);
@@ -210,14 +200,8 @@ class Smarty_Internal_Extension_Handler
             $class = 'Smarty_Internal_Method_' . $this->upperCase($property_name);
         }
         if (!class_exists($class)) {
-            prettyPrintThings("Class did not yet exist");
-            prettyPrintThings($class);
-            prettyPrintThings("Will create new undefined");
-            prettyPrintThings($property_name);
             return $this->$property_name = new Smarty_Internal_Undefined($class);
         }
-        prettyPrintThings("Will use existing property name?");
-        prettyPrintThings($property_name);
         return $this->$property_name = new $class();
     }
 
@@ -230,8 +214,6 @@ class Smarty_Internal_Extension_Handler
      */
     public function __set($property_name, $value)
     {
-        prettyPrintThings("Will set property name");
-        prettyPrintThings($property_name);
         $this->$property_name = $value;
     }
 
@@ -245,7 +227,6 @@ class Smarty_Internal_Extension_Handler
      */
     public function __call($name, $args)
     {
-        prettyPrintThings("Call");
         return call_user_func_array(array(new Smarty_Internal_Undefined(), $name), array($this));
     }
 }
