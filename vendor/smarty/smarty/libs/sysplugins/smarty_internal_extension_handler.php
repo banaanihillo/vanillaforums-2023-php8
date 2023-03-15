@@ -41,6 +41,10 @@ function prettyPrintThings($thing) {
  * @property   Smarty_Internal_Method_RegisterObject     $registerObject
  * @property   Smarty_Internal_Method_RegisterPlugin     $registerPlugin
  * @property   mixed|\Smarty_Template_Cached             configLoad
+ * @property   Smarty_Internal_Method_SetDebugTemplate   $setDebugTemplate
+ * @property   Smarty_Internal_Method_SetLiterals        $setLiterals
+ * @property   Smarty_Internal_Method_GetLiterals        $getLiterals
+ * @property   Smarty_Internal_Method_AddLiterals        $addLiterals
  */
 class Smarty_Internal_Extension_Handler
 {
@@ -152,6 +156,8 @@ class Smarty_Internal_Extension_Handler
         }
         prettyPrintThings("Smarty ext dynamic name thing?");
         prettyPrintThings($smarty?->ext?->$name);
+        prettyPrintThings("Smarty ext name has been set; printing smarty ext");
+        prettyPrintThings($smarty?->ext);
         $callback = array($smarty->ext->$name, $name);
         array_unshift($args, $data);
         if (isset($callback) && $callback[0]?->objMap | $data->_objType) {
