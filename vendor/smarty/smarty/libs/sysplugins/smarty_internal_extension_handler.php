@@ -145,7 +145,7 @@ class Smarty_Internal_Extension_Handler
         }
         $callback = array($smarty->ext->$name, $name);
         array_unshift($args, $data);
-        if (isset($callback) && $callback[ 0 ]->objMap | $data->_objType) {
+        if (isset($callback) && $callback[0]?->objMap | $data->_objType) {
             // prettyPrintThings("Callback");
             // prettyPrintThings($callback);
             // prettyPrintThings("Args");
