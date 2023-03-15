@@ -149,7 +149,7 @@ class Smarty_Internal_Extension_Handler
             // prettyPrintThings("Callback");
             // prettyPrintThings($callback);
             // prettyPrintThings("Args");
-            prettyPrintThings($args);
+            prettyPrintThings(json_encode($args));
             return call_user_func_array($callback, $args);
         }
         return call_user_func_array(array(new Smarty_Internal_Undefined(), $name), $args);
