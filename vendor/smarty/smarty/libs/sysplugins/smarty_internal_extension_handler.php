@@ -69,6 +69,7 @@ class Smarty_Internal_Extension_Handler
     // public $getLiterals;
     // public $_writeFile;
     // public $registerPlugin;
+    // public $addLiterals;
 
     /**
      * Call external Method
@@ -94,6 +95,8 @@ class Smarty_Internal_Extension_Handler
                         $classObj = new $class();
                         $methodes = get_class_methods($classObj);
                         foreach ($methodes as $method) {
+                            prettyPrintThings("External method");
+                            prettyPrintThings($method);
                             $smarty->ext->$method = $classObj;
                         }
                     }
@@ -146,10 +149,10 @@ class Smarty_Internal_Extension_Handler
         $callback = array($smarty->ext->$name, $name);
         array_unshift($args, $data);
         if (isset($callback) && $callback[0]?->objMap | $data->_objType) {
-            prettyPrintThings("Callback objMap");
-            prettyPrintThings($callback[0]?->objMap);
-            prettyPrintThings("Data _objType");
-            prettyPrintThings($data->_objType);
+            // prettyPrintThings("Callback objMap");
+            // prettyPrintThings($callback[0]?->objMap);
+            // prettyPrintThings("Data _objType");
+            // prettyPrintThings($data->_objType);
             return call_user_func_array($callback, $args);
         }
         return call_user_func_array(array(new Smarty_Internal_Undefined(), $name), $args);
@@ -178,6 +181,8 @@ class Smarty_Internal_Extension_Handler
      */
     public function __get($property_name)
     {
+        prettyPrintThings("Get propety name");
+        prettyPrintThings($property_name);
         // object properties of runtime template extensions will start with '_'
         if ($property_name[ 0 ] === '_') {
             $class = 'Smarty_Internal_Runtime' . $this->upperCase($property_name);
