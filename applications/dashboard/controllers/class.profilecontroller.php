@@ -52,12 +52,17 @@ class ProfileController extends Gdn_Controller
 
     /** Added for PHP8.2+ support */
     public $Roles;
-    public $_ProfileTabs;
+    // Guessing that the underscore means "private property"
+    private $_ProfileTabs;
     public $ActivityModel;
     public $_CurrentTab;
     public $ProfileUserID;
     public $HideActivity;
     public $GenderOptions;
+    public $Pager;
+    public $Preferences;
+    public $PreferenceGroups;
+    public $PreferenceTypes;
 
     /** @var string View for current tab. */
     protected $_TabView;
