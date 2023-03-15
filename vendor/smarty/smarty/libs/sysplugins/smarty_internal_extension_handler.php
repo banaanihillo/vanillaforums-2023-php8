@@ -150,6 +150,8 @@ class Smarty_Internal_Extension_Handler
                 }
             }
         }
+        prettyPrintThings("Smarty ext dynamic name thing?");
+        prettyPrintThings($smarty?->ext?->$name);
         $callback = array($smarty->ext->$name, $name);
         array_unshift($args, $data);
         if (isset($callback) && $callback[0]?->objMap | $data->_objType) {
@@ -185,8 +187,6 @@ class Smarty_Internal_Extension_Handler
      */
     public function __get($property_name)
     {
-        prettyPrintThings("Get propety name");
-        prettyPrintThings($property_name);
         // object properties of runtime template extensions will start with '_'
         if ($property_name[ 0 ] === '_') {
             $class = 'Smarty_Internal_Runtime' . $this->upperCase($property_name);
@@ -194,8 +194,14 @@ class Smarty_Internal_Extension_Handler
             $class = 'Smarty_Internal_Method_' . $this->upperCase($property_name);
         }
         if (!class_exists($class)) {
+            prettyPrintThings("Class did not yet exist");
+            prettyPrintThings($class);
+            prettyPrintThings("Will create new undefined");
+            prettyPrintThings($property_name);
             return $this->$property_name = new Smarty_Internal_Undefined($class);
         }
+        prettyPrintThings("Will use existing property name?");
+        prettyPrintThings($property_name);
         return $this->$property_name = new $class();
     }
 
@@ -208,6 +214,8 @@ class Smarty_Internal_Extension_Handler
      */
     public function __set($property_name, $value)
     {
+        prettyPrintThings("Will set property name");
+        prettyPrintThings($property_name);
         $this->$property_name = $value;
     }
 
