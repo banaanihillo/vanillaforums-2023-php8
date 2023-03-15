@@ -147,9 +147,9 @@ class Smarty_Internal_Extension_Handler
         array_unshift($args, $data);
         if (isset($callback) && $callback[0]?->objMap | $data->_objType) {
             // prettyPrintThings("Callback");
-            prettyPrintThings($callback);
+            // prettyPrintThings($callback);
             // prettyPrintThings("Args");
-            // prettyPrintThings($args);
+            prettyPrintThings($args);
             return call_user_func_array($callback, $args);
         }
         return call_user_func_array(array(new Smarty_Internal_Undefined(), $name), $args);
