@@ -134,9 +134,9 @@ class DiscussionController extends VanillaController
         if (
             strcasecmp(
                 val(
-                    "Type" ?? "",
+                    "Type",
                     $this->Discussion,
-                ),
+                ) ?? "",
                 "redirect",
             ) === 0
         ) {
