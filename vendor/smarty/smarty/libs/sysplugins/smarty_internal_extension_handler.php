@@ -60,20 +60,20 @@ class Smarty_Internal_Extension_Handler
 
     private $resolvedProperties = array();
 
-    /** Added for PHP8.2+ support */
-    /** Runtime extensions */
-    private $_codeFrame;
-    private $_foreach;
-    private $_writeFile;
-    /** Method extensions */
-    public $getTemplateVars;
-    public $registerPlugin;
-    public $loadPlugin;
-    /** Other */
-    // public $setDebugTemplate;
-    // public $setLiterals;
-    // public $getLiterals; // Why is that source control thing there
-    // public $addLiterals;
+    // /** Added for PHP8.2+ support */
+    // /** Runtime extensions */
+    // private $_codeFrame;
+    // private $_foreach;
+    // private $_writeFile;
+    // /** Method extensions */
+    // public $getTemplateVars;
+    // public $registerPlugin;
+    // public $loadPlugin;
+    // /** Other */
+    // // public $setDebugTemplate;
+    // // public $setLiterals;
+    // // public $getLiterals; // Why is that source control thing there
+    // // public $addLiterals;
 
     /**
      * Call external Method

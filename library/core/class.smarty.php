@@ -19,6 +19,21 @@ class Gdn_Smarty implements \Vanilla\Contracts\Web\LegacyViewHandlerInterface {
     /** @var Smarty The smarty object used for the template. */
     protected $_Smarty = null;
 
+    /** PHP8.2+ */
+    /** Runtime extensions */
+    private $_codeFrame;
+    private $_foreach;
+    private $_writeFile;
+    /** Method extensions */
+    public $getTemplateVars;
+    public $registerPlugin;
+    public $loadPlugin;
+    /** Other */
+    public $setDebugTemplate;
+    public $setLiterals;
+    public $getLiterals;
+    public $addLiterals;
+
     /**
      *
      *
