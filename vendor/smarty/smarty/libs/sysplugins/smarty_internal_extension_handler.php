@@ -79,12 +79,12 @@ class Smarty_Internal_Extension_Handler
     // // public $getLiterals; // Why is that source control thing there
     // // public $addLiterals;
 
-    public ?Smarty_Internal_Method_SetDebugTemplate $setDebugTemplate = null;
-    public ?Smarty_Internal_Method_RegisterPlugin $registerPlugin = null;
-    public ?Smarty_Internal_Runtime_CodeFrame $_codeFrame = null;
-    public ?Smarty_Internal_Method_Literals $getLiterals = null;
-    public ?Smarty_Internal_Method_Literals $addLiterals = null;
-    public ?Smarty_Internal_Method_Literals $setLiterals = null;
+    // public ?Smarty_Internal_Method_SetDebugTemplate $setDebugTemplate = null;
+    // public ?Smarty_Internal_Method_RegisterPlugin $registerPlugin = null;
+    // public ?Smarty_Internal_Runtime_CodeFrame $_codeFrame = null;
+    // public ?Smarty_Internal_Method_Literals $getLiterals = null;
+    // public ?Smarty_Internal_Method_Literals $addLiterals = null;
+    // public ?Smarty_Internal_Method_Literals $setLiterals = null;
 
     /**
      * Call external Method
@@ -102,7 +102,9 @@ class Smarty_Internal_Extension_Handler
         if (!isset($smarty->ext->$name)) {
             if (preg_match('/^((set|get)|(.*?))([A-Z].*)$/', $name, $match)) {
                 $basename = $this->upperCase($match[ 4 ]);
-                if (!isset($smarty->ext->$basename) && isset($this->_property_info[ $basename ])
+                if (
+                    !isset($smarty->ext->$basename)
+                    && isset($this->_property_info[ $basename ])
                     && is_string($this->_property_info[ $basename ])
                 ) {
                     $class = 'Smarty_Internal_Method_' . $this->_property_info[ $basename ];
@@ -161,10 +163,10 @@ class Smarty_Internal_Extension_Handler
                 }
             }
         }
-        // prettyPrintThings("Smarty ext dynamic name thing?");
-        // prettyPrintThings($smarty?->ext?->$name);
-        // prettyPrintThings("Smarty ext name has been set; printing smarty ext");
-        // prettyPrintThings($smarty?->ext);
+        prettyPrintThings("Smarty ext dynamic name thing?");
+        prettyPrintThings($smarty?->ext?->$name);
+        prettyPrintThings("Smarty ext name has been set; printing smarty ext");
+        prettyPrintThings($smarty?->ext);
         $callback = array($smarty->ext->$name, $name);
         array_unshift($args, $data);
         if (isset($callback) && $callback[0]?->objMap | $data->_objType) {
@@ -207,14 +209,14 @@ class Smarty_Internal_Extension_Handler
             $class = 'Smarty_Internal_Method_' . $this->upperCase($property_name);
         }
         if (!class_exists($class)) {
-            // prettyPrintThings("Class did not yet exist");
-            // prettyPrintThings($class);
-            // prettyPrintThings("Will create new undefined");
-            // prettyPrintThings($property_name);
+            prettyPrintThings("Class did not yet exist");
+            prettyPrintThings($class);
+            prettyPrintThings("Will create new undefined");
+            prettyPrintThings($property_name);
             return $this->$property_name = new Smarty_Internal_Undefined($class);
         }
-        // prettyPrintThings("Will use existing property name?");
-        // prettyPrintThings($property_name);
+        prettyPrintThings("Will use existing property name?");
+        prettyPrintThings($property_name);
         return $this->$property_name = new $class();
     }
 
@@ -227,8 +229,8 @@ class Smarty_Internal_Extension_Handler
      */
     public function __set($property_name, $value)
     {
-        // prettyPrintThings("Will set property name");
-        // prettyPrintThings($property_name);
+        prettyPrintThings("Will set property name");
+        prettyPrintThings($property_name);
         $this->$property_name = $value;
     }
 
@@ -242,6 +244,7 @@ class Smarty_Internal_Extension_Handler
      */
     public function __call($name, $args)
     {
+        prettyPrintThings("Call");
         return call_user_func_array(array(new Smarty_Internal_Undefined(), $name), array($this));
     }
 }
