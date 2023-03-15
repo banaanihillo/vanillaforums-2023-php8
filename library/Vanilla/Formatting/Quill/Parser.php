@@ -169,14 +169,18 @@ class Parser
             return self::SINGLE_NEWLINE_CONTENTS;
         }
         $operations = json_decode($json, true);
-        prettyPrintThings("Raw JSON:");
-        prettyPrintThings($json);
-        prettyPrintThings("Operations decoded:");
-        prettyPrintThings($operations);
-        // if ($operations == []) {
-        //     prettyPrintThings("Operations was empty");
-        //     $json = '"' . $json . '"';
-        // }
+        // prettyPrintThings("Raw JSON:");
+        // prettyPrintThings($json);
+        // prettyPrintThings("Operations decoded:");
+        // prettyPrintThings($operations);
+        if ($operations == []) {
+            prettyPrintThings("Operations was empty");
+            $json = '[{"insert":' . $json . '}]';
+            prettyPrintThings($json);
+            $operations = json_decode($json, true);
+            prettyPrintThings("Operations re-decoded");
+            prettyPrintThings($operations);
+        }
 
         $errMessage = "JSON could not be converted into quill operations.\n $json";
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($operations)) {
