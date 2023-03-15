@@ -46,6 +46,7 @@ function prettyPrintThings($thing) {
  * @property   Smarty_Internal_Method_GetLiterals        $getLiterals
  * @property   Smarty_Internal_Method_AddLiterals        $addLiterals
  */
+#[\AllowDynamicProperties]
 class Smarty_Internal_Extension_Handler
 {
     public $objType = null;
