@@ -61,7 +61,7 @@ class Smarty_Internal_Extension_Handler
     private $resolvedProperties = array();
 
     /** Added for PHP8.2+ support */
-    public $setDebugTemplate;
+    // public $setDebugTemplate;
     // public $setLiterals;
     // public $_codeFrame;
     // public $_foreach;
@@ -147,7 +147,7 @@ class Smarty_Internal_Extension_Handler
         array_unshift($args, $data);
         if (isset($callback) && $callback[0]?->objMap | $data->_objType) {
             // prettyPrintThings("Callback");
-            // prettyPrintThings($callback);
+            prettyPrintThings($callback);
             // prettyPrintThings("Args");
             // prettyPrintThings($args);
             return call_user_func_array($callback, $args);
