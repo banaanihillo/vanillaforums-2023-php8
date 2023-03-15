@@ -79,12 +79,12 @@ class Smarty_Internal_Extension_Handler
     // // public $getLiterals; // Why is that source control thing there
     // // public $addLiterals;
 
-    public Smarty_Internal_Method_SetDebugTemplate $setDebugTemplate;
-    public Smarty_Internal_Method_RegisterPlugin $registerPlugin;
-    public Smarty_Internal_Runtime_CodeFrame $_codeFrame;
-    public Smarty_Internal_Method_Literals $getLiterals;
-    public Smarty_Internal_Method_Literals $addLiterals;
-    public Smarty_Internal_Method_Literals $setLiterals;
+    public ?Smarty_Internal_Method_SetDebugTemplate $setDebugTemplate = null;
+    public ?Smarty_Internal_Method_RegisterPlugin $registerPlugin = null;
+    public ?Smarty_Internal_Runtime_CodeFrame $_codeFrame = null;
+    public ?Smarty_Internal_Method_Literals $getLiterals = null;
+    public ?Smarty_Internal_Method_Literals $addLiterals = null;
+    public ?Smarty_Internal_Method_Literals $setLiterals = null;
 
     /**
      * Call external Method
