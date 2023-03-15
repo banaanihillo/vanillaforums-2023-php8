@@ -1,8 +1,8 @@
 <?php
 
-function prettyPrint($whatToPrint) {
-    print_r("<pre>" . json_encode($whatToPrint) . "</pre>");
-}
+// function prettyPrint($whatToPrint) {
+//     print_r("<pre>" . json_encode($whatToPrint) . "</pre>");
+// }
 
 /**
  * Gdn_Pluggable
@@ -184,22 +184,16 @@ abstract class Gdn_Pluggable
             throw new Exception($message);
         }
 
-        prettyPrint("Method name");
-        prettyPrint($methodName);
         // Was this method declared, or called?
         if (substr($methodName, 0, 1) == "x") {
             // Declared
-            prettyPrint("Declared");
             $actualMethodName = substr($methodName, 1); // Remove the x prefix
             $referenceMethodName = $actualMethodName; // No x prefix
         } else {
             // Called
-            prettyPrint("Called");
             $actualMethodName = "x" . $methodName; // Add the x prefix
             $referenceMethodName = $methodName; // No x prefix
         }
-        prettyPrint("Method name is now:");
-        prettyPrint($actualMethodName);
 
         $className = \Garden\EventManager::classBasename($this->ClassName ?: get_called_class());
 
