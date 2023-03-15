@@ -794,7 +794,7 @@ class DiscussionController extends VanillaController
                 $this->Form->addError("Failed to delete discussion");
             }
 
-            if ($this->Form->errorCount() == 0) {
+            if ($this->Form?->errorCount() == 0) {
                 if ($this->_DeliveryType === DELIVERY_TYPE_ALL) {
                     redirectTo($target);
                 }
@@ -878,7 +878,7 @@ class DiscussionController extends VanillaController
             redirectTo($target);
         }
 
-        if ($this->Form->errorCount() > 0) {
+        if ($this->Form?->errorCount() > 0) {
             $this->setJson("ErrorMessage", $this->Form->errors());
         } else {
             $this->jsonTarget("#Comment_$commentID", "", "SlideUp");

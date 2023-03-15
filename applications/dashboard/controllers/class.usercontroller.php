@@ -459,7 +459,7 @@ class UserController extends DashboardController
                     $this->Form->addError("ValidateRequired", "Reason Text");
                 }
 
-                if ($this->Form->errorCount() == 0) {
+                if ($this->Form?->errorCount() == 0) {
                     if ($this->Form->getFormValue("Reason") == "Other") {
                         $reason = $this->Form->getFormValue("ReasonText");
                     } else {
@@ -474,7 +474,7 @@ class UserController extends DashboardController
                 }
             }
 
-            if ($this->Form->errorCount() == 0) {
+            if ($this->Form?->errorCount() == 0) {
                 // Redirect after a successful save.
                 if ($this->Request->get("Target")) {
                     $this->setRedirectTo($this->Request->get("Target"));
@@ -626,7 +626,7 @@ class UserController extends DashboardController
             $this->Form->addError(t("You cannot delete a super-admin."));
         }
 
-        if ($this->Form->errorCount() == 0) {
+        if ($this->Form?->errorCount() == 0) {
             Gdn::userModel()->delete($userID, [
                 "DeleteMethod" => $this->Form->getFormValue("DeleteMethod"),
                 "Log" => true,
@@ -1157,7 +1157,7 @@ class UserController extends DashboardController
                 $form->addError(sprintf('%1$s "%2$s" not found.', t("Provider"), $form->getFormValue("ClientID")));
             }
 
-            if ($form->errorCount() > 0) {
+            if ($form?->errorCount() > 0) {
                 throw new Gdn_UserException($form->errorString());
             }
 

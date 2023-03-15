@@ -1678,7 +1678,7 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
             // Or as a boolean if necessary
             $view = true;
             if (property_exists($this, "Form") && is_object($this->Form)) {
-                $view = $this->Form->errorCount() > 0 ? false : true;
+                $view = $this->Form?->errorCount() > 0 ? false : true;
             }
         }
 
@@ -1702,7 +1702,10 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
             // with the result.
             if ($this->_FormSaved === "") {
                 // Allow for override
-                $this->_FormSaved = property_exists($this, "Form") && $this->Form->errorCount() == 0 ? true : false;
+                $this->_FormSaved = (
+                    property_exists($this, "Form")
+                    && $this->Form?->errorCount() == 0 ? true : false
+                );
             }
 
             $this->setJson("FormSaved", $this->_FormSaved);

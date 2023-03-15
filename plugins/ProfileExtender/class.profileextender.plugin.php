@@ -528,7 +528,7 @@ class ProfileExtenderPlugin extends Gdn_Plugin
             }
 
             // Save if no errors
-            if (!$sender->Form->errorCount()) {
+            if (!$sender->Form?->errorCount()) {
                 $data = (array) Gdn::config("ProfileExtender.Fields");
                 $formPostValues = (array) $formPostValues;
                 $key = null;

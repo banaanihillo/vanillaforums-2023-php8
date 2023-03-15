@@ -196,7 +196,7 @@ class SettingsController extends DashboardController
         } catch (Exception $e) {
             $this->Form->addError(strip_tags($e->getMessage()));
         }
-        if ($this->Form->errorCount() == 0) {
+        if ($this->Form?->errorCount() == 0) {
             $validation = new Gdn_Validation();
             $applicationManager->registerPermissions($addonName, $validation);
             $applicationManager->enableApplication($addonName, $validation);
@@ -211,7 +211,7 @@ class SettingsController extends DashboardController
     {
         require_once $this->fetchViewLocation("helper_functions");
 
-        if ($this->Form->errorCount() > 0) {
+        if ($this->Form?->errorCount() > 0) {
             $this->informMessage($this->Form->errors());
         } else {
             if ($action === "SlideUp") {
@@ -447,7 +447,7 @@ class SettingsController extends DashboardController
                 ];
                 $newAvatar = $this->saveDefaultAvatars($tmpAvatar, $thumbOptions);
             }
-            if ($this->Form->errorCount() == 0) {
+            if ($this->Form?->errorCount() == 0) {
                 if ($newAvatar) {
                     $this->deleteDefaultAvatars($avatar);
                     $avatar = c("Garden.DefaultAvatar");
@@ -2086,7 +2086,7 @@ class SettingsController extends DashboardController
                 $this->Form->addError($ex);
             }
 
-            if ($this->Form->errorCount() == 0) {
+            if ($this->Form?->errorCount() == 0) {
                 redirectTo("/settings/themes");
             }
         }
@@ -2261,7 +2261,7 @@ class SettingsController extends DashboardController
 
             $AsyncRequest = $this->deliveryType() === DELIVERY_TYPE_VIEW ? true : false;
 
-            if ($this->Form->errorCount() == 0) {
+            if ($this->Form?->errorCount() == 0) {
                 if ($AsyncRequest) {
                     echo "Success";
                     $this->render("Blank", "Utility", "Dashboard");
