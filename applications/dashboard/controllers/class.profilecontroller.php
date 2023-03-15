@@ -57,6 +57,7 @@ class ProfileController extends Gdn_Controller
     public $_CurrentTab;
     public $ProfileUserID;
     public $HideActivity;
+    public $GenderOptions;
 
     /** @var string View for current tab. */
     protected $_TabView;
