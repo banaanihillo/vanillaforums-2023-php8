@@ -12,11 +12,11 @@ use Vanilla\Formatting\Quill\Blots;
 use Vanilla\Formatting\Quill\Formats;
 use Vanilla\Formatting\Quill\Blots\AbstractBlot;
 
-function prettyPrintThings($thing) {
-    echo '<pre>';
-    print_r($thing);
-    echo '</pre>';
-}
+// function prettyPrintThings($thing) {
+//     echo '<pre>';
+//     print_r($thing);
+//     echo '</pre>';
+// }
 
 /**
  * Class for parsing Quill Deltas into BlotGroups.
@@ -159,9 +159,8 @@ class Parser
      * @return array
      * @throws FormattingException If valid operations could not be produced.
      */
-    public static function jsonToOperations(string $jsonParameter): array
+    public static function jsonToOperations(string $json): array
     {
-        $json = $jsonParameter;
         // Ensure that empty posts still get some body content.
         // This will ensure that they will render/validate correctly where empty is allowed
         // And that empty bodies by properly caught in length validation.
@@ -169,18 +168,6 @@ class Parser
             return self::SINGLE_NEWLINE_CONTENTS;
         }
         $operations = json_decode($json, true);
-        // prettyPrintThings("Raw JSON:");
-        // prettyPrintThings($json);
-        // prettyPrintThings("Operations decoded:");
-        // prettyPrintThings($operations);
-        if ($operations == []) {
-            prettyPrintThings("Operations was empty");
-            $json = '[{"insert":' . $json . '}]';
-            prettyPrintThings($json);
-            $operations = json_decode($json, true);
-            prettyPrintThings("Operations re-decoded");
-            prettyPrintThings($operations);
-        }
 
         $errMessage = "JSON could not be converted into quill operations.\n $json";
         if (json_last_error() !== JSON_ERROR_NONE || !is_array($operations)) {
