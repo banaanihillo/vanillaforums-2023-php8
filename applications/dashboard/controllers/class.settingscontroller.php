@@ -50,6 +50,10 @@ class SettingsController extends DashboardController
 
     /** PHP8.2+ */
     public $ActiveUserData;
+    public $addonType;
+    public $AvailablePlugins;
+    public $EnabledPlugins;
+    public $Filter;
 
     /**
      * SettingsController constructor.
