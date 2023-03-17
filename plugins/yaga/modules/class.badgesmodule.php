@@ -10,6 +10,9 @@
  */
 class BadgesModule extends Gdn_Module {
 
+    /** PHP8.2+ */
+    public $Title;
+
     /**
      * Retrieves the user's badgelist upon construction of the module object.
      * 

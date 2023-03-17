@@ -138,8 +138,16 @@ class YouTubeEmbedFactory extends AbstractEmbedFactory
             if (array_key_exists("ticks", $timeParts) && $timeParts["ticks"] !== "") {
                 return $timeParts["ticks"];
             } else {
-                $minutes = $timeParts["minutes"] ? (int) $timeParts["minutes"] : 0;
-                $seconds = $timeParts["seconds"] ? (int) $timeParts["seconds"] : 0;
+                $minutes = (
+                    ($timeParts["minutes"] ?? null)
+                        ? (int) $timeParts["minutes"]
+                        : 0
+                );
+                $seconds = (
+                    ($timeParts["seconds"] ?? null)
+                        ? (int) $timeParts["seconds"]
+                        : 0
+                );
                 return $minutes * 60 + $seconds;
             }
         }

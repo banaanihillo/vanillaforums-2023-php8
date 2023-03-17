@@ -83,6 +83,11 @@ abstract class Gdn_SQLDriver
     /** @var int The offset from which data should be returned. FALSE by default. */
     protected $_Offset;
 
+    /**
+     * Added for PHP8.2+ support, since dynamic properties are deprecated
+     */
+    protected $_Order;
+
     /** @var int The number of where groups currently open. */
     protected $_OpenWhereGroupCount;
 

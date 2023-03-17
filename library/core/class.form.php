@@ -3025,7 +3025,7 @@ PASSWORDMETER;
     public function save()
     {
         $saveResult = false;
-        if ($this->errorCount() == 0) {
+        if ($this?->errorCount() == 0) {
             if (!isset($this->_Model)) {
                 trigger_error(
                     errorMessage(
@@ -3511,7 +3511,7 @@ PASSWORDMETER;
         if ($this->_Model->Validation->validate($this->formValues()) === false) {
             $this->setValidationResults($this->_Model->validationResults());
         }
-        return $this->errorCount();
+        return $this?->errorCount();
     }
 
     /**

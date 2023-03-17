@@ -241,6 +241,15 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
     /** @var bool */
     protected $isReactView = false;
 
+    /** Added for PHP8.2+ support */
+    protected $Property;
+    protected $Database;
+    public $DiscussionModel;
+    public $UserModel;
+    public $RoleData;
+    public $Form;
+    public $ConversationMessageModel;
+
     /**
      * Gdn_Controller constructor.
      */
@@ -1669,7 +1678,7 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
             // Or as a boolean if necessary
             $view = true;
             if (property_exists($this, "Form") && is_object($this->Form)) {
-                $view = $this->Form->errorCount() > 0 ? false : true;
+                $view = $this->Form?->errorCount() > 0 ? false : true;
             }
         }
 
@@ -1693,7 +1702,10 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
             // with the result.
             if ($this->_FormSaved === "") {
                 // Allow for override
-                $this->_FormSaved = property_exists($this, "Form") && $this->Form->errorCount() == 0 ? true : false;
+                $this->_FormSaved = (
+                    property_exists($this, "Form")
+                    && $this->Form?->errorCount() == 0 ? true : false
+                );
             }
 
             $this->setJson("FormSaved", $this->_FormSaved);
@@ -1714,7 +1726,12 @@ class Gdn_Controller extends Gdn_Pluggable implements CacheControlConstantsInter
             $this->finalize();
 
             if (!check_utf8($this->_Json["Data"])) {
-                $this->_Json["Data"] = utf8_encode($this->_Json["Data"]);
+                // $this->_Json["Data"] = utf8_encode($this->_Json["Data"]);
+                $this->_Json["Data"] = mb_convert_encoding(
+                    $this->_Json["Data"],
+                    "UTF-8",
+                    mb_detect_encoding($this->_Json["Data"]),
+                );
             }
 
             $json = ipDecodeRecursive($this->_Json);

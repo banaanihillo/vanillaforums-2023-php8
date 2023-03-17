@@ -1098,8 +1098,12 @@ if (!function_exists("inSubArray")) {
      * @param array $haystack The array to search.
      * @return bool Returns true if the value is found in the array.
      */
-    function inSubArray($needle, $haystack)
+    function inSubArray($needle, $haystackParameter)
     {
+        $haystack = $haystackParameter || [];
+        if (gettype($haystack) == "boolean") {
+            $haystack = [];
+        }
         foreach ($haystack as $key => $val) {
             if (is_array($val) && in_array($needle, $val)) {
                 return true;

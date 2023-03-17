@@ -52,6 +52,9 @@ class ProxyRequest
 
     protected $Options;
 
+    /** PHP8.2+ */
+    public $Loud;
+
     /**
      * Set up ProxyRequest.
      *

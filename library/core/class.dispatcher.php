@@ -25,14 +25,14 @@ use Vanilla\FeatureFlagHelper;
 use Vanilla\Utility\DebugUtils;
 use Vanilla\Utility\Timers;
 
-/**
- * @global
- */
-function echoToPage($value) {
-    echo '<pre>';
-    print_r($value);
-    echo '</pre>';
-}
+// /**
+//  * @global ?
+//  */
+// function echoToPage($value) {
+//     echo '<pre>';
+//     print_r($value);
+//     echo '</pre>';
+// }
 
 /**
  * Handles all requests and routing.

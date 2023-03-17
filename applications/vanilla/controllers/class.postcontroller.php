@@ -264,7 +264,7 @@ class PostController extends VanillaController
             $this->Form->setValue(
               "Name",
               htmlspecialchars_decode(
-                $this->Form->getValue("Name")
+                $this->Form->getValue("Name") ?? ""
               )
             );
         } elseif ($this->Form->authenticatedPostBack(true)) {
@@ -383,7 +383,7 @@ class PostController extends VanillaController
                     $this->Form->setFormValue("Name", $name);
                 }
 
-                if ($this->Form->errorCount() == 0) {
+                if ($this->Form?->errorCount() == 0) {
                     if ($draft) {
                         $draftID = $this->DraftModel->save($formValues);
                         $this->Form->setValidationResults($this->DraftModel->validationResults());
@@ -429,7 +429,7 @@ class PostController extends VanillaController
                     $this->View = "preview";
                 }
             }
-            if ($this->Form->errorCount() > 0) {
+            if ($this->Form?->errorCount() > 0) {
                 // Return the form errors
                 $this->errorMessage($this->Form->errors());
             } elseif ($discussionID > 0 || $draftID > 0) {
@@ -850,7 +850,7 @@ class PostController extends VanillaController
 
             // Handle non-ajax requests first:
             if ($this->_DeliveryType == DELIVERY_TYPE_ALL) {
-                if ($this->Form->errorCount() == 0) {
+                if ($this->Form?->errorCount() == 0) {
                     // Make sure that this form knows what comment we are editing.
                     if ($CommentID > 0) {
                         $this->Form->addHidden("CommentID", $CommentID);
@@ -882,7 +882,7 @@ class PostController extends VanillaController
                 }
             } else {
                 // Handle ajax-based requests
-                if ($this->Form->errorCount() > 0) {
+                if ($this->Form?->errorCount() > 0) {
                     // Return the form errors
                     $this->errorMessage($this->Form->errors());
                 } else {

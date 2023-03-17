@@ -31,6 +31,15 @@ class DiscussionController extends VanillaController
     /** @var Message[] */
     private $messages = [];
 
+    /** PHP8.2+ */
+    public $Discussion;
+    public $Offset;
+    public $Pager;
+    public $DiscussionID;
+    public $CanEditComments;
+    public $CurrentComment;
+    public $CheckedComments;
+
     /**
      *
      *
@@ -124,7 +133,15 @@ class DiscussionController extends VanillaController
         }
         $this->setData("CategoryID", $this->CategoryID);
 
-        if (strcasecmp(val("Type", $this->Discussion) ?? "", "redirect") === 0) {
+        if (
+            strcasecmp(
+                val(
+                    "Type",
+                    $this->Discussion,
+                ) ?? "",
+                "redirect",
+            ) === 0
+        ) {
             $this->redirectDiscussion($this->Discussion);
         }
 
@@ -777,7 +794,7 @@ class DiscussionController extends VanillaController
                 $this->Form->addError("Failed to delete discussion");
             }
 
-            if ($this->Form->errorCount() == 0) {
+            if ($this->Form?->errorCount() == 0) {
                 if ($this->_DeliveryType === DELIVERY_TYPE_ALL) {
                     redirectTo($target);
                 }
@@ -829,7 +846,7 @@ class DiscussionController extends VanillaController
                      * https://higherlogic.atlassian.net/browse/VNLA-901
                      * @psalm-suppress UndefinedClass
                      */
-                    if (!is_null($discussion->GroupID ?? null) && class_exists(GroupModel::class)) {
+                    if (!is_null($discussion->GroupID) && class_exists(GroupModel::class)) {
                         $groupModel = new GroupModel();
                         $groupDelete = $groupModel->canModerate($discussion->GroupID, $session->UserID);
                     }
@@ -861,7 +878,7 @@ class DiscussionController extends VanillaController
             redirectTo($target);
         }
 
-        if ($this->Form->errorCount() > 0) {
+        if ($this->Form?->errorCount() > 0) {
             $this->setJson("ErrorMessage", $this->Form->errors());
         } else {
             $this->jsonTarget("#Comment_$commentID", "", "SlideUp");
