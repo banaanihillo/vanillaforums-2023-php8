@@ -20,10 +20,6 @@ use Vanilla\Scheduler\SchedulerInterface;
 use Vanilla\Theme\ThemeFeatures;
 use Vanilla\Utility\Timers;
 
-function prettyPrintN($whatToPrint) {
-    print_r("<pre>" . json_encode($whatToPrint) . "</pre>");
-}
-
 /**
  * Framework superobject.
  *
@@ -395,24 +391,19 @@ class Gdn
      */
     public static function installationID($setInstallationID = null)
     {
-        // prettyPrintN("Set installation ID?");
-        // prettyPrintN($setInstallationID);
         static $installationID = false;
         if (!is_null($setInstallationID)) {
             if ($setInstallationID !== false) {
                 saveToConfig("Garden.InstallationID", $setInstallationID);
             } else {
-                // removeFromConfig("Garden.InstallationID");
+                removeFromConfig("Garden.InstallationID");
             }
             $installationID = $setInstallationID;
         }
 
         if ($installationID === false) {
             $installationID = c("Garden.InstallationID", null);
-            // prettyPrintN("Installation ID taken from Garden.InstallationID");
-            // prettyPrintN($installationID);
         }
-        prettyPrintN($installationID);
 
         return $installationID;
     }

@@ -13,10 +13,6 @@
 
 use Vanilla\CurrentTimeStamp;
 
-function prettyPrintDuplicate($whatToPrint) {
-    print_r("<pre>" . json_encode($whatToPrint) . "</pre>");
-}
-
 /**
  * Handles install-side analytics gathering and sending.
  */
@@ -1148,18 +1144,11 @@ class Gdn_Statistics extends Gdn_Pluggable
         // Calculate clock desync
         $currentGmTime = Gdn_Statistics::time();
         $requestTime = val("RequestTime", $request, 0);
-        prettyPrintDuplicate("Request time:");
-        prettyPrintDuplicate($requestTime);
         $timeDiff = abs($currentGmTime - $requestTime);
-        prettyPrintDuplicate("Time difference");
-        prettyPrintDuplicate($timeDiff);
         $allowedTimeDiff = c("Garden.Analytics.RequestTimeout", 1440);
-        prettyPrintDuplicate("Allowed time difference");
-        prettyPrintDuplicate($allowedTimeDiff);
 
         // Allow 24* minutes of clock desync, otherwise signature is invalid
         if ($timeDiff > $allowedTimeDiff) {
-            prettyPrintDuplicate("Time difference is greater than allowed");
             return false;
         }
 
